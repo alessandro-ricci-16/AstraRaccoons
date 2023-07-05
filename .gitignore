@@ -175,3 +175,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Ignore Xcode project
+*.xcodeproj
+*.entitlements
