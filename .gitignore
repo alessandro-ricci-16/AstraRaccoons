@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# Build directory
+build
+
 # Prerequisites
 *.d
 
