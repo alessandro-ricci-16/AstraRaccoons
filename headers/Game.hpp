@@ -1,7 +1,7 @@
 #ifndef GAME_DEFINED
 #define GAME_DEFINED
 
-#include "base/BaseProject.hpp"
+#include "engine/base/BaseProject.hpp"
 #include "scenes/Scene.hpp"
 
 class Game: public BaseProject {

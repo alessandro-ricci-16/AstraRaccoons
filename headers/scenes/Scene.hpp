@@ -1,9 +1,9 @@
 #ifndef SCENE_INCLUDE
 #define SCENE_INCLUDE
 
-#include "../base/includes.hpp"
-#include "../objects/Collider.hpp"
-#include "../objects/GameObject.hpp"
+#include "../engine/base/includes.hpp"
+#include "../engine/objects/Collider.hpp"
+#include "../engine/objects/GameObject.hpp"
 
 class Scene {
     public:

@@ -8,7 +8,6 @@
 class GameObject {
     protected:
         Transform transform;
-        std::optional<ModelComponent> model;
         GameObject* parentObject;
         std::vector<GameObject> children;
 
@@ -21,7 +20,6 @@ class GameObject {
         virtual void Destroy();
 
         void addChild(GameObject child);
-        void setModel(ModelComponent model);
         
 };
 

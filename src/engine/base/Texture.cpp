@@ -1,19 +1,19 @@
-#include "../../headers/base/Texture.hpp"
+#include "../../../headers/engine/base/Texture.hpp"
 
 #define TINYOBJLOADER_IMPLEMENTATION
-#include "../../headers/helpers/tiny_obj_loader.h"
+#include "../../../headers/engine/helpers/tiny_obj_loader.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "../../headers/helpers/stb_image.h"
+#include "../../../headers/engine/helpers/stb_image.h"
 
 #define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define TINYGLTF_NOEXCEPTION
 #define JSON_NOEXCEPTION
 #define TINYGLTF_NO_INCLUDE_STB_IMAGE
-#include "../../headers/helpers/tiny_gltf.h"
+#include "../../../headers/engine/helpers/tiny_gltf.h"
 
-void Texture::createTextureImage(const char *const files[], VkFormat Fmt = VK_FORMAT_R8G8B8A8_SRGB) {
+void Texture::createTextureImage(const char *const files[], VkFormat Fmt) {
 	int texWidth, texHeight, texChannels;
 	int curWidth = -1, curHeight = -1, curChannels = -1;
 	stbi_uc* pixels[maxImgs];
@@ -81,7 +81,7 @@ void Texture::createTextureImage(const char *const files[], VkFormat Fmt = VK_FO
 	vkFreeMemory(BP->device, stagingBufferMemory, nullptr);
 }
 
-void Texture::createTextureImageView(VkFormat Fmt = VK_FORMAT_R8G8B8A8_SRGB) {
+void Texture::createTextureImageView(VkFormat Fmt) {
 	textureImageView = BP->createImageView(textureImage,
 									   Fmt,
 									   VK_IMAGE_ASPECT_COLOR_BIT,
@@ -91,15 +91,14 @@ void Texture::createTextureImageView(VkFormat Fmt = VK_FORMAT_R8G8B8A8_SRGB) {
 }
 	
 void Texture::createTextureSampler(
-							 VkFilter magFilter = VK_FILTER_LINEAR,
-							 VkFilter minFilter = VK_FILTER_LINEAR,
-							 VkSamplerAddressMode addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-							 VkSamplerAddressMode addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-							 VkSamplerMipmapMode mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR,
-							 VkBool32 anisotropyEnable = VK_TRUE,
-							 float maxAnisotropy = 16,
-							 float maxLod = -1
-							) {
+							 VkFilter magFilter,
+							 VkFilter minFilter,
+							 VkSamplerAddressMode addressModeU,
+							 VkSamplerAddressMode addressModeV,
+							 VkSamplerMipmapMode mipmapMode,
+							 VkBool32 anisotropyEnable,
+							 float maxAnisotropy,
+							 float maxLod) {
 	VkSamplerCreateInfo samplerInfo{};
 	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	samplerInfo.magFilter = magFilter;
@@ -126,7 +125,7 @@ void Texture::createTextureSampler(
 	}
 }
 
-void Texture::init(BaseProject *bp, const char *  file, VkFormat Fmt = VK_FORMAT_R8G8B8A8_SRGB, bool initSampler = true) {
+void Texture::init(BaseProject *bp, const char *  file, VkFormat Fmt, bool initSampler) {
 	const char *files[1] = {file};
 	BP = bp;
 	imgs = 1;
