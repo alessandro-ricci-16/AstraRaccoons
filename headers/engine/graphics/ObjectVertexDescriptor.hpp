@@ -13,13 +13,12 @@ class ObjectVertexDescriptor {
         std::vector<VertexBindingDescriptorElement> bindings;
         std::vector<VertexDescriptorElement> locations;
 
-        VertexDescriptor compile(BaseProject* proj);
-
     public:
         ObjectVertexDescriptor();
 
         void addBinding(uint32_t size, bool changesPerVertex);
         void addLocation(uint32_t bindingNumber, VkFormat format, uint32_t offset, uint32_t size, VertexDescriptorElementUsage usage);
+        VertexDescriptor compile(BaseProject* proj);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_GRAPHICS_OBJECTVERTEXDESCRIPTOR_HPP_
