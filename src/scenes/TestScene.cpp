@@ -14,11 +14,9 @@ void TestScene::Instantiate() {
 }
 
 void TestScene::Update() {
-    
+    //Update scene-level objects - NOT GameObjects, they are automatically managed by the scene
 }
 
 void TestScene::Destroy() {
-    for (int i = 0; i < activeObjects.size(); i++) {
-        activeObjects.at(i)->Destroy();
-    }
+    //Perform destruction of local objects not covered under the standard scene lifecycle
 }

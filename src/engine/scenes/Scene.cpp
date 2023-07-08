@@ -28,3 +28,10 @@ void Scene::UpdateImpl(int currentimage) {
         activeObjects.at(i)->CommitUpdates(currentimage, cameraMatrix);
     }
 }
+
+void Scene::DestroyImpl() {
+    for (int i = 0; i < activeObjects.size(); i++) {
+        activeObjects.at(i)->Destroy();
+    }
+    Destroy();
+}

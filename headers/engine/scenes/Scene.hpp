@@ -28,6 +28,7 @@ class Scene {
         virtual void Destroy() = 0;
 
         void UpdateImpl(int currentImage);
+        void DestroyImpl();
         virtual void updateAspectRatio(float aspectRatio);
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage);
         virtual void addObject(GameObject* object);

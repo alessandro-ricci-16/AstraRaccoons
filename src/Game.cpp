@@ -52,7 +52,7 @@ void Game::pipelinesAndDescriptorSetsCleanup() {
 
 void Game::localCleanup() {
 	for (int i = 0; i < managedScenes.size(); i++) {
-		managedScenes.at(i)->Destroy();
+		managedScenes.at(i)->DestroyImpl();
 	}
 }
 
