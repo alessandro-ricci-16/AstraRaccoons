@@ -26,7 +26,8 @@ class DSet {
         void addTextureBinding(Texture* tex, VkShaderStageFlags shaderStage);
         void addUniformBinding(void* uniform, int uniformSize, VkShaderStageFlags shaderStage);
         void compile(BaseProject* proj);
-        void mapBind(VkCommandBuffer commandBuffer, Pipeline &pipeline, int setId, int currentImage);
+        void map(int currentImage);
+        void bind(VkCommandBuffer commandBuffer, Pipeline &pipeline, int setId, int currentImage);
 };
 
 class GraphicsPipeline {
@@ -49,6 +50,7 @@ class GraphicsPipeline {
         void cleanup();
         void destroy();
 
+        void commitUniforms(int currentImage);
         void bind(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline);
 };
 

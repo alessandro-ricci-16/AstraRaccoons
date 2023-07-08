@@ -14,9 +14,7 @@ void TestScene::Instantiate() {
 }
 
 void TestScene::Update() {
-    for (int i = 0; i < activeObjects.size(); i++) {
-        activeObjects.at(i)->Update();
-    }
+    
 }
 
 void TestScene::Destroy() {

@@ -18,6 +18,8 @@ class MeshObject: public GameObject {
         virtual void Start() = 0;
         virtual void Update() = 0;
         virtual void Destroy() = 0;
+        virtual void CommitUpdates(int currentimage, glm::mat4 cameraMatrix);
+
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix);
 };
 
@@ -41,8 +43,6 @@ void MeshObject<Vert>::setModel(std::string name, ObjectVertexDescriptor* vertex
 
 template <class Vert>
 void MeshObject<Vert>::Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix) {
-    //Update model uniforms with the object transform
-    model.uniforms.mvpMat = cameraMatrix * transform.getMatrix();
     //Draw the model
     model.Draw(commandBuffer, currentImage, activePipeline);
     //Recursively draw all children
@@ -50,6 +50,18 @@ void MeshObject<Vert>::Draw(VkCommandBuffer commandBuffer, int currentImage, Gra
         children.at(i)->Draw(commandBuffer, currentImage, activePipeline, cameraMatrix);
     }
     
+}
+
+template <class Vert>
+void MeshObject<Vert>::CommitUpdates(int currentImage, glm::mat4 cameraMatrix) {
+    //Update model uniforms with the object transform
+    model.uniforms.mvpMat = cameraMatrix * transform.getMatrix();
+    //Commit updates
+    model.Commit(currentImage);
+    //Recursively update all children
+    for (int i = 0; i < children.size(); i++) {
+        children.at(i)->CommitUpdates(currentImage, cameraMatrix);
+    }
 }
 
 #endif  // MESHOBJECT_IMPLEMENTATION

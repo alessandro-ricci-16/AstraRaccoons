@@ -65,5 +65,5 @@ void Game::updateUniformBuffer(uint32_t currentImage) {
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 	//Update the active scene
-	managedScenes.at(activeScene)->Update();
+	managedScenes.at(activeScene)->UpdateImpl(currentImage);
 }

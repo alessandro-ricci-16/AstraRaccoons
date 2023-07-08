@@ -33,7 +33,7 @@ void DSet::compile(BaseProject* proj) {
     compiledSet.init(proj, &compiledSetLayout, extractedElements);
 }
 
-void DSet::mapBind(VkCommandBuffer commandBuffer, Pipeline &pipeline, int setId, int currentImage) {
+void DSet::map(int currentImage) {
     for (int i = 0; i < setElements.size(); i++) {
         //Map all uniforms
         DSetElement setElement = setElements.at(i);
@@ -42,6 +42,9 @@ void DSet::mapBind(VkCommandBuffer commandBuffer, Pipeline &pipeline, int setId,
             compiledSet.map(currentImage, setElement.uniformPtr, setElement.setElement.size, i);
         }
     }
+}
+
+void DSet::bind(VkCommandBuffer commandBuffer, Pipeline &pipeline, int setId, int currentImage) {
     //Bind
     compiledSet.bind(commandBuffer, pipeline, setId, currentImage);
 }
@@ -104,7 +107,14 @@ void GraphicsPipeline::bind(VkCommandBuffer commandBuffer, int currentImage, Gra
     }
     //Map & bind datasets
     for (int i = 0; i < descriptorSets.size(); i++) {
-        descriptorSets.at(i)->mapBind(commandBuffer, activePipeline->compiledPipeline, i, currentImage);
+        descriptorSets.at(i)->bind(commandBuffer, activePipeline->compiledPipeline, i, currentImage);
+    }
+}
+
+void GraphicsPipeline::commitUniforms(int currentImage) {
+    //Map datasets
+    for (int i = 0; i < descriptorSets.size(); i++) {
+        descriptorSets.at(i)->map(currentImage);
     }
 }
 

@@ -18,6 +18,7 @@ class GameObject {
         virtual void Instantiate() = 0;
         virtual void Start() = 0;
         virtual void Update() = 0;
+        virtual void CommitUpdates(int currentimage, glm::mat4 cameraMatrix);
         virtual void Destroy() = 0;
 
         virtual void addChild(GameObject* child);

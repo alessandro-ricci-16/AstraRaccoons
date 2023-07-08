@@ -40,6 +40,7 @@ class ModelComponent {
         void setShader(std::string vertexStage, std::string fragmentStage);
         void compile(BaseProject* proj, GlobalUniforms* guboPtr);
         void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline);
+        void Commit(int currentImage);
 
         void cleanup();
         void destroy();
@@ -163,6 +164,12 @@ void ModelComponent<Vert>::Draw(VkCommandBuffer commandBuffer, int currentImage,
     model.bind(commandBuffer);
     //Draw!
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(model.indices.size()), 1, 0, 0, 0);   
+}
+
+template <class Vert>
+void ModelComponent<Vert>::Commit(int currentImage) {
+    //Update uniforms part of the pipeline
+    pipeline->commitUniforms(currentImage);
 }
 
 #endif  // MODELCOMPONENT_IMPLEMENTATION_

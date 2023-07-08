@@ -27,6 +27,7 @@ class Scene {
         //Called when the scene has to be destroyed
         virtual void Destroy() = 0;
 
+        void UpdateImpl(int currentImage);
         virtual void updateAspectRatio(float aspectRatio);
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage);
         virtual void addObject(GameObject* object);

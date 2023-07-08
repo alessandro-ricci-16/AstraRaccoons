@@ -1,6 +1,8 @@
 #define MESHOBJECT_IMPLEMENTATION
 #include "../../headers/objects/TestCubeObject.hpp"
 
+#include <ctime>
+
 void TestCubeObject::Instantiate() {
     //Load the model component
     ObjectVertexDescriptor* vertexDescriptor = new ObjectVertexDescriptor();
@@ -18,7 +20,9 @@ void TestCubeObject::Start() {
 }
 
 void TestCubeObject::Update() {
-    
+    std::time_t result = std::time(nullptr);
+    double sinTime = sin((double)result);
+    transform.TranslateBy(vec3(sinTime, 0, 0));
 }
 
 void TestCubeObject::Destroy() {

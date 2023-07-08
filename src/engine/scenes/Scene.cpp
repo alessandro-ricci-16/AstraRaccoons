@@ -20,3 +20,11 @@ void Scene::updateAspectRatio(float aspectRatio) {
 void Scene::addObject(GameObject* object) {
     activeObjects.push_back(object);
 }
+
+void Scene::UpdateImpl(int currentimage) {
+    glm::mat4 cameraMatrix = camera.getCameraMatrix(aspectRatio);
+    for (int i = 0; i < activeObjects.size(); i++) {
+        activeObjects.at(i)->Update();
+        activeObjects.at(i)->CommitUpdates(currentimage, cameraMatrix);
+    }
+}
