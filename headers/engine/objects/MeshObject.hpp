@@ -18,9 +18,9 @@ class MeshObject: public GameObject {
         virtual void Start() = 0;
         virtual void Update() = 0;
         virtual void Destroy() = 0;
-        virtual void CommitUpdates(int currentimage, glm::mat4 cameraMatrix);
+        void CommitUpdates(int currentimage, glm::mat4 cameraMatrix) override;
 
-        virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix);
+        void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix) override;
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_MESHOBJECT_HPP_
