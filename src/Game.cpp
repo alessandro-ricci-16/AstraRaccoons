@@ -41,6 +41,7 @@ void Game::localInit() {
 void Game::pipelinesAndDescriptorSetsInit() {
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes.at(i)->proj = this;
+		managedScenes.at(i)->updateAspectRatio(Ar); //Initialize aspect ratio in scene
 		managedScenes.at(i)->Instantiate();
 	}
 }
