@@ -8,16 +8,18 @@
 
 template <class Vert>
 class MeshObject: public GameObject {
-    private:
+    public:
         ModelComponent<Vert> model;
 
-    public:
-        void setModel(std::string name, ObjectVertexDescriptor vertexDescriptor);
+        void setModel(std::string name, ObjectVertexDescriptor* vertexDescriptor);
+        virtual void compile(BaseProject* proj, GlobalUniforms* guboPtr);
 
-        virtual void Instantiate();
-        virtual void Start();
-        virtual void Update();
-        virtual void Destroy();
+        virtual void Instantiate() = 0;
+        virtual void Start() = 0;
+        virtual void Update() = 0;
+        virtual void Destroy() = 0;
+
+        virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_MESHOBJECT_HPP_
@@ -25,9 +27,30 @@ class MeshObject: public GameObject {
 #ifdef MESHOBJECT_IMPLEMENTATION
 #undef MESHOBJECT_IMPLEMENTATION
 
+#define MODELCOMPONENT_IMPLEMENTATION_
+#include "../graphics/ModelComponent.hpp"
+
 template <class Vert>
-void MeshObject<Vert>::setModel(std::string name, ObjectVertexDescriptor vertexDescriptor) {
-    model = ModelComponent<Vert>(name, vertexDescriptor)
+void MeshObject<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
+    model.compile(proj, guboPtr);
+}
+
+template <class Vert>
+void MeshObject<Vert>::setModel(std::string name, ObjectVertexDescriptor* vertexDescriptor) {
+    model = ModelComponent<Vert>(name, vertexDescriptor);
+}
+
+template <class Vert>
+void MeshObject<Vert>::Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix) {
+    //Update model uniforms with the object transform
+    model.uniforms.mvpMat = cameraMatrix * transform.getMatrix();
+    //Draw the model
+    model.Draw(commandBuffer, currentImage, activePipeline);
+    //Recursively draw all children
+    for (int i = 0; i < children.size(); i++) {
+        children.at(i)->Draw(commandBuffer, currentImage, activePipeline, cameraMatrix);
+    }
+    
 }
 
 #endif  // MESHOBJECT_IMPLEMENTATION

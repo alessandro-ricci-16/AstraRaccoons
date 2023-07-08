@@ -7,20 +7,21 @@
 
 class GameObject {
     protected:
-        Transform transform;
         GameObject* parentObject;
-        std::vector<GameObject> children;
+        std::vector<GameObject*> children;
 
     public:
+        Transform transform;
+        
         GameObject();
 
-        virtual void Instantiate();
-        virtual void Start();
-        virtual void Update();
-        virtual void Destroy();
+        virtual void Instantiate() = 0;
+        virtual void Start() = 0;
+        virtual void Update() = 0;
+        virtual void Destroy() = 0;
 
-        void addChild(GameObject child);
-        
+        virtual void addChild(GameObject* child);
+        virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix);
 };
 
 #endif

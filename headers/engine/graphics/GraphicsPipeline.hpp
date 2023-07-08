@@ -9,8 +9,13 @@
 
 class DSet {
     private:
+        struct DSetElement {
+            void* uniformPtr = nullptr;
+            DescriptorSetElement setElement;
+        };
+
         std::vector<DescriptorSetLayoutBinding> bindings;
-        std::vector<DescriptorSetElement> setElements;
+        std::vector<DSetElement> setElements;
 
     public:
         DescriptorSet compiledSet;
@@ -19,28 +24,32 @@ class DSet {
         DSet();
 
         void addTextureBinding(Texture* tex, VkShaderStageFlags shaderStage);
-        void addUniformBinding(int uniformSize, VkShaderStageFlags shaderStage);
+        void addUniformBinding(void* uniform, int uniformSize, VkShaderStageFlags shaderStage);
         void compile(BaseProject* proj);
+        void mapBind(VkCommandBuffer commandBuffer, Pipeline &pipeline, int setId, int currentImage);
 };
 
 class GraphicsPipeline {
     private:
         std::string vertexShaderName, fragmentShaderName;
-        std::vector<DSet> descriptorSets;
+        std::vector<DSet*> descriptorSets;
         Pipeline compiledPipeline;
 
     protected:
         uint32_t id;
 
     public:
+        GraphicsPipeline() = default;
         GraphicsPipeline(std::string vertexShader, std::string fragmentShader);
 
         void addSet();
         void addTextureBindingToLastSet(Texture* tex, VkShaderStageFlags shaderStage);
-        void addUniformBindingToLastSet(int uniformSize, VkShaderStageFlags shaderStage);
+        void addUniformBindingToLastSet(void* uniform, int uniformSize, VkShaderStageFlags shaderStage);
         void compile(BaseProject* proj, VertexDescriptor* vertexDescriptor);
         void cleanup();
         void destroy();
+
+        void bind(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_GRAPHICS_GRAPHICSPIPELINE_HPP_

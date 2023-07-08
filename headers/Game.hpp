@@ -2,14 +2,17 @@
 #define GAME_DEFINED
 
 #include "engine/base/BaseProject.hpp"
-#include "scenes/Scene.hpp"
+#include "scenes/TestScene.hpp"
 
 class Game: public BaseProject {
     protected:
         //The window aspect ratio
         float Ar;
         //The list of scenes managed by the game
-        std::vector<Scene> managedScenes;
+        std::vector<Scene*> managedScenes;
+        //The currently active scene index
+        int activeScene;
+        TestScene* test;
     
     public:
         Game();
