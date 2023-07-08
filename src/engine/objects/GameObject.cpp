@@ -17,22 +17,6 @@ void GameObject::Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsP
     }
 }
 
-void GameObject::Instantiate() {
-
-}
-
-void GameObject::Start() {
-    
-}
-
-void GameObject::Update() {
-    
-}
-
-void GameObject::Destroy() {
-    
-}
-
 void GameObject::CommitUpdates(int currentImage, glm::mat4 cameraMatrix) {
     // Don't do anything since this object has no mesh!
     // Recursively draw all children

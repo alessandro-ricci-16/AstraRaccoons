@@ -14,7 +14,6 @@ class TestCubeObject: public MeshObject<TestCubeVertex> {
         void Instantiate();
         void Start();
         void Update();
-        void Destroy();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_TESTCUBEOBJECT_HPP_

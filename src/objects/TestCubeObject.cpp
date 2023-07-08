@@ -22,7 +22,3 @@ void TestCubeObject::Start() {
 void TestCubeObject::Update() {
     transform.Rotate(2.f, glm::vec3(1, 0, 0));
 }
-
-void TestCubeObject::Destroy() {
-
-}

@@ -17,7 +17,7 @@ class MeshObject: public GameObject {
         virtual void Instantiate() = 0;
         virtual void Start() = 0;
         virtual void Update() = 0;
-        virtual void Destroy() = 0;
+        virtual void Destroy();
         void CommitUpdates(int currentimage, glm::mat4 cameraMatrix) override;
 
         void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix) override;
@@ -61,6 +61,14 @@ void MeshObject<Vert>::CommitUpdates(int currentImage, glm::mat4 cameraMatrix) {
     //Recursively update all children
     for (int i = 0; i < children.size(); i++) {
         children.at(i)->CommitUpdates(currentImage, cameraMatrix);
+    }
+}
+
+template <class Vert>
+void MeshObject<Vert>::Destroy() {
+    model.destroy();
+    for (int i = 0; i < children.size(); i++) {
+        children.at(i)->Destroy();
     }
 }
 

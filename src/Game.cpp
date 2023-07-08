@@ -47,12 +47,13 @@ void Game::pipelinesAndDescriptorSetsInit() {
 }
 
 void Game::pipelinesAndDescriptorSetsCleanup() {
+	
+}
+
+void Game::localCleanup() {
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes.at(i)->Destroy();
 	}
-}
-
-void Game::localCleanup() {	
 }
 
 void Game::populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage) {
