@@ -6,7 +6,7 @@
 #include "../objects/GameObject.hpp"
 #include "../graphics/GraphicsPipeline.hpp"
 #include "../objects/Camera.hpp"
-
+#include <unordered_map>
 class Scene {
     protected:
         std::vector<GameObject*> activeObjects;

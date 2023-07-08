@@ -98,7 +98,7 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
     VertexDescriptor vd = vertexDescriptor->compile(proj);
     //Derive the model type from the file extension
     std::filesystem::path modelPath = modelName;
-    std::string modelExtension = modelPath.extension();
+    std::string modelExtension = modelPath.extension().string();
     ModelType modelType;
     if (modelExtension == ".obj") {
         modelType = OBJ;

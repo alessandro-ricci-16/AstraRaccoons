@@ -18,7 +18,6 @@ class MeshObject: public GameObject {
         virtual void Start() = 0;
         virtual void Update() = 0;
         virtual void Destroy() = 0;
-
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix);
 };
 
