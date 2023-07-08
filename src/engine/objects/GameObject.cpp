@@ -9,7 +9,7 @@ void GameObject::addChild(GameObject child) {
     children.push_back(child);
 }
 
-/*void GameObject::Instantiate() {
+void GameObject::Instantiate() {
 
 }
 
@@ -23,4 +23,4 @@ void GameObject::Update() {
 
 void GameObject::Destroy() {
     
-}*/
+}

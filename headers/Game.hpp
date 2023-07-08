@@ -13,7 +13,6 @@ class Game: public BaseProject {
     
     public:
         Game();
-        
         void setWindowParameters();
             
         // What to do when the window changes size
