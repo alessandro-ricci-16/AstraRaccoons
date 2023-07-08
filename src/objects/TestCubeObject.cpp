@@ -20,9 +20,7 @@ void TestCubeObject::Start() {
 }
 
 void TestCubeObject::Update() {
-    std::time_t result = std::time(nullptr);
-    double sinTime = sin((double)result);
-    transform.TranslateBy(vec3(sinTime, 0, 0));
+    transform.Rotate(2.f, glm::vec3(1, 0, 0));
 }
 
 void TestCubeObject::Destroy() {
