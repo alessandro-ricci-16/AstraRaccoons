@@ -2,7 +2,6 @@
 #define TRANSFORM_INCLUDE
 
 #include "../base/includes.hpp"
-#include "../glm/gtx/quaternion.hpp"
 
 using namespace glm;
 

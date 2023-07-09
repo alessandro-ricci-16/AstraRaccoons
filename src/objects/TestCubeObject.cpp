@@ -9,6 +9,7 @@ void TestCubeObject::Instantiate() {
     vertexDescriptor->addBinding(sizeof(TestCubeVertex), true);
     vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(TestCubeVertex, pos), sizeof(glm::vec3), POSITION);
     vertexDescriptor->addLocation(0, VK_FORMAT_R32G32_SFLOAT, offsetof(TestCubeVertex, uv), sizeof(glm::vec2), UV);
+    vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(TestCubeVertex, norm), sizeof(glm::vec3), NORMAL);
     setModel("models/Cube.obj", vertexDescriptor);
 	model.setShader("shaders/Shader_Vert.spv", "shaders/Shader_Frag.spv");
 	model.addTexture("textures/Checker.png");

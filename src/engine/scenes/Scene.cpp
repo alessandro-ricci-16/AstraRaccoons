@@ -18,6 +18,7 @@ void Scene::updateAspectRatio(float aspectRatio) {
 }
 
 void Scene::addObject(GameObject* object) {
+    object->parentScene = this;
     activeObjects.push_back(object);
 }
 

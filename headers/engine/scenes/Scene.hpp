@@ -6,13 +6,16 @@
 #include "../objects/GameObject.hpp"
 #include "../graphics/GraphicsPipeline.hpp"
 #include "../objects/Camera.hpp"
+#include "../graphics/Uniforms.hpp"
 #include <unordered_map>
+
 class Scene {
     protected:
         std::vector<GameObject*> activeObjects;
         std::unordered_map<uint8_t, Collider> activeColliders;
         Camera camera;
         float aspectRatio;
+        GlobalUniforms gubos;
 
     public:
         BaseProject* proj;

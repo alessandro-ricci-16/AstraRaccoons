@@ -12,7 +12,8 @@ class GameObject {
 
     public:
         Transform transform;
-        
+        void* parentScene;
+
         GameObject();
 
         virtual void Instantiate() = 0;

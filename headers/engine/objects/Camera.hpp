@@ -20,6 +20,7 @@ class Camera {
         void setTargetDistance(float targetDistance);
 
         glm::mat4 getCameraMatrix(float aspectRatio); //Prj * View
+        glm::vec3 getCameraPosition(float aspectRatio);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_ENGINE_OBJECTS_CAMERA_HPP_

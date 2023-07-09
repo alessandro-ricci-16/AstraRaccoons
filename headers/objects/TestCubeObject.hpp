@@ -7,6 +7,7 @@
 struct TestCubeVertex {
     glm::vec3 pos;
     glm::vec2 uv;
+    glm::vec3 norm;
 };
 
 class TestCubeObject: public MeshObject<TestCubeVertex> {

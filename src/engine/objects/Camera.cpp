@@ -30,3 +30,7 @@ glm::mat4 Camera::getCameraMatrix(float aspectRatio) {
     glm::mat4 View = glm::lookAt(camPos, camTarget, glm::vec3(0, 1, 0));
     return Prj * View;
 }
+
+glm::vec3 Camera::getCameraPosition(float aspectRatio) {
+    return getCameraMatrix(aspectRatio) * glm::vec4(0, 0, 0, 1);
+}
