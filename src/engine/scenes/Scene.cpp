@@ -30,9 +30,23 @@ void Scene::UpdateImpl(int currentimage) {
     }
 }
 
+void Scene::CompileObjects() {
+    for (int i = 0; i < activeObjects.size(); i++) {
+        activeObjects.at(i)->compile(proj, &gubos);
+    }
+}
+
+void Scene::CleanupImpl() {
+    for (int i = 0; i < activeObjects.size(); i++) {
+        activeObjects.at(i)->Cleanup();
+    }
+    Cleanup();
+}
+
 void Scene::DestroyImpl() {
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects.at(i)->Destroy();
     }
     Destroy();
+    activeObjects = {};
 }

@@ -6,7 +6,6 @@ void TestScene::Instantiate() {
     TestCubeObject* object = new TestCubeObject();
     object->Instantiate();
     addObject(object);
-    object->compile(proj, &gubos);
     //Set up the camera
     camera = Camera(glm::radians(90.0f), 0.1f, 100.0f);
     camera.setTarget(&(object->transform));
@@ -24,4 +23,8 @@ void TestScene::Update() {
 
 void TestScene::Destroy() {
     //Perform destruction of local objects not covered under the standard scene lifecycle
+}
+
+void TestScene::Cleanup() {
+    //Perform cleanup of local objects not covered under the standard scene lifecycle
 }

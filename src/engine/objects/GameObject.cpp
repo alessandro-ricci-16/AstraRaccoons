@@ -24,3 +24,9 @@ void GameObject::CommitUpdates(int currentImage, glm::mat4 cameraMatrix) {
         children.at(i)->CommitUpdates(currentImage, cameraMatrix);
     }
 }
+
+void GameObject::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
+    for (int i = 0; i < children.size(); i++) {
+        children.at(i)->compile(proj, guboPtr);
+    }
+}

@@ -12,7 +12,6 @@ class Game: public BaseProject {
         std::vector<Scene*> managedScenes;
         //The currently active scene index
         int activeScene;
-        TestScene* test;
     
     public:
         Game();

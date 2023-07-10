@@ -123,14 +123,17 @@ void GraphicsPipeline::cleanup() {
     for (int i = 0; i < descriptorSets.size(); i++) {
         descriptorSets.at(i)->compiledSet.cleanup();
         descriptorSets.at(i)->compiledSetLayout.cleanup();
+        delete descriptorSets.at(i);
     }
+    descriptorSets = {};
 }
 
 void GraphicsPipeline::destroy() {
-    compiledPipeline.cleanup();
     compiledPipeline.destroy();
     for (int i = 0; i < descriptorSets.size(); i++) {
         descriptorSets.at(i)->compiledSet.cleanup();
         descriptorSets.at(i)->compiledSetLayout.cleanup();
+        delete descriptorSets.at(i);
     }
+    descriptorSets = {};
 }

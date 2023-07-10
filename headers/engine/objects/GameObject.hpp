@@ -21,7 +21,9 @@ class GameObject {
         virtual void Update() = 0;
         virtual void CommitUpdates(int currentimage, glm::mat4 cameraMatrix);
         virtual void Destroy() = 0;
+        virtual void Cleanup() = 0;
 
+        virtual void compile(BaseProject* proj, GlobalUniforms* guboPtr);
         virtual void addChild(GameObject* child);
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix);
 };

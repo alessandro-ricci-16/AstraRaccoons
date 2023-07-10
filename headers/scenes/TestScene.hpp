@@ -9,6 +9,7 @@ class TestScene: public Scene {
         void Instantiate();
         void Update();
         void Destroy();
+        void Cleanup();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_SCENES_TESTSCENE_HPP_

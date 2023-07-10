@@ -12,12 +12,13 @@ class MeshObject: public GameObject {
         ModelComponent<Vert> model;
 
         void setModel(std::string name, ObjectVertexDescriptor* vertexDescriptor);
-        virtual void compile(BaseProject* proj, GlobalUniforms* guboPtr);
+        void compile(BaseProject* proj, GlobalUniforms* guboPtr) override;
 
         virtual void Instantiate() = 0;
         virtual void Start() = 0;
         virtual void Update() = 0;
         virtual void Destroy();
+        virtual void Cleanup();
         void CommitUpdates(int currentimage, glm::mat4 cameraMatrix) override;
 
         void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix) override;
@@ -34,6 +35,9 @@ class MeshObject: public GameObject {
 template <class Vert>
 void MeshObject<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
     model.compile(proj, guboPtr);
+    for (int i = 0; i < children.size(); i++) {
+        children.at(i)->compile(proj, guboPtr);
+    }
 }
 
 template <class Vert>
@@ -69,6 +73,14 @@ void MeshObject<Vert>::Destroy() {
     model.destroy();
     for (int i = 0; i < children.size(); i++) {
         children.at(i)->Destroy();
+    }
+}
+
+template <class Vert>
+void MeshObject<Vert>::Cleanup() {
+    model.cleanup();
+    for (int i = 0; i < children.size(); i++) {
+        children.at(i)->Cleanup();
     }
 }
 

@@ -5,7 +5,6 @@ Game::Game() {
     managedScenes = {};
 
     activeScene = 0;
-	test = new TestScene();
 }
 
 // Here you set the main application parameters
@@ -35,19 +34,22 @@ void Game::onWindowResize(int w, int h) {
 void Game::localInit() {
 	TestScene* testScene = new TestScene();
 	testScene->proj = this;
-	managedScenes.push_back(test);
+	testScene->Instantiate();
+	managedScenes.push_back(testScene);
 }
 
 void Game::pipelinesAndDescriptorSetsInit() {
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes.at(i)->proj = this;
 		managedScenes.at(i)->updateAspectRatio(Ar); //Initialize aspect ratio in scene
-		managedScenes.at(i)->Instantiate();
+		managedScenes.at(i)->CompileObjects();
 	}
 }
 
 void Game::pipelinesAndDescriptorSetsCleanup() {
-	
+	for (int i = 0; i < managedScenes.size(); i++) {
+		managedScenes.at(i)->CleanupImpl();
+	}
 }
 
 void Game::localCleanup() {

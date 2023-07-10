@@ -21,6 +21,7 @@ class ModelComponent {
         std::string vertexStage, fragmentStage;
         std::vector<std::string> textureNames;
         std::vector<UniformEntry> additionalUniforms;
+        bool isCompiled;
 
    protected:
         uint32_t id;
@@ -67,6 +68,7 @@ ModelComponent<Vert>::ModelComponent(std::string name, ObjectVertexDescriptor* v
     std::hash<std::string> hasher;
     id = hasher(name);
     this->vertexDescriptor = vertexDescriptor;
+    isCompiled = false;
 }
 
 template <class Vert>
@@ -89,27 +91,30 @@ void ModelComponent<Vert>::setShader(std::string vertexStage,
 
 template <class Vert>
 void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
-    // Compile textures
-    for (int i = 0; i < textureNames.size(); i++) {
-        Texture* tex = new Texture();
-        tex->init(proj, textureNames.at(i).c_str());
-        textures.push_back(tex);
-    }
     // Compile the vertex descriptor & model
     VertexDescriptor vd = vertexDescriptor->compile(proj);
-    //Derive the model type from the file extension
-    std::filesystem::path modelPath = modelName;
-    std::string modelExtension = modelPath.extension().string();
-    ModelType modelType;
-    if (modelExtension == ".obj") {
-        modelType = OBJ;
-    } else if (modelExtension == ".gltf") {
-        modelType = GLTF;
-    } else {
-        modelType = MGCG;
+    //Compile assets only if they have been cleaned up
+    if (!isCompiled) {
+        // Compile textures
+        for (int i = 0; i < textureNames.size(); i++) {
+            Texture* tex = new Texture();
+            tex->init(proj, textureNames.at(i).c_str());
+            textures.push_back(tex);
+        }
+        //Derive the model type from the file extension
+        std::filesystem::path modelPath = modelName;
+        std::string modelExtension = modelPath.extension().string();
+        ModelType modelType;
+        if (modelExtension == ".obj") {
+            modelType = OBJ;
+        } else if (modelExtension == ".gltf") {
+            modelType = GLTF;
+        } else {
+            modelType = MGCG;
+        }
+        model.init(proj, &vd, modelName, modelType);
     }
-    model.init(proj, &vd, modelName, modelType);
-    //Compile the pipeline
+    //Compile the pipeline - this needs to be done even if all assets were compiled, since the pipeline may have been cleaned up
     //Add all necessary sets & descriptor bindings
     if (guboPtr != nullptr) {
         //Bind Global uniforms
@@ -133,16 +138,13 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
     
     //Compile the pipeline
     pipeline->compile(proj, &vd);
+
+    isCompiled = true;
 }
 
 template <class Vert>
 void ModelComponent<Vert>::cleanup() {
-    for (int i = 0; i < textures.size(); i++) {
-        Texture* tex = textures.at(i);
-        tex->cleanup();
-    }
     pipeline->cleanup();
-    model.cleanup();
 }
 
 template <class Vert>
@@ -150,9 +152,12 @@ void ModelComponent<Vert>::destroy() {
     for (int i = 0; i < textures.size(); i++) {
         Texture* tex = textures.at(i);
         tex->cleanup();
+        delete tex;
     }
+    textures = {};
     pipeline->destroy();
     model.cleanup();
+    isCompiled = false;
 }
 
 template <class Vert>
