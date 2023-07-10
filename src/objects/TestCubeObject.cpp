@@ -1,5 +1,6 @@
 #define MESHOBJECT_IMPLEMENTATION
 #include "../../headers/objects/TestCubeObject.hpp"
+#include "../../headers/engine/base/Time.hpp"
 
 #include <ctime>
 
@@ -21,5 +22,5 @@ void TestCubeObject::Start() {
 }
 
 void TestCubeObject::Update() {
-    transform.Rotate(2.f, glm::vec3(1, 0, 0));
+    transform.Rotate(20*Time::getDeltaT(), glm::vec3(1, 0, 0));
 }

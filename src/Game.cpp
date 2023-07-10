@@ -1,10 +1,11 @@
 #include "../headers/Game.hpp"
 #include "../headers/scenes/TestScene.hpp"
+#include "../headers/engine/base/Time.hpp"
 
 Game::Game() {
     managedScenes = {};
 
-    activeScene = 0;
+	activeScene = 0;
 }
 
 // Here you set the main application parameters
@@ -63,6 +64,8 @@ void Game::populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage
 }
 
 void Game::updateUniformBuffer(uint32_t currentImage) {
+	Time::computeDeltaT();
+
 	// Standard procedure to quit when the ESC key is pressed
 	if(glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 		glfwSetWindowShouldClose(window, GL_TRUE);
