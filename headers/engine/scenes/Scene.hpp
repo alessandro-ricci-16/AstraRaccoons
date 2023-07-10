@@ -9,10 +9,14 @@
 #include "../graphics/Uniforms.hpp"
 #include <unordered_map>
 
+inline auto key_selector = [](auto pair){return pair.first;};
+
 class Scene {
+    private:
+        std::vector<GameObject*> removedObjects;
+
     protected:
-        
-        std::unordered_map<uint8_t, Collider> activeColliders;
+        std::unordered_map<uint8_t, std::vector<Collider*>> activeColliders; //Maps the collision mask to the colliders with that mask
         Camera camera;
         float aspectRatio;
         GlobalUniforms gubos;
@@ -40,6 +44,10 @@ class Scene {
         virtual void updateAspectRatio(float aspectRatio);
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage);
         virtual void addObject(GameObject* object);
+        virtual void removeObject(GameObject* object);
+
+    private:
+        void CheckCollisions();
 };
 
 #endif

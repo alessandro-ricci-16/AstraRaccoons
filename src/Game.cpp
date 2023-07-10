@@ -73,3 +73,7 @@ void Game::updateUniformBuffer(uint32_t currentImage) {
 	//Update the active scene
 	managedScenes.at(activeScene)->UpdateImpl(currentImage);
 }
+
+void Game::recreateVulkanSwapChain() {
+	framebufferResized = true;
+}

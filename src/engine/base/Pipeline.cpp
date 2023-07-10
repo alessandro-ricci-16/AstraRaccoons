@@ -206,7 +206,6 @@ void Pipeline::create() {
 	 	PrintVkError(result);
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
-	
 }
 
 void Pipeline::destroy() {

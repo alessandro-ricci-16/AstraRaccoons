@@ -1,6 +1,7 @@
 #define MESHOBJECT_IMPLEMENTATION
 #include "../../headers/objects/TestCubeObject.hpp"
 #include "../../headers/engine/base/Time.hpp"
+#include "../../headers/engine/scenes/Scene.hpp"
 
 #include <ctime>
 
@@ -15,6 +16,8 @@ void TestCubeObject::Instantiate() {
 	model.setShader("shaders/Shader_Vert.spv", "shaders/Shader_Frag.spv");
 	model.addTexture("textures/Checker.png");
     transform.TranslateBy(glm::vec3(-3, 0, 0));
+    //Add the collider
+    setCollider(1, 1, 1);
 }
 
 void TestCubeObject::Start() {
@@ -23,4 +26,11 @@ void TestCubeObject::Start() {
 
 void TestCubeObject::Update() {
     transform.Rotate(20*Time::getDeltaT(), glm::vec3(1, 0, 0));
+    if (moves) {
+        transform.TranslateBy(glm::vec3(-0.01, 0, 0));
+    }
+}
+
+void TestCubeObject::OnCollisionWith(GameObject* other) {
+    ((Scene*)parentScene)->removeObject(this);
 }

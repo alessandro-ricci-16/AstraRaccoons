@@ -10,11 +10,13 @@ struct TestCubeVertex {
     glm::vec3 norm;
 };
 
-class TestCubeObject: public MeshObject<TestCubeVertex> {
+class TestCubeObject: public MeshObject<TestCubeVertex>, public ICollidable {
     public:
+        bool moves;
         void Instantiate();
         void Start();
         void Update();
+        void OnCollisionWith(GameObject* other);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_TESTCUBEOBJECT_HPP_

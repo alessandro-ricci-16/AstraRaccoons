@@ -6,6 +6,19 @@ void TestScene::Instantiate() {
     TestCubeObject* object = new TestCubeObject();
     object->Instantiate();
     addObject(object);
+    TestCubeObject* object2 = new TestCubeObject();
+    object2->Instantiate();
+    object2->transform.TranslateTo(glm::vec3(3, 0, 0));
+    //object2->moves = true;
+    addObject(object2);
+    TestCubeObject* object3 = new TestCubeObject();
+    object3->Instantiate();
+    object3->transform.TranslateTo(glm::vec3(0, 2, 0));
+    addObject(object3);
+    TestCubeObject* object4 = new TestCubeObject();
+    object4->Instantiate();
+    object4->transform.TranslateTo(glm::vec3(0, 4, 0));
+    addObject(object4);
     //Set up the camera
     camera = Camera(glm::radians(90.0f), 0.1f, 100.0f);
     camera.setTarget(&(object->transform));

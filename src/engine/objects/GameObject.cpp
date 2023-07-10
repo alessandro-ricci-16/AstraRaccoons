@@ -1,4 +1,5 @@
 #include "../../../headers/engine/objects/GameObject.hpp"
+#include "../../../headers/engine/objects/Collider.hpp"
 
 GameObject::GameObject() {
     transform = Transform::identity();
@@ -7,6 +8,15 @@ GameObject::GameObject() {
 void GameObject::addChild(GameObject* child) {
     child->parentObject = this;
     children.push_back(child);
+}
+
+void GameObject::setCollider(float radius, uint8_t collisionLayer, uint8_t collisionMask) {
+    if (dynamic_cast<ICollidable*>(this) == nullptr) {
+        std::cout << "WARNING: Trying to set a collider to object " << this << " which does not conform to ICollidable! For safety, a collider will not be added to this object.\n";
+    } else {
+        collider = new Collider(radius, collisionLayer, collisionMask);
+        collider->setParent(this);
+    }
 }
 
 void GameObject::Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix) {
