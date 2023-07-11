@@ -72,6 +72,9 @@
         "concepts": "cpp",
         "numeric": "cpp",
         "algorithm": "cpp",
-        "memory_resource": "cpp"
-    }
+        "memory_resource": "cpp",
+        "__availability": "cpp",
+        "filesystem": "cpp"
+    },
+    "cmake.configureOnOpen": false
 }

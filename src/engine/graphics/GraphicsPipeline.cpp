@@ -4,6 +4,7 @@
 DSet::DSet() {
 	bindings = {};
 	setElements = {};
+	isCompiled = false;
 }
 
 void DSet::addTextureBinding(Texture* tex, VkShaderStageFlags shaderStage) {
@@ -24,13 +25,17 @@ void DSet::addUniformBinding(void* uniform, int uniformSize, VkShaderStageFlags 
 
 void DSet::compile(BaseProject* proj) {
 	//Compile the DescriptorSetLayout and DescriptorSet objects
-	compiledSetLayout.init(proj, bindings);
+	if (!isCompiled) {
+		compiledSetLayout.init(proj, bindings);
+		isCompiled = true;
+	}
 	std::vector<DescriptorSetElement> extractedElements = {};
 	for (int i = 0; i < setElements.size(); i++) {
 		extractedElements.push_back(setElements.at(i).setElement);
 	}
 
 	compiledSet.init(proj, &compiledSetLayout, extractedElements);
+	datasetsCleanedUp = false;
 }
 
 void DSet::map(int currentImage) {
@@ -42,6 +47,18 @@ void DSet::map(int currentImage) {
 			compiledSet.map(currentImage, setElement.uniformPtr, setElement.setElement.size, i);
 		}
 	}
+}
+
+void DSet::cleanup() {
+	compiledSet.cleanup();
+	datasetsCleanedUp = true;
+}
+
+void DSet::destroy() {
+	if (!datasetsCleanedUp) {
+		cleanup();
+	}
+	compiledSetLayout.cleanup();
 }
 
 void DSet::bind(VkCommandBuffer commandBuffer, Pipeline& pipeline, int setId, int currentImage) {
@@ -90,18 +107,24 @@ void GraphicsPipeline::addUniformBindingToLastSet(void* uniform, int uniformSize
 
 void GraphicsPipeline::compile(BaseProject* proj, VertexDescriptor* vertexDescriptor) {
 	// Compile descriptors & build the dsl pointer array
-	std::vector<DescriptorSetLayout*> dslPointers;
-	for (int i = 0; i < descriptorSets.size(); i++) {
-		descriptorSets.at(i)->compile(proj);
-		dslPointers.push_back(&(descriptorSets.at(i)->compiledSetLayout));
-	}
-	//if (!isInitialized) {
-		std::cout << "Compiling pipeline\n";
+	if (!isInitialized) {
+		std::vector<DescriptorSetLayout*> dslPointers;
+		for (int i = 0; i < descriptorSets.size(); i++) {
+			descriptorSets.at(i)->compile(proj);
+			dslPointers.push_back(&(descriptorSets.at(i)->compiledSetLayout));
+		}
 		compiledPipeline.init(proj, vertexDescriptor, vertexShaderName, fragmentShaderName, dslPointers);
 		isInitialized = true;
-	//}
-	//Create the pipeline
-	compiledPipeline.create();
+		//Create the pipeline
+		compiledPipeline.create();
+	} else {
+		//Create the pipeline
+		compiledPipeline.create();
+		//Recompile the data sets (and not the DSLs)
+		for (int i = 0; i < descriptorSets.size(); i++) {
+			descriptorSets.at(i)->compile(proj);
+		}
+	}
 }
 
 void GraphicsPipeline::bind(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline) {
@@ -125,20 +148,16 @@ void GraphicsPipeline::commitUniforms(int currentImage) {
 
 void GraphicsPipeline::cleanup() {
 	compiledPipeline.cleanup();
-	/*for (int i = 0; i < descriptorSets.size(); i++) {
-		descriptorSets.at(i)->compiledSet.cleanup();
-		descriptorSets.at(i)->compiledSetLayout.cleanup();
-		delete descriptorSets.at(i);
+	for (int i = 0; i < descriptorSets.size(); i++) {
+		descriptorSets.at(i)->cleanup();
 	}
-	descriptorSets = {};*/
 }
 
 void GraphicsPipeline::destroy() {
 	compiledPipeline.destroy();
 	isInitialized = false;
 	for (int i = 0; i < descriptorSets.size(); i++) {
-		descriptorSets.at(i)->compiledSet.cleanup();
-		descriptorSets.at(i)->compiledSetLayout.cleanup();
+		descriptorSets.at(i)->destroy();
 		delete descriptorSets.at(i);
 	}
 	descriptorSets = {};

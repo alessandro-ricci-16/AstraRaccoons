@@ -33,7 +33,6 @@ void Game::onWindowResize(int w, int h) {
 }
 
 void Game::localInit() {
-	std::cout << "Local init\n";
 	TestScene* testScene = new TestScene();
 	testScene->proj = this;
 	testScene->Instantiate();

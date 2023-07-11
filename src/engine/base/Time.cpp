@@ -1,4 +1,4 @@
-#include "..\..\..\headers\engine\base\Time.hpp"
+#include "../../../headers/engine/base/Time.hpp"
 
 std::chrono::steady_clock::time_point Time::lastTime = std::chrono::steady_clock::now();
 float Time::delT = 0.0f;

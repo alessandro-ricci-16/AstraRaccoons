@@ -16,6 +16,7 @@ class DSet {
 
         std::vector<DescriptorSetLayoutBinding> bindings;
         std::vector<DSetElement> setElements;
+        bool isCompiled, datasetsCleanedUp;
 
     public:
         DescriptorSet compiledSet;
@@ -26,6 +27,8 @@ class DSet {
         void addTextureBinding(Texture* tex, VkShaderStageFlags shaderStage);
         void addUniformBinding(void* uniform, int uniformSize, VkShaderStageFlags shaderStage);
         void compile(BaseProject* proj);
+        void cleanup();
+        void destroy();
         void map(int currentImage);
         void bind(VkCommandBuffer commandBuffer, Pipeline &pipeline, int setId, int currentImage);
 };

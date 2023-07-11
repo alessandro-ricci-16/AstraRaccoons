@@ -3,6 +3,7 @@
 ObjectVertexDescriptor::ObjectVertexDescriptor() {
     bindings = {};
     locations = {};
+    isCompiled = false;
 }
 
 void ObjectVertexDescriptor::addBinding(uint32_t size, bool changesPerVertex) {
@@ -17,8 +18,11 @@ void ObjectVertexDescriptor::addLocation(uint32_t bindingNumber, VkFormat format
     locations.push_back(location);
 }
 
-VertexDescriptor ObjectVertexDescriptor::compile(BaseProject* proj) {
-    VertexDescriptor VD;
-    VD.init(proj, bindings, locations);
-    return VD;
+VertexDescriptor* ObjectVertexDescriptor::compile(BaseProject* proj) {
+    if (!isCompiled) {
+        compiledDescriptor = new VertexDescriptor();
+        compiledDescriptor->init(proj, bindings, locations);
+        isCompiled = true;
+    }
+    return compiledDescriptor;
 }

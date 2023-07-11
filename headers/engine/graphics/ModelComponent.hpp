@@ -92,7 +92,7 @@ void ModelComponent<Vert>::setShader(std::string vertexStage,
 template <class Vert>
 void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
     // Compile the vertex descriptor & model
-    VertexDescriptor vd = vertexDescriptor->compile(proj);
+    VertexDescriptor* vd = vertexDescriptor->compile(proj);
     //Compile assets only if they have been cleaned up
     if (!isCompiled) {
         // Compile textures
@@ -112,32 +112,33 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
         } else {
             modelType = MGCG;
         }
-        model.init(proj, &vd, modelName, modelType);
-    }
-    //Compile the pipeline - this needs to be done even if all assets were compiled, since the pipeline may have been cleaned up
-    //Add all necessary sets & descriptor bindings
-    if (guboPtr != nullptr) {
-        //Bind Global uniforms
+        model.init(proj, vd, modelName, modelType);
+
+        //Compile the pipeline - this needs to be done even if all assets were compiled, since the pipeline may have been cleaned up
+        //Add all necessary sets & descriptor bindings
+        if (guboPtr != nullptr) {
+            //Bind Global uniforms
+            pipeline->addSet();
+            pipeline->addUniformBindingToLastSet(guboPtr, sizeof(GlobalUniforms), VK_SHADER_STAGE_ALL_GRAPHICS);
+        }
+        //Bind model uniforms
         pipeline->addSet();
-        pipeline->addUniformBindingToLastSet(guboPtr, sizeof(GlobalUniforms), VK_SHADER_STAGE_ALL_GRAPHICS);
-    }
-    //Bind model uniforms
-    pipeline->addSet();
-    pipeline->addUniformBindingToLastSet(&uniforms, sizeof(Uniforms), VK_SHADER_STAGE_ALL_GRAPHICS);
-    //Bind all textures in order
-    for (int i = 0; i < textures.size(); i++) {
-        Texture* tex = textures.at(i);
-        pipeline->addTextureBindingToLastSet(tex, VK_SHADER_STAGE_FRAGMENT_BIT);
-    }
-    //Bind each additional uniform in a separate set
-    for (int i = 0; i < additionalUniforms.size(); i++) {
-        UniformEntry entry = additionalUniforms.at(i);
-        pipeline->addSet();
-        pipeline->addUniformBindingToLastSet(entry.uniformPtr, entry.size, entry.stage);
+        pipeline->addUniformBindingToLastSet(&uniforms, sizeof(Uniforms), VK_SHADER_STAGE_ALL_GRAPHICS);
+        //Bind all textures in order
+        for (int i = 0; i < textures.size(); i++) {
+            Texture* tex = textures.at(i);
+            pipeline->addTextureBindingToLastSet(tex, VK_SHADER_STAGE_FRAGMENT_BIT);
+        }
+        //Bind each additional uniform in a separate set
+        for (int i = 0; i < additionalUniforms.size(); i++) {
+            UniformEntry entry = additionalUniforms.at(i);
+            pipeline->addSet();
+            pipeline->addUniformBindingToLastSet(entry.uniformPtr, entry.size, entry.stage);
+        }
     }
     
     //Compile the pipeline
-    pipeline->compile(proj, &vd);
+    pipeline->compile(proj, vd);
 
     isCompiled = true;
 }
@@ -152,7 +153,7 @@ void ModelComponent<Vert>::destroy() {
     for (int i = 0; i < textures.size(); i++) {
         Texture* tex = textures.at(i);
         tex->cleanup();
-        delete tex;
+        delete tex;9
     }
     textures = {};
     pipeline->destroy();

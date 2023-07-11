@@ -17,7 +17,7 @@ void Pipeline::init(BaseProject *bp, VertexDescriptor *vd,
 			createShaderModule(vertShaderCode);
 	fragShaderModule =
 			createShaderModule(fragShaderCode);
-	std::cout<<"\nCreated 2 shader modules\n";
+			
  	compareOp = VK_COMPARE_OP_LESS;
  	polyModel = VK_POLYGON_MODE_FILL;
  	CM = VK_CULL_MODE_BACK_BIT;
@@ -35,7 +35,7 @@ void Pipeline::setAdvancedFeatures(VkCompareOp _compareOp, VkPolygonMode _polyMo
 }
 
 
-void Pipeline::create() {	
+void Pipeline::create() {
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
     vertShaderStageInfo.sType =
     		VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -58,7 +58,7 @@ void Pipeline::create() {
 			VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 	auto bindingDescription = VD->getBindingDescription();
 	auto attributeDescriptions = VD->getAttributeDescriptions();
-			
+	
 	vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescription.size());
 	vertexInputInfo.vertexAttributeDescriptionCount =
 			static_cast<uint32_t>(attributeDescriptions.size());
@@ -211,7 +211,6 @@ void Pipeline::create() {
 void Pipeline::destroy() {
 	vkDestroyShaderModule(BP->device, fragShaderModule, nullptr);
 	vkDestroyShaderModule(BP->device, vertShaderModule, nullptr);
-	std::cout << "\nDestroyed 2 shader modules\n";
 }	
 
 void Pipeline::bind(VkCommandBuffer commandBuffer) {
@@ -240,6 +239,6 @@ VkShaderModule Pipeline::createShaderModule(const std::vector<char>& code) {
 }
 
 void Pipeline::cleanup() {
-		vkDestroyPipeline(BP->device, graphicsPipeline, nullptr);
-		vkDestroyPipelineLayout(BP->device, pipelineLayout, nullptr);
+    vkDestroyPipeline(BP->device, graphicsPipeline, nullptr);
+    vkDestroyPipelineLayout(BP->device, pipelineLayout, nullptr);
 }

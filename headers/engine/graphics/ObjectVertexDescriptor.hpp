@@ -9,6 +9,10 @@ struct Vertex {
 };
 
 class ObjectVertexDescriptor {
+    private:
+        VertexDescriptor* compiledDescriptor;
+        bool isCompiled;
+
     protected:
         std::vector<VertexBindingDescriptorElement> bindings;
         std::vector<VertexDescriptorElement> locations;
@@ -18,7 +22,7 @@ class ObjectVertexDescriptor {
 
         void addBinding(uint32_t size, bool changesPerVertex);
         void addLocation(uint32_t bindingNumber, VkFormat format, uint32_t offset, uint32_t size, VertexDescriptorElementUsage usage);
-        VertexDescriptor compile(BaseProject* proj);
+        VertexDescriptor* compile(BaseProject* proj);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_GRAPHICS_OBJECTVERTEXDESCRIPTOR_HPP_
