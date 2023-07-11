@@ -153,7 +153,7 @@ void ModelComponent<Vert>::destroy() {
     for (int i = 0; i < textures.size(); i++) {
         Texture* tex = textures.at(i);
         tex->cleanup();
-        delete tex;9
+        delete tex;
     }
     textures = {};
     pipeline->destroy();

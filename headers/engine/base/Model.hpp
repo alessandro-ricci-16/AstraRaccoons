@@ -35,20 +35,12 @@ class Model {
 #if defined(MODEL_IMPLEMENTATION_) || defined(__INTELLISENSE__)
 #undef MODEL_IMPLEMENTATION_
 
-#define TINYOBJLOADER_IMPLEMENTATION
 #include "../helpers/tiny_obj_loader.h"
-
-#define STB_IMAGE_IMPLEMENTATION
 #include "../helpers/stb_image.h"
-
-#define TINYGLTF_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
 #define TINYGLTF_NOEXCEPTION
 #define JSON_NOEXCEPTION
 #define TINYGLTF_NO_INCLUDE_STB_IMAGE
 #include "../helpers/tiny_gltf.h"
-
-#define SINFL_IMPLEMENTATION
 #include "../helpers/sinfl.h"
 
 #include "Texture.hpp"
@@ -431,6 +423,8 @@ void Model<Vert>::bind(VkCommandBuffer commandBuffer) {
                              VK_INDEX_TYPE_UINT32);
 }
 
+#if defined(TEXTURE_IMPLEMENTATION_) || defined(__INTELLISENSE__)
+#undef TEXTURE_IMPLEMENTATION_
 //Loading textures here because STBI :(
 
 void Texture::createTextureImage(const char *const files[], VkFormat Fmt) {
@@ -571,4 +565,5 @@ void Texture::cleanup() {
 	vkFreeMemory(BP->device, textureImageMemory, nullptr);
 }
 
+#endif
 #endif // MODEL_IMPLEMENTATION_
