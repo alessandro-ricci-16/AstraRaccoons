@@ -9,7 +9,7 @@ void TestScene::Instantiate() {
     TestCubeObject* object2 = new TestCubeObject();
     object2->Instantiate();
     object2->transform.TranslateTo(glm::vec3(3, 0, 0));
-    //object2->moves = true;
+    object2->moves = true;
     addObject(object2);
     TestCubeObject* object3 = new TestCubeObject();
     object3->Instantiate();

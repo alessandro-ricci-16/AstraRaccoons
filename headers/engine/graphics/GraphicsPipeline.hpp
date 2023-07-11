@@ -35,7 +35,7 @@ class GraphicsPipeline {
         std::string vertexShaderName, fragmentShaderName;
         std::vector<DSet*> descriptorSets;
         Pipeline compiledPipeline;
-
+        bool isInitialized;
     protected:
         uint32_t id;
 

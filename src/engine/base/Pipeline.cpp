@@ -17,7 +17,7 @@ void Pipeline::init(BaseProject *bp, VertexDescriptor *vd,
 			createShaderModule(vertShaderCode);
 	fragShaderModule =
 			createShaderModule(fragShaderCode);
-
+	std::cout<<"\nCreated 2 shader modules\n";
  	compareOp = VK_COMPARE_OP_LESS;
  	polyModel = VK_POLYGON_MODE_FILL;
  	CM = VK_CULL_MODE_BACK_BIT;
@@ -211,6 +211,7 @@ void Pipeline::create() {
 void Pipeline::destroy() {
 	vkDestroyShaderModule(BP->device, fragShaderModule, nullptr);
 	vkDestroyShaderModule(BP->device, vertShaderModule, nullptr);
+	std::cout << "\nDestroyed 2 shader modules\n";
 }	
 
 void Pipeline::bind(VkCommandBuffer commandBuffer) {

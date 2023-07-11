@@ -67,12 +67,14 @@ void Scene::CheckCollisions() {
 }
 
 void Scene::CompileObjects() {
+    std::cout << "Compiling active objects\n";
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->compile(proj, &gubos);
     }
 }
 
 void Scene::CleanupImpl() {
+    std::cout << "Cleanup:\n";
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->Cleanup();
     }

@@ -21,6 +21,7 @@ void Collider::setParent(GameObject* object) {
 bool Collider::checkCollisionWith(Collider* collider2) {
     //Check masks
     bool maskCheck = (collisionMask & collider2->collisionLayer) != 0;
+    if (!maskCheck) return false;
     //Get the origin of this collider
     glm::vec3 localOrigin = (parent->transform.getMatrix()) * glm::vec4(0, 0, 0, 1);
     //Get the origin of the other collider
@@ -30,5 +31,5 @@ bool Collider::checkCollisionWith(Collider* collider2) {
     //Subtract radii
     float subtractedDistance = colliderDistance - radius - collider2->radius;
     //If the last value is negative, we have a collision!
-    return subtractedDistance < 0 && maskCheck;
+    return subtractedDistance < 0;
 }
