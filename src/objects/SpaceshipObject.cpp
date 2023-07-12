@@ -12,8 +12,9 @@ void SpaceshipObject::Instantiate() {
     vertexDescriptor->addLocation(0, VK_FORMAT_R32G32_SFLOAT, offsetof(SpaceshipVertex, uv), sizeof(glm::vec2), UV);
     vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(SpaceshipVertex, norm), sizeof(glm::vec3), NORMAL);
     setModel("models/spaceship.obj", vertexDescriptor);
-    model.setShader("shaders/Shader_Vert.spv", "shaders/Shader_Frag.spv");
+    model.setShader("shaders/ShipShader_Vert.spv", "shaders/ShipShader_Frag.spv");
     model.addTexture("textures/spaceship/Albedo.png");
+    model.addTexture("textures/spaceship/MetallicRoughnessEmission.png");
     transform.TranslateBy(glm::vec3(-3, 0, 0));
     transform.Scale(glm::vec3(0.3f));
 }

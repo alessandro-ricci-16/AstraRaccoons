@@ -13,6 +13,8 @@ void TestScene::Instantiate() {
     //Set up lights
     gubos.pointLightPosition = glm::vec3(-1.0f, 0, 0.0f);
     gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    gubos.directionalLightDirection = glm::vec3(-1.0f, -1.f, 0.0f);
+    gubos.directionalLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     gubos.eyePos = camera.getCameraPosition(aspectRatio);
 }
 
