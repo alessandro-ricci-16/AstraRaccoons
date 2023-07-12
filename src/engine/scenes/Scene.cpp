@@ -42,6 +42,7 @@ void Scene::removeObject(GameObject* object) {
 
 void Scene::UpdateImpl(int currentimage) {
     glm::mat4 cameraMatrix = camera.getCameraMatrix(aspectRatio);
+    Update();
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->Update();
         activeObjects[i]->CommitUpdates(currentimage, cameraMatrix);

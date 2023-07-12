@@ -1,9 +1,10 @@
 #include "../../headers/scenes/TestScene.hpp"
-#include "../../headers/objects/SpaceshipObject.hpp"
+#include "../../headers/objects/MaterialTestSphere.hpp"
+#include <headers/engine/base/Time.hpp>
 
 void TestScene::Instantiate() {
     //Load & compile a test model
-    SpaceshipObject* object = new SpaceshipObject();
+    TestSphereObject* object = new TestSphereObject();
     object->Instantiate();
     addObject(object);
     //Set up the camera
@@ -11,15 +12,31 @@ void TestScene::Instantiate() {
     camera.setTarget(&(object->transform));
     camera.setTargetDistance(10);
     //Set up lights
-    gubos.pointLightPosition = glm::vec3(-1.0f, 0, 0.0f);
+    gubos.pointLightPosition = glm::vec3(2.0f, 0, 0.0f);
     gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    gubos.directionalLightDirection = glm::vec3(-1.0f, -1.f, 0.0f);
+    gubos.pointLightDecayFactor = 2; //Inverse-lineat
+    gubos.pointLightTargetDistance = 1;
+    gubos.directionalLightDirection = glm::vec3(-1.0f, 0, 0.0f);
     gubos.directionalLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    gubos.spotlightPosition = glm::vec3(2.0f, 0, -1.2f);
+    gubos.spotlightDirection = glm::vec3(0, 0, 1);
+    gubos.spotlightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    gubos.spotlightDecayFactor = 2;  // Inverse-lineat
+    gubos.spotlightTargetDistance = 1;
+    gubos.spotlightCosIn = 0.92f;
+    gubos.spotlightCosOut = 0.89f;
     gubos.eyePos = camera.getCameraPosition(aspectRatio);
 }
 
 void TestScene::Update() {
     //Update scene-level objects - NOT GameObjects, they are automatically managed by the scene
+    //Rotate the directional light over time
+    gubos.directionalLightDirection = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 1, 0)) * glm::vec4(gubos.directionalLightDirection , 1);
+    //Rotate the point light
+    gubos.pointLightPosition = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 0, 1)) * glm::vec4(gubos.pointLightPosition, 1);
+    //Move the spot light
+    gubos.spotlightPosition = glm::vec3(9.f * sin(time), 0, -2);
+    time += Time::getDeltaT();
     gubos.eyePos = camera.getCameraPosition(aspectRatio);
 }
 

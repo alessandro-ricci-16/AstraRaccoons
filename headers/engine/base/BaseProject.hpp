@@ -142,10 +142,10 @@ class BaseProject {
 		void RebuildPipeline();
 		// Control Wrapper
 		void handleGamePad(int id,  glm::vec3 &m, glm::vec3 &r, bool &fire);
-		void getSixAxis(float &deltaT, glm::vec3 &m, glm::vec3 &r, bool &fire);
 	
 	// Public part of the base class
 	public:
+		void getSixAxis(float &deltaT, glm::vec3 &m, glm::vec3 &r, bool &fire);
 		// Debug commands
 		void printFloat(const char *Name, float v);
 		void printVec2(const char *Name, glm::vec2 v);

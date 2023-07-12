@@ -1,5 +1,28 @@
 #define M_PI 3.141592653589793f
 
+vec3 PointLight(vec3 pointLightPosition, vec3 pointLightColor, vec3 fragPos, float beta, float g) {
+    vec3 dir = pointLightPosition - fragPos;
+	vec3 lightDir = normalize(dir);
+	float decay = pow(g / length(dir), beta);
+    return pointLightColor * decay;
+}
+
+vec3 DirectionalLight(vec3 lightDir, vec3 lightColor) {
+    return lightColor;
+}
+
+vec3 Spotlight(vec3 lightPos, vec3 lightCol, vec3 lightDir, vec3 fragPos, float decayExp, float baseDist, float cosin, float cosout) {
+	vec3 dir = lightPos - fragPos;
+	vec3 lightDirection = normalize(dir);
+	float decay = pow(baseDist / length(dir), decayExp);
+	vec3 lightColor = lightCol;
+	float cosalpha = dot(lightDirection, lightDirection);
+	float coneDimming = clamp((cosalpha - cosout) / (cosin - cosout), 0, 1);
+	lightColor = lightColor * decay * coneDimming;
+
+    return lightColor;
+}
+
 float Gggx(vec3 n, vec3 a, float rho) {
 	float pow2 = pow(clamp(dot(n, a), 0.0001f, 1), 2);
 	float term2 = (1 - pow2) / pow2;
@@ -14,7 +37,7 @@ vec3 LambertDiffuse(vec3 Md, vec3 L, vec3 N) {
     return Md * clamp(dot(L, N), 0, 1);
 }
 
-vec3 BlinnSpecular(vec3 V, vec3 N, vec3 L, vec3 Ms, float gamma) {
+vec3 PhongSpecular(vec3 V, vec3 N, vec3 L, vec3 Ms, float gamma) {
 	//vec3 V  - direction of the viewer
 	//vec3 N  - normal vector to the surface
 	//vec3 L  - light vector (from the light model)
@@ -25,7 +48,7 @@ vec3 BlinnSpecular(vec3 V, vec3 N, vec3 L, vec3 Ms, float gamma) {
 	return phong;
 } //Combine with lambert as <lambert> + <blinn>
 
-vec3 PhongSpecular(vec3 V, vec3 N, vec3 L, vec3 Ms, float gamma) {
+vec3 BlinnSpecular(vec3 V, vec3 N, vec3 L, vec3 Ms, float gamma) {
 	//vec3 V  - direction of the viewer
 	//vec3 N  - normal vector to the surface
 	//vec3 L  - light vector (from the light model)
@@ -34,7 +57,7 @@ vec3 PhongSpecular(vec3 V, vec3 N, vec3 L, vec3 Ms, float gamma) {
 	vec3 R = normalize(L + V);
 	vec3 blinn = Ms * pow(clamp(dot(N, R), 0, 1), gamma);
 	return blinn;
-} //Combine with lambert as <lambert> + <phong>
+} //Combine with lambert as <lambert> + <blinn>
 
 vec3 OrenNayarDiffuse(vec3 V, vec3 N, vec3 L, vec3 Md, float sigma) {
 	//vec3 V  - direction of the viewer
@@ -76,3 +99,4 @@ vec3 GGXDiffuseSpecular(vec3 V, vec3 N, vec3 L, vec3 Md, float F0, float metalli
 	vec3 diffuse = LambertDiffuse(Md, L, N);
 	return K * diffuse + (1 - K) * specular;
 } //Diffuse + Specular already combined!
+

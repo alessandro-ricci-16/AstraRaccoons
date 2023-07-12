@@ -6,6 +6,7 @@
 
 class TestScene: public Scene {
     public:
+        float time;
         void Instantiate();
         void Update();
         void Destroy();
