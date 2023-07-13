@@ -18,7 +18,7 @@ void Pipeline::init(BaseProject *bp, VertexDescriptor *vd,
 	fragShaderModule =
 			createShaderModule(fragShaderCode);
 			
- 	compareOp = VK_COMPARE_OP_LESS;
+ 	compareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
  	polyModel = VK_POLYGON_MODE_FILL;
  	CM = VK_CULL_MODE_BACK_BIT;
  	transp = false;

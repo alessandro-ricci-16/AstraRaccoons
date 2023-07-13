@@ -16,7 +16,6 @@ void SpaceshipObject::Instantiate() {
     model.setShader("shaders/ShipShader_Vert.spv", "shaders/ShipShader_Frag.spv");
     model.addTexture("textures/spaceship/Albedo.png");
     model.addTexture("textures/spaceship/MetallicRoughnessEmission.png");
-    transform.TranslateBy(glm::vec3(-3, 0, 0));
     transform.Scale(glm::vec3(0.3f));
     vel = glm::vec3(0.0f);
     angVel = glm::vec3(0.0f);

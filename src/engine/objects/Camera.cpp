@@ -12,7 +12,7 @@ void Camera::setTarget(Transform* targetTransform) {
 }
 
 void Camera::setTargetDistance(float targetDistance) {
-    this->distance = targetDistance/6;
+    this->distance = targetDistance;
 }
 
 glm::mat4 Camera::getCameraMatrix() {

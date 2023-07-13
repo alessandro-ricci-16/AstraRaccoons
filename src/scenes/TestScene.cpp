@@ -1,6 +1,7 @@
 #include "../../headers/scenes/TestScene.hpp"
 #include "../../headers/objects/SpaceshipObject.hpp"
 #include "../../headers/objects/SkyBoxObject.hpp"
+#include <headers/objects/TestCubeObject.hpp>
 #include <headers/engine/base/Time.hpp>
 
 void TestScene::Instantiate() {
@@ -11,11 +12,11 @@ void TestScene::Instantiate() {
     //Set up the camera
     camera = Camera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
     camera.setTarget(&(object->transform));
-    camera.setTargetDistance(30);
-    //Load skybox
-    /*SkyBoxObject* sky = new SkyBoxObject(camera);
-    sky->Instantiate();
-    addObject(sky);*/
+    camera.setTargetDistance(5);
+    // Load skybox
+    SkyBoxObject* skybox = new SkyBoxObject(camera);
+    skybox->Instantiate();
+    addObject(skybox);
     //Set up lights
     gubos.pointLightPosition = glm::vec3(.5f, 0, 1.0f);
     gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
