@@ -89,6 +89,7 @@ void Scene::CleanupImpl() {
 void Scene::DestroyImpl() {
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->Destroy();
+        delete activeObjects.at(i);
     }
     Destroy();
     activeObjects = {};
@@ -98,4 +99,8 @@ void Scene::DestroyImpl() {
         delete removedObjects.at(i);
     }
     removedObjects = {};
+}
+
+Scene::~Scene() {
+    //Everything deallocated on Destroy
 }

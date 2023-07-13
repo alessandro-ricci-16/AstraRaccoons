@@ -18,6 +18,7 @@ class GameObject {
         void* parentScene;
 
         GameObject();
+        virtual ~GameObject();
 
         virtual void Instantiate() = 0;
         virtual void Start() = 0;

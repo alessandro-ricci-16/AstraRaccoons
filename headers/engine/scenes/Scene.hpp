@@ -27,6 +27,7 @@ class Scene {
         GraphicsPipeline* activePipeline;
         
         Scene();
+        virtual ~Scene();
         
         //Perform initial scene setup
         virtual void Instantiate() = 0;

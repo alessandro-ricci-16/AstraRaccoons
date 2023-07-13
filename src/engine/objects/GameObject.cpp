@@ -40,3 +40,10 @@ void GameObject::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
         children.at(i)->compile(proj, guboPtr);
     }
 }
+
+GameObject::~GameObject() {
+    for (int i = 0; i < children.size(); i++) {
+        delete children.at(i);
+    }
+    children.clear();
+}

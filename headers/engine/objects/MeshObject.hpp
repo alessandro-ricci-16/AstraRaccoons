@@ -10,6 +10,7 @@ template <class Vert>
 class MeshObject: public GameObject {
     public:
         ModelComponent<Vert> model;
+        virtual ~MeshObject();
 
         void setModel(std::string name, ObjectVertexDescriptor* vertexDescriptor);
         void compile(BaseProject* proj, GlobalUniforms* guboPtr) override;
@@ -82,6 +83,14 @@ void MeshObject<Vert>::Cleanup() {
     for (int i = 0; i < children.size(); i++) {
         children.at(i)->Cleanup();
     }
+}
+
+template <class Vert>
+MeshObject<Vert>::~MeshObject() {
+    for (int i = 0; i < children.size(); i++) {
+        delete children.at(i);
+    }
+    children.clear();
 }
 
 #endif  // MESHOBJECT_IMPLEMENTATION
