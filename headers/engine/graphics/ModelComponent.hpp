@@ -159,6 +159,7 @@ void ModelComponent<Vert>::destroy() {
     pipeline->destroy();
     model.cleanup();
     isCompiled = false;
+    delete vertexDescriptor;
 }
 
 template <class Vert>

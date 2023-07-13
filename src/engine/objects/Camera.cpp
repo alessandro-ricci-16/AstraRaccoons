@@ -11,7 +11,7 @@ void Camera::setTarget(Transform* targetTransform) {
 }
 
 void Camera::setTargetDistance(float targetDistance) {
-    this->distance = targetDistance;
+    this->distance = targetDistance/6;
 }
 
 glm::mat4 Camera::getCameraMatrix(float aspectRatio) {
@@ -25,8 +25,8 @@ glm::mat4 Camera::getCameraMatrix(float aspectRatio) {
 
     glm::mat4 Prj = glm::perspective(FOVy, aspectRatio, nearPlane, farPlane);
     Prj[1][1] *= -1;
-    glm::vec3 camTarget = glm::vec3(0, 0, 0);
-    glm::vec3 camPos = camTarget + glm::vec3(0, 0, -2);
+    glm::vec3 camTarget = this->target->getPos() + vec4(0, 1, 0, 1);
+    glm::vec3 camPos = this->target->getPos() + vec4(0, 0.3*distance, -distance, 1);
     glm::mat4 View = glm::lookAt(camPos, camTarget, glm::vec3(0, 1, 0));
     return Prj * View;
 }

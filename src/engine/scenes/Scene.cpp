@@ -95,6 +95,7 @@ void Scene::DestroyImpl() {
     for (int i = 0; i < removedObjects.size(); i++) {
         removedObjects[i]->Cleanup();
         removedObjects[i]->Destroy();
+        delete removedObjects.at(i);
     }
     removedObjects = {};
 }

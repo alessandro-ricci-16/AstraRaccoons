@@ -24,6 +24,7 @@ class Transform {
         void Rotate(float by, vec3 around);
         void RotateBy(vec3 by);
         void Scale(vec3 by);
+        vec4 getPos();
 
         mat4 getMatrix();
 
