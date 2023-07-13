@@ -18,9 +18,9 @@ void SkyBoxObject::Instantiate() {
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(SkyBoxObjectVertex, norm), sizeof(glm::vec3), NORMAL);
 	setModel("models/SkyBoxCube.obj", vertexDescriptor);
 	model.setShader("shaders/SkyBox_Vert.spv", "shaders/SkyBox_Frag.spv");
-	const std::vector<std::string> textures = {"textures/sky/bkg1_right.png", "textures/sky/bkg1_left.png",
-							  "textures/sky/bkg1_top.png",   "textures/sky/bkg1_bot.png",
-							  "textures/sky/bkg1_front.png", "textures/sky/bkg1_back.png" };
+	const std::vector<std::string> textures = {"textures/sky/right.png", "textures/sky/left.png",
+							  "textures/sky/top.png",   "textures/sky/bottom.png",
+							  "textures/sky/front.png", "textures/sky/back.png" };
 	model.addCubicTexture(textures);
 	transform.Scale(glm::vec3(100, 100, 100));
 }

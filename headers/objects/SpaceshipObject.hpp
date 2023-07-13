@@ -17,7 +17,9 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         const float maxVel = 10.0f;
         const float maxAngVel = 180.0f;
         const float acc = 5.0f;
+        const float dec = 0.5f;
         const float angAcc = 90.0f;
+        const float angDec = 4.0f;
 
     public:
         void Instantiate();
