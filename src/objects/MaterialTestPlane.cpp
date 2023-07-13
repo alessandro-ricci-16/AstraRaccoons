@@ -22,6 +22,8 @@ void TestPlaneObject::Instantiate() {
     model.setShader("shaders/Shader_Vert.spv", "shaders/Shader_Frag.spv");
     model.addTexture("textures/Checker.png");
     transform.Rotate(180, glm::vec3(1, 0, 0));
+    //Enable GUBOs -- REQUIRED if the shader uses them!
+    acceptsGUBOs = true;
 }
 
 void TestPlaneObject::Start() {}

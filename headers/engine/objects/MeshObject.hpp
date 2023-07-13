@@ -35,7 +35,7 @@ class MeshObject: public GameObject {
 
 template <class Vert>
 void MeshObject<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
-    model.compile(proj, guboPtr);
+    model.compile(proj, acceptsGUBOs ? guboPtr : nullptr);
     for (int i = 0; i < children.size(); i++) {
         children.at(i)->compile(proj, guboPtr);
     }

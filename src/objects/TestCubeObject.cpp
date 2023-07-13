@@ -18,6 +18,8 @@ void TestCubeObject::Instantiate() {
     transform.TranslateTo(glm::vec3(0, 0, -1));
     //Add the collider
     setCollider(1, 1, 1);
+    // Enable GUBOs -- REQUIRED if the shader uses them!
+    acceptsGUBOs = true;
 }
 
 void TestCubeObject::Start() {

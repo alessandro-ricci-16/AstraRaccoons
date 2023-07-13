@@ -20,6 +20,8 @@ void SpaceshipObject::Instantiate() {
     transform.Scale(glm::vec3(0.3f));
     vel = glm::vec3(0.0f);
     angVel = glm::vec3(0.0f);
+    // Enable GUBOs -- REQUIRED if the shader uses them!
+    acceptsGUBOs = true;
 }
 
 void SpaceshipObject::Start() {}

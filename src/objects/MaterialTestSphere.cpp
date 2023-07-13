@@ -21,6 +21,8 @@ void TestSphereObject::Instantiate() {
     setModel("models/Sphere.gltf", vertexDescriptor);
     model.setShader("shaders/Shader_Vert.spv", "shaders/Shader_Frag.spv");
     model.addTexture("textures/Checker.png");
+    // Enable GUBOs -- REQUIRED if the shader uses them!
+    acceptsGUBOs = true;
 }
 
 void TestSphereObject::Start() {}

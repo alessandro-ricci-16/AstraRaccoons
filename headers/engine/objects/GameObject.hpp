@@ -11,6 +11,7 @@ class GameObject {
     protected:
         GameObject* parentObject;
         std::vector<GameObject*> children;
+        bool acceptsGUBOs;
 
     public:
         Transform transform;
