@@ -17,5 +17,5 @@ void main() {
 	gl_Position = ubo.mvpMat * vec4(inPosition, 1.0);
 	outPosition = gl_Position.xyz;
 	outUV = inUV;
-	outNormal = inNormal;
+	outNormal = (ubo.mvpMat * vec4(inNormal, 1.0)).xyz;
 }

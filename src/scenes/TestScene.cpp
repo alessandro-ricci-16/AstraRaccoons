@@ -12,16 +12,16 @@ void TestScene::Instantiate() {
     camera.setTarget(&(object->transform));
     camera.setTargetDistance(30);
     //Set up lights
-    gubos.pointLightPosition = glm::vec3(2.0f, 0, 0.0f);
-    //gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    gubos.pointLightPosition = glm::vec3(.5f, 0, 1.0f);
+    gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     gubos.pointLightDecayFactor = 2; //Inverse-lineat
-    gubos.pointLightTargetDistance = 1;
-    gubos.directionalLightDirection = glm::vec3(-1.0f, 0, 0.0f);
-    //gubos.directionalLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    gubos.pointLightTargetDistance = 2;
+    gubos.directionalLightDirection = glm::vec3(0, 0, 1);
+    gubos.directionalLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     gubos.spotlightPosition = glm::vec3(0, 0, 1.2f);
     gubos.spotlightDirection = glm::vec3(0, 0, -1);
     gubos.spotlightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    gubos.spotlightDecayFactor = 2;  // Inverse-lineat
+    gubos.spotlightDecayFactor = 2;  // Inverse-linear
     gubos.spotlightTargetDistance = 1.5f;
     gubos.spotlightCosIn = 0.92f;
     gubos.spotlightCosOut = 0.89f;
@@ -31,7 +31,7 @@ void TestScene::Instantiate() {
 void TestScene::Update() {
     //Update scene-level objects - NOT GameObjects, they are automatically managed by the scene
     //Rotate the directional light over time
-    gubos.directionalLightDirection = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 1, 0)) * glm::vec4(gubos.directionalLightDirection , 1);
+    //gubos.directionalLightDirection = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 1, 0)) * glm::vec4(gubos.directionalLightDirection , 1);
     //Rotate the point light
     gubos.pointLightPosition = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 0, 1)) * glm::vec4(gubos.pointLightPosition, 1);
     //Move the spot light
