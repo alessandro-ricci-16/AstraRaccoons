@@ -29,5 +29,4 @@ void SkyBoxObject::Start() {
 }
 
 void SkyBoxObject::Update() {
-	transform.TranslateTo(camera.getCameraPosition());
 }

@@ -14,7 +14,7 @@ layout(location = 2) in vec3 inNormal;
 void main()
 {
     fragTexCoord = inPosition;
-    vec4 pos = ubo.mvpMat * vec4(inPosition, 1.0);
+    vec4 pos = ubo.mvpMat * vec4(inPosition, 0.0);
     gl_Position = pos.xyww;
 }
 
