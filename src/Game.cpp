@@ -3,7 +3,7 @@
 #include "../headers/engine/base/Time.hpp"
 
 Game::Game() {
-    managedScenes = {};
+	managedScenes = {};
 
 	activeScene = 0;
 }
@@ -14,27 +14,27 @@ void Game::setWindowParameters() {
 	windowWidth = 800;
 	windowHeight = 600;
 	windowTitle = "AstroRaccoons";
-   	windowResizable = GLFW_TRUE;
-	initialBackgroundColor = {0.0f, 0.005f, 0.01f, 1.0f};
-	
+	windowResizable = GLFW_TRUE;
+	initialBackgroundColor = { 0.0f, 0.005f, 0.01f, 1.0f };
+
 	// Descriptor pool sizes
 	uniformBlocksInPool = 10;
-	texturesInPool = 4;
+	texturesInPool = 10;
 	setsInPool = 10;
-	
+
 	Ar = (float)windowWidth / (float)windowHeight;
 }
 
 void Game::onWindowResize(int w, int h) {
-	Ar = (float)w / (float)h;
+	if (w & h) {
+		Ar = (float)w / (float)h;
+	}
 }
 
 void Game::localInit() {
 	TestScene* testScene = new TestScene(&Ar);
 	testScene->proj = this;
-	std::cout << "0\n";
 	testScene->Instantiate();
-	std::cout << "1\n";
 	managedScenes.push_back(testScene);
 }
 
@@ -67,7 +67,7 @@ void Game::updateUniformBuffer(uint32_t currentImage) {
 	Time::computeDeltaT();
 
 	// Standard procedure to quit when the ESC key is pressed
-	if(glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 	//Update the active scene

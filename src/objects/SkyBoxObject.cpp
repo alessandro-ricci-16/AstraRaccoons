@@ -30,5 +30,4 @@ void SkyBoxObject::Start() {
 
 void SkyBoxObject::Update() {
 	transform.TranslateTo(camera.getCameraPosition());
-	//std::cout << camera.getCameraPosition().x << " " << camera.getCameraPosition().y << " " << camera.getCameraPosition().z << "\n";
 }

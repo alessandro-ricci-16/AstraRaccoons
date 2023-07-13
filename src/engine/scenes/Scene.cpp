@@ -37,10 +37,12 @@ void Scene::removeObject(GameObject* object) {
 }
 
 void Scene::UpdateImpl(int currentimage) {
-    glm::mat4 cameraMatrix = camera.getCameraMatrix();
     Update();
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->Update();
+    }
+    glm::mat4 cameraMatrix = camera.getCameraMatrix();
+    for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->CommitUpdates(currentimage, cameraMatrix);
     }
     //Now check for collisions

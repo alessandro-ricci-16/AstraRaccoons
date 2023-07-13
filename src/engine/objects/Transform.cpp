@@ -41,8 +41,8 @@ mat4 Transform::getMatrix() {
 	return translationMatrix * rotationMatrix * scaleMatrix;
 }
 
-vec4 Transform::getPos() {
-	return translationMatrix * vec4(0, 0, 0, 1);
+vec3 Transform::getPos() {
+	return vec3(translationMatrix[3]);
 }
 
 Transform Transform::identity() {

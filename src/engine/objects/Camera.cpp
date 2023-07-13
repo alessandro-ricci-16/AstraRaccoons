@@ -26,12 +26,12 @@ glm::mat4 Camera::getCameraMatrix() {
     
     glm::mat4 Prj = glm::perspective(FOVy, *aspectRatio, nearPlane, farPlane);
     Prj[1][1] *= -1;
-    glm::vec3 camTarget = this->target->getPos() + vec4(0, 1, 0, 1);
-    glm::vec3 camPos = this->target->getPos() + vec4(0, 0.3*distance, -distance, 1);
+    glm::vec3 camTarget = this->target->getPos() + glm::vec3(0, 1, 0);
+    glm::vec3 camPos = this->target->getPos() + glm::vec3(0, 0.3 * distance, -distance);
     glm::mat4 View = glm::lookAt(camPos, camTarget, glm::vec3(0, 1, 0));
     return Prj * View;
 }
 
 glm::vec3 Camera::getCameraPosition() {
-    return getCameraMatrix() * glm::vec4(0, 0, 0, 1);
+    return glm::vec3(getCameraMatrix() * glm::vec4(0, 0, 0, 1));
 }
