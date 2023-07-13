@@ -17,44 +17,6 @@ void Inputs::getSixAxis(glm::vec3& mov, glm::vec3& rot, bool& fire) {
     m.y = -glfwGetKey(window, GLFW_KEY_F) + glfwGetKey(window, GLFW_KEY_R);
     m.z = -glfwGetKey(window, GLFW_KEY_S) + glfwGetKey(window, GLFW_KEY_W);
 
-    /*if (glfwGetKey(window, GLFW_KEY_LEFT)) {
-        r.y = -1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
-        r.y = 1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_UP)) {
-        r.x = -1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_DOWN)) {
-        r.x = 1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_Q)) {
-        r.z = 1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_E)) {
-        r.z = -1.0f;
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_A)) {
-        m.x = -1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_D)) {
-        m.x = 1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_S)) {
-        m.z = -1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_W)) {
-        m.z = 1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_R)) {
-        m.y = 1.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_F)) {
-        m.y = -1.0f;
-    }*/
-
     fire = glfwGetKey(window, GLFW_KEY_SPACE) |
         glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
     handleGamePad(GLFW_JOYSTICK_1, m, r, fire);

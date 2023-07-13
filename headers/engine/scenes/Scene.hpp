@@ -18,7 +18,7 @@ class Scene {
     protected:
         std::unordered_map<uint8_t, std::vector<Collider*>> activeColliders; //Maps the collision mask to the colliders with that mask
         Camera camera;
-        float aspectRatio;
+        float* aspectRatio;
         GlobalUniforms gubos;
 
     public:
@@ -26,7 +26,7 @@ class Scene {
         BaseProject* proj;
         GraphicsPipeline* activePipeline;
         
-        Scene();
+        Scene(float* ar);
         virtual ~Scene();
         
         //Perform initial scene setup
@@ -42,7 +42,6 @@ class Scene {
         void DestroyImpl();
         void CleanupImpl();
         void CompileObjects();
-        virtual void updateAspectRatio(float aspectRatio);
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage);
         virtual void addObject(GameObject* object);
         virtual void removeObject(GameObject* object);

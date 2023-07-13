@@ -27,22 +27,20 @@ void Game::setWindowParameters() {
 
 void Game::onWindowResize(int w, int h) {
 	Ar = (float)w / (float)h;
-	for (int i = 0; i < managedScenes.size(); i++) {
-		managedScenes.at(i)->updateAspectRatio(Ar);
-	}
 }
 
 void Game::localInit() {
-	TestScene* testScene = new TestScene();
+	TestScene* testScene = new TestScene(&Ar);
 	testScene->proj = this;
+	std::cout << "0\n";
 	testScene->Instantiate();
+	std::cout << "1\n";
 	managedScenes.push_back(testScene);
 }
 
 void Game::pipelinesAndDescriptorSetsInit() {
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes.at(i)->proj = this;
-		managedScenes.at(i)->updateAspectRatio(Ar); //Initialize aspect ratio in scene
 		managedScenes.at(i)->CompileObjects();
 	}
 }

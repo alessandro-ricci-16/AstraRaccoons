@@ -11,16 +11,17 @@ class Camera {
         float farPlane;
         Transform* target;
         float distance;
+        float* aspectRatio;
 
     public:
         Camera() = default;
-        Camera(float FOVy, float nearPlane, float farPlane);
+        Camera(float FOVy, float nearPlane, float farPlane, float* aspectRatio);
 
         void setTarget(Transform* targetTransform);
         void setTargetDistance(float targetDistance);
 
-        glm::mat4 getCameraMatrix(float aspectRatio); //Prj * View
-        glm::vec3 getCameraPosition(float aspectRatio);
+        glm::mat4 getCameraMatrix(); //Prj * View
+        glm::vec3 getCameraPosition();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_ENGINE_OBJECTS_CAMERA_HPP_

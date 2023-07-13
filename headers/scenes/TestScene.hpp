@@ -6,6 +6,7 @@
 
 class TestScene: public Scene {
     public:
+        TestScene(float* ar) : Scene(ar) {}
         float time;
         void Instantiate();
         void Update();

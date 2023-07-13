@@ -1,20 +1,25 @@
 #include "../../headers/scenes/TestScene.hpp"
-#include "../../headers/objects/TestCubeObject.hpp"
+#include "../../headers/objects/SpaceshipObject.hpp"
+#include "../../headers/objects/SkyBoxObject.hpp"
 #include <headers/engine/base/Time.hpp>
 
 void TestScene::Instantiate() {
     //Load & compile a test model
-    TestCubeObject* object = new TestCubeObject();
+    SpaceshipObject* object = new SpaceshipObject();
     object->Instantiate();
     addObject(object);
     //Set up the camera
-    camera = Camera(glm::radians(90.0f), 0.1f, 100.0f);
+    camera = Camera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
     camera.setTarget(&(object->transform));
     camera.setTargetDistance(30);
+    //Load skybox
+    /*SkyBoxObject* sky = new SkyBoxObject(camera);
+    sky->Instantiate();
+    addObject(sky);*/
     //Set up lights
     gubos.pointLightPosition = glm::vec3(.5f, 0, 1.0f);
     gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    gubos.pointLightDecayFactor = 2; //Inverse-lineat
+    gubos.pointLightDecayFactor = 2; // Inverse-linear
     gubos.pointLightTargetDistance = 2;
     gubos.directionalLightDirection = glm::vec3(0, 0, 1);
     gubos.directionalLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -25,7 +30,7 @@ void TestScene::Instantiate() {
     gubos.spotlightTargetDistance = 1.5f;
     gubos.spotlightCosIn = 0.92f;
     gubos.spotlightCosOut = 0.89f;
-    gubos.eyePos = camera.getCameraPosition(aspectRatio);
+    gubos.eyePos = camera.getCameraPosition();
 }
 
 void TestScene::Update() {
@@ -37,7 +42,7 @@ void TestScene::Update() {
     //Move the spot light
     //gubos.spotlightPosition = glm::vec3(9.f * sin(time), 0, -2);
     time += Time::getDeltaT();
-    gubos.eyePos = camera.getCameraPosition(aspectRatio);
+    gubos.eyePos = camera.getCameraPosition();
 }
 
 void TestScene::Destroy() {

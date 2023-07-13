@@ -112,13 +112,11 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
             if (textureNames[i].size() == 1) {
                 tex->init(proj, textureNames.at(i).at(0).c_str());
             } else {
-                const char** filenames = (const char**) malloc(6 * sizeof(char*));
+                const char* filenames[6];
                 for (int j = 0; j < 6; j++) {
-                    filenames[i] = textureNames[i][j].c_str();
+                    filenames[j] = textureNames.at(i).at(j).c_str();
                 }
-                
                 tex->initCubic(proj, filenames);
-                free(filenames);
             }
             textures.push_back(tex);
         }
