@@ -1,16 +1,16 @@
 #include "../../headers/scenes/TestScene.hpp"
-#include "../../headers/objects/MaterialTestSphere.hpp"
+#include "../../headers/objects/SpaceshipObject.hpp"
 #include <headers/engine/base/Time.hpp>
 
 void TestScene::Instantiate() {
     //Load & compile a test model
-    TestSphereObject* object = new TestSphereObject();
+    SpaceshipObject* object = new SpaceshipObject();
     object->Instantiate();
     addObject(object);
     //Set up the camera
     camera = Camera(glm::radians(90.0f), 0.1f, 100.0f);
     camera.setTarget(&(object->transform));
-    camera.setTargetDistance(10);
+    camera.setTargetDistance(30);
     //Set up lights
     gubos.pointLightPosition = glm::vec3(2.0f, 0, 0.0f);
     gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);

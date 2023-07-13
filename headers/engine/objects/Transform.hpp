@@ -20,7 +20,9 @@ class Transform {
         };
         void TranslateTo(vec3 to);
         void TranslateBy(vec3 by);
+        void TranslateLocalBy(vec3 by);
         void Rotate(float by, vec3 around);
+        void RotateBy(vec3 by);
         void Scale(vec3 by);
 
         mat4 getMatrix();
