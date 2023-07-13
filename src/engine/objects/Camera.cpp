@@ -22,11 +22,16 @@ glm::mat4 Camera::getCameraMatrix(float aspectRatio) {
     glm::vec3 camTarget = target->getMatrix() * glm::vec4(0, 0, 0, 1);
     glm::vec3 camPos = target->getMatrix() * glm::vec4(0, 0, distance, 1);
     glm::mat4 View = glm::lookAt(camPos, camTarget, glm::vec3(0, 1, 0));*/
-
+    
     glm::mat4 Prj = glm::perspective(FOVy, aspectRatio, nearPlane, farPlane);
     Prj[1][1] *= -1;
+<<<<<<< HEAD
     glm::vec3 camTarget = this->target->getPos() + vec4(0, 1, 0, 1);
     glm::vec3 camPos = this->target->getPos() + vec4(0, 0.3*distance, -distance, 1);
+=======
+    glm::vec3 camTarget = glm::vec3(0, 0, 0);
+    glm::vec3 camPos = camTarget + glm::vec3(0, 0, 2);
+>>>>>>> 60e4ebb6a569f3db8a908d6298d0956dc40a69dd
     glm::mat4 View = glm::lookAt(camPos, camTarget, glm::vec3(0, 1, 0));
     return Prj * View;
 }
