@@ -17,9 +17,14 @@ class ModelComponent {
             VkShaderStageFlagBits stage;
         };
 
+        struct TextureEntry {
+            const char** filenames;
+            int size;
+        };
+
         std::string modelName;
         std::string vertexStage, fragmentStage;
-        std::vector<std::string> textureNames;
+        std::vector<std::vector<std::string>> textureNames;
         std::vector<UniformEntry> additionalUniforms;
         bool isCompiled;
 
@@ -37,6 +42,7 @@ class ModelComponent {
         ModelComponent(std::string name, ObjectVertexDescriptor* vertexDescriptor);
 
         void addTexture(std::string name);
+        void addCubicTexture(std::vector<std::string> files);
         void addUniformData(void* uniformPtr, int size, VkShaderStageFlagBits stage);
         void setShader(std::string vertexStage, std::string fragmentStage);
         void compile(BaseProject* proj, GlobalUniforms* guboPtr);
@@ -73,7 +79,12 @@ ModelComponent<Vert>::ModelComponent(std::string name, ObjectVertexDescriptor* v
 
 template <class Vert>
 void ModelComponent<Vert>::addTexture(std::string name) {
-    textureNames.push_back(name);
+    textureNames.push_back({ name });
+}
+
+template <class Vert>
+void ModelComponent<Vert>::addCubicTexture(std::vector<std::string> files) {
+    textureNames.push_back(files);
 }
 
 template <class Vert>
@@ -98,7 +109,17 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
         // Compile textures
         for (int i = 0; i < textureNames.size(); i++) {
             Texture* tex = new Texture();
-            tex->init(proj, textureNames.at(i).c_str());
+            if (textureNames[i].size() == 1) {
+                tex->init(proj, textureNames.at(i).at(0).c_str());
+            } else {
+                const char** filenames = (const char**) malloc(6 * sizeof(char*));
+                for (int j = 0; j < 6; j++) {
+                    filenames[i] = textureNames[i][j].c_str();
+                }
+                
+                tex->initCubic(proj, filenames);
+                free(filenames);
+            }
             textures.push_back(tex);
         }
         //Derive the model type from the file extension
