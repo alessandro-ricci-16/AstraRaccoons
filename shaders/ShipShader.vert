@@ -21,8 +21,8 @@ void main() {
 	gl_Position = ubo.mvpMat * vec4(inPosition, 1.0);
 	outPosition = gl_Position.xyz;
 	outUV = inUV;
-	outNormal = inNormal;
+	outNormal = vec3(ubo.mvpMat * vec4(inNormal, 1.0));
 
-	outPosition_Reflections = vec3(ubo.modelMat * vec4(inPosition, 1.0));
+	outPosition_Reflections = vec3(ubo.modelMat * mat4(vec4(100, 0, 0, 0), vec4(0, 100, 0, 0), vec4(0, 0, 100, 0), vec4(0, 0, 0, 1)) * vec4(inPosition, 0.0));
 	outNormal_Reflections = mat3(transpose(inverse(ubo.modelMat))) * inNormal;
 }
