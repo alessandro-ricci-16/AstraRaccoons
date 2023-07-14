@@ -11,25 +11,23 @@ void Camera::setTarget(Transform* targetTransform) {
     this->target = targetTransform;
 }
 
-void Camera::setTargetDistance(float targetDistance) {
+void Camera::setTargetDistance(vec3 targetDistance) {
     this->distance = targetDistance;
 }
 
 glm::mat4 Camera::getCameraMatrix() {
-    //Get the projection
-    /*glm::mat4 Prj = glm::perspective(FOVy, aspectRatio, nearPlane, farPlane);
-    Prj[1][1] *= -1;
-    //Get the View
-    glm::vec3 camTarget = target->getMatrix() * glm::vec4(0, 0, 0, 1);
-    glm::vec3 camPos = target->getMatrix() * glm::vec4(0, 0, distance, 1);
-    glm::mat4 View = glm::lookAt(camPos, camTarget, glm::vec3(0, 1, 0));*/
-    
-    glm::mat4 Prj = glm::perspective(FOVy, *aspectRatio, nearPlane, farPlane);
-    Prj[1][1] *= -1;
-    glm::vec3 camTarget = this->target->getPos() + glm::vec3(0, 1, 0);
-    glm::vec3 camPos = this->target->getPos() + glm::vec3(0, 0.3 * distance, -distance);
-    glm::mat4 View = glm::lookAt(camPos, camTarget, glm::vec3(0, 1, 0));
-    return Prj * View;
+    targetMat = target->getMatrix();
+    uy = glm::normalize(glm::vec3(targetMat * glm::vec4(0, 1, 0, 0)));
+  
+    camTarget = target->getPos() + 2.0f*uy;
+    camPos = glm::vec3(targetMat * glm::vec4(distance, 1));
+
+    prj = glm::perspective(FOVy, *aspectRatio, nearPlane, farPlane);
+    prj[1][1] *= -1;
+
+    view = glm::lookAt(camPos, camTarget, uy);
+
+    return prj * view;
 }
 
 glm::vec3 Camera::getCameraPosition() {
