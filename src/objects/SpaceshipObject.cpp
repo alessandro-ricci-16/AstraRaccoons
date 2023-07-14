@@ -36,14 +36,8 @@ void SpaceshipObject::Update() {
 	rot *= glm::vec3(1, -1, -1);
 	mov *= glm::vec3(-1, 1, 1);
 	// increments velocity by movement * acceleration, decrements where there is no movement linearly to velocity
-	vel += (mov * acc - (glm::vec3(1.0f) - glm::abs(mov)) * dec * vel) * Time::getDeltaT();
-	angVel += (rot * angAcc - (glm::vec3(1.0f) - glm::abs(rot)) * angDec * angVel) * Time::getDeltaT();
-	float velLen = glm::length(vel);
-	float angVelLen = glm::length(angVel);
-	if (velLen > maxVel)
-		vel *= (maxVel / velLen);
-	if (angVelLen > maxAngVel)
-		angVel *= (maxAngVel / angVelLen);
+	vel += (mov * acc - dec * vel) * Time::getDeltaT();
+	angVel += (rot * angAcc - angDec * angVel) * Time::getDeltaT();
 	transform.TranslateLocalBy(vel * Time::getDeltaT());
 	transform.RotateBy(angVel * Time::getDeltaT());
 }
