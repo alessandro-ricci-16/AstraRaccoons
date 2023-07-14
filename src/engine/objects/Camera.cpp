@@ -13,6 +13,9 @@ void Camera::setTarget(Transform* targetTransform) {
 
 void Camera::setTargetDistance(vec3 targetDistance) {
     this->distance = targetDistance;
+    targetMat = target->getMatrix();
+    dampedPos = glm::vec3(targetMat * glm::vec4(distance, 1));
+    camPos = dampedPos;
 }
 
 glm::mat4 Camera::getCameraMatrix() {
@@ -22,10 +25,12 @@ glm::mat4 Camera::getCameraMatrix() {
     camTarget = target->getPos() + 2.0f*uy;
     camPos = glm::vec3(targetMat * glm::vec4(distance, 1));
 
+    dampedPos = DAMP(dampedPos, camPos, Time::getDeltaT());
+
     prj = glm::perspective(FOVy, *aspectRatio, nearPlane, farPlane);
     prj[1][1] *= -1;
 
-    view = glm::lookAt(camPos, camTarget, uy);
+    view = glm::lookAt(dampedPos, camTarget, uy);
 
     return prj * view;
 }
