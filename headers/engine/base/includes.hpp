@@ -13,6 +13,7 @@
 #include <set>
 #include <stdexcept>
 #include <vector>
+#include <unordered_map>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
