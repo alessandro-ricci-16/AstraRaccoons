@@ -6,6 +6,8 @@
 layout(location = 0) in vec3 fragPos;
 layout(location = 1) in vec3 fragNorm;
 layout(location = 2) in vec2 fragUV;
+layout(location = 3) in vec3 fragNormal_Reflections;
+layout(location = 4) in vec3 fragPosition_Reflections;
 
 layout(location = 0) out vec4 outColor;
 
@@ -22,6 +24,7 @@ layout(set = 0, binding = 0) uniform GlobalUniformBufferObject {
 
 layout(set = 1, binding = 1) uniform sampler2D albedo;
 layout(set = 1, binding = 2) uniform sampler2D metallicRoughnessEmission;
+layout(set = 1, binding = 3) uniform samplerCube skybox;
 
 const float beta = 0.2f;
 const float g = 1.5;
@@ -64,5 +67,12 @@ void main() {
 	vec3 Ambient = albedoCol * 0.05f;
 	vec3 emissionColor = emission * albedoCol;
 	
-	outColor = vec4(clamp(0.95 * DiffSpec * lightColor.rgb + Ambient + emissionColor, 0.0, 1.0), 1.0f);
+	//For cubemap reflections
+	vec3 I = normalize(gubo.eyePos - fragPosition_Reflections);
+    vec3 R = reflect(I, normalize(fragNormal_Reflections));
+    vec3 reflectionColor = texture(skybox, R).rgb;
+	float reflectivity = 1 - roughness;
+	float F0 = reflectivity * reflectivity;
+	
+	outColor = vec4(clamp(mix(0.95f * DiffSpec * lightColor.rgb + Ambient + emissionColor, reflectionColor, F0), 0.0, 1.0), 1.0f);
 }

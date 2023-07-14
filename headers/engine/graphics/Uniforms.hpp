@@ -23,6 +23,8 @@ struct GlobalUniforms {
 
 struct Uniforms {
     alignas(16) glm::mat4 mvpMat;
+    alignas(16) glm::mat4 modelMat;
+    alignas(16) glm::mat4 cameraMat;
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_GRAPHICS_UNIFORMS_HPP_
