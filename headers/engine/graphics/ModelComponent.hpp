@@ -7,6 +7,7 @@
 #include "../base/Texture.hpp"
 #include "ObjectVertexDescriptor.hpp"
 #include "GraphicsPipeline.hpp"
+#include <headers/engine/base/TexturePool.hpp>
 
 template <class Vert>
 class ModelComponent {
@@ -108,15 +109,21 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
     if (!isCompiled) {
         // Compile textures
         for (int i = 0; i < textureNames.size(); i++) {
-            Texture* tex = new Texture();
-            if (textureNames[i].size() == 1) {
-                tex->init(proj, textureNames.at(i).at(0).c_str());
-            } else {
-                const char* filenames[6];
-                for (int j = 0; j < 6; j++) {
-                    filenames[j] = textureNames.at(i).at(j).c_str();
+            Texture* tex = TexturePool::getTexture(textureNames[i]);
+            if (tex == nullptr) {
+                tex = new Texture();
+                if (textureNames[i].size() == 1) {
+                    tex->init(proj, textureNames.at(i).at(0).c_str());
+                } else {
+                    const char* filenames[6];
+                    for (int j = 0; j < 6; j++) {
+                        filenames[j] = textureNames.at(i).at(j).c_str();
+                    }
+                    tex->initCubic(proj, filenames);
                 }
-                tex->initCubic(proj, filenames);
+                TexturePool::addTextureIfNotPresent(textureNames.at(i), tex);
+            } else {
+                TexturePool::registerTextureUsage(textureNames[i]);
             }
             textures.push_back(tex);
         }
@@ -169,12 +176,11 @@ void ModelComponent<Vert>::cleanup() {
 
 template <class Vert>
 void ModelComponent<Vert>::destroy() {
-    for (int i = 0; i < textures.size(); i++) {
-        Texture* tex = textures.at(i);
-        tex->cleanup();
-        delete tex;
+    for (int i = 0; i < textureNames.size(); i++) {
+        TexturePool::removeTexture(textureNames[i]);
     }
-    textures = {};
+    textureNames.clear();
+    textures.clear();
     pipeline->destroy();
     model.cleanup();
     isCompiled = false;

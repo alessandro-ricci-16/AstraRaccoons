@@ -16,6 +16,10 @@ void SpaceshipObject::Instantiate() {
 	model.setShader("shaders/ShipShader_Vert.spv", "shaders/ShipShader_Frag.spv");
 	model.addTexture("textures/spaceship/Albedo.png");
 	model.addTexture("textures/spaceship/MetallicRoughnessEmission.png");
+    const std::vector<std::string> textures = {"textures/sky/right.png", "textures/sky/left.png",
+							  "textures/sky/top.png",   "textures/sky/bottom.png",
+							  "textures/sky/front.png", "textures/sky/back.png" };
+	model.addCubicTexture(textures);
 	transform.Scale(glm::vec3(0.3f));
 	vel = glm::vec3(0.0f);
 	angVel = glm::vec3(0.0f);
