@@ -43,7 +43,6 @@ void TestScene::Update() {
     //Move the spot light
     //gubos.spotlightPosition = glm::vec3(9.f * sin(time), 0, -2);
     time += Time::getDeltaT();
-    gubos.eyePos = camera.getCameraPosition();
 }
 
 void TestScene::Destroy() {
