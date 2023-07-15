@@ -19,7 +19,7 @@ void Game::setWindowParameters() {
 
 	// Descriptor pool sizes
 	uniformBlocksInPool = 10;
-	texturesInPool = 10;
+	texturesInPool = 6;
 	setsInPool = 10;
 
 	Ar = (float)windowWidth / (float)windowHeight;

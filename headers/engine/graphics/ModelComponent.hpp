@@ -123,6 +123,11 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
                 }
                 TexturePool::addTextureIfNotPresent(textureNames.at(i), tex);
             } else {
+                std::cout << "Retrieved texture ";
+                for (std::string str: textureNames[i]) {
+                    std::cout << str << " - ";
+                }
+                std::cout << "\n";
                 TexturePool::registerTextureUsage(textureNames[i]);
             }
             textures.push_back(tex);
