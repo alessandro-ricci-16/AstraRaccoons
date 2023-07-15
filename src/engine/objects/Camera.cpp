@@ -36,5 +36,5 @@ glm::mat4 Camera::getCameraMatrix() {
 }
 
 glm::vec3 Camera::getCameraPosition() {
-    return glm::vec3(getCameraMatrix() * glm::vec4(0, 0, 0, 1));
+    return dampedPos;
 }

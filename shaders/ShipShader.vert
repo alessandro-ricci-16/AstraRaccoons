@@ -4,6 +4,7 @@
 layout(set = 1, binding = 0) uniform UniformBufferObject {
 	mat4 mvpMat;
 	mat4 modelMat;
+	mat4 nMat;
 	mat4 cameraMat;
 } ubo;
 
@@ -14,15 +15,10 @@ layout(location = 2) in vec3 inNormal;
 layout(location = 0) out vec3 outPosition;
 layout(location = 1) out vec3 outNormal;
 layout(location = 2) out vec2 outUV;
-layout(location = 3) out vec3 outNormal_Reflections;
-layout(location = 4) out vec3 outPosition_Reflections;
 
 void main() {
 	gl_Position = ubo.mvpMat * vec4(inPosition, 1.0);
-	outPosition = gl_Position.xyz;
+	outPosition = (ubo.modelMat * vec4(inPosition, 1.0)).xyz;
 	outUV = inUV;
-	outNormal = vec3(ubo.mvpMat * vec4(inNormal, 1.0));
-
-	outPosition_Reflections = vec3(ubo.modelMat * mat4(vec4(100, 0, 0, 0), vec4(0, 100, 0, 0), vec4(0, 0, 100, 0), vec4(0, 0, 0, 1)) * vec4(inPosition, 0.0));
-	outNormal_Reflections = mat3(transpose(inverse(ubo.modelMat))) * inNormal;
+	outNormal = (ubo.nMat * vec4(inNormal, 0)).xyz;
 }

@@ -4,6 +4,7 @@
 layout(set = 1, binding = 0) uniform UniformBufferObject {
 	mat4 mvpMat;
 	mat4 modelMat;
+	mat4 nMat;
 	mat4 cameraMat;
 } ubo;
 
@@ -17,7 +18,7 @@ layout(location = 2) out vec2 outUV;
 
 void main() {
 	gl_Position = ubo.mvpMat * vec4(inPosition, 1.0);
-	outPosition = gl_Position.xyz;
+	outPosition = (ubo.modelMat * vec4(inPosition, 1.0)).xyz;
 	outUV = inUV;
-	outNormal = (ubo.mvpMat * vec4(inNormal, 1.0)).xyz;
+	outNormal = (ubo.nMat * vec4(inNormal, 0.0)).xyz;
 }

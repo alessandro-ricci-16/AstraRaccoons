@@ -18,7 +18,7 @@ void SpaceshipObject::Instantiate() {
 	model.addTexture("textures/spaceship/MetallicRoughnessEmission.png");
     const std::vector<std::string> textures = {"textures/sky/right.png", "textures/sky/left.png",
 							  "textures/sky/top.png",   "textures/sky/bottom.png",
-							  "textures/sky/front.png", "textures/sky/back.png" };
+							  "textures/sky/back.png", "textures/sky/front.png" };
 	model.addCubicTexture(textures);
 	transform.Scale(glm::vec3(0.3f));
 	vel = glm::vec3(0.0f);

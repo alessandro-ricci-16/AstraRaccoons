@@ -6,19 +6,23 @@
 layout(location = 0) in vec3 fragPos;
 layout(location = 1) in vec3 fragNorm;
 layout(location = 2) in vec2 fragUV;
-layout(location = 3) in vec3 fragNormal_Reflections;
-layout(location = 4) in vec3 fragPosition_Reflections;
 
 layout(location = 0) out vec4 outColor;
 
 layout(set = 0, binding = 0) uniform GlobalUniformBufferObject {
-	vec3 pointLightPosition;           // position of the point light
-    vec4 pointLightColor;              // color of the point light
-    vec3 directionalLightDirection;    // direction of the directional light
-    vec4 directionalLightColor;        // color of the directional light
-    vec3 spotlightPosition;            // postion of the spotlight
-    vec3 spotlightDirection;           // direction of the spotlight/directional light
-    vec4 spotlightColor;               // color of the light
+	vec3 pointLightPosition;           	// position of the point light
+    vec4 pointLightColor;              	// color of the point light
+	float pointLightDecayFactor;		// decay factor
+    float pointLightTargetDistance;		// target distance
+    vec3 directionalLightDirection;    	// direction of the directional light
+    vec4 directionalLightColor;        	// color of the directional light
+    vec3 spotlightPosition;            	// postion of the spotlight
+    vec3 spotlightDirection;           	// direction of the spotlight/directional light
+    vec4 spotlightColor;               	// color of the light
+	float spotlightDecayFactor;			// decay factor
+    float spotlightTargetDistance;		// target distance
+	float spotlightCosIn;
+    float spotlightCosOut;
     vec3 eyePos;
 } gubo;
 
@@ -68,11 +72,11 @@ void main() {
 	vec3 emissionColor = emission * albedoCol;
 	
 	//For cubemap reflections
-	vec3 I = normalize(gubo.eyePos - fragPosition_Reflections);
-    vec3 R = reflect(I, normalize(fragNormal_Reflections));
-    vec3 reflectionColor = texture(skybox, R).rgb;
+	vec3 I = -normalize(gubo.eyePos - fragPos);
+    vec3 R = reflect(I, Norm);
 	float reflectivity = 1 - roughness;
-	float F0 = reflectivity * reflectivity;
+	float F0 = pow(reflectivity, 4);
+	vec3 reflectionColor = texture(skybox, R).xyz * F0;
 	
-	outColor = vec4(clamp(mix(0.95f * DiffSpec * lightColor.rgb + Ambient + emissionColor, reflectionColor, F0), 0.0, 1.0), 1.0f);
+	outColor = vec4(clamp(DiffSpec + Ambient + emissionColor + reflectionColor, 0.0, 1.0), 1.0f);
 }

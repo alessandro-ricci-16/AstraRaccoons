@@ -61,6 +61,7 @@ template <class Vert>
 void MeshObject<Vert>::CommitUpdates(int currentImage, glm::mat4 cameraMatrix) {
     //Update model uniforms with the object transform
     model.uniforms.modelMat = transform.getMatrix();
+    model.uniforms.nMat = glm::inverse(glm::transpose(model.uniforms.modelMat));
     model.uniforms.cameraMat = cameraMatrix;
     model.uniforms.mvpMat = cameraMatrix * model.uniforms.modelMat;
     //Commit updates

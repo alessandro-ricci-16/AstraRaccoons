@@ -20,9 +20,8 @@ void SkyBoxObject::Instantiate() {
 	model.setShader("shaders/SkyBox_Vert.spv", "shaders/SkyBox_Frag.spv");
 	const std::vector<std::string> textures = {"textures/sky/right.png", "textures/sky/left.png",
 							  "textures/sky/top.png",   "textures/sky/bottom.png",
-							  "textures/sky/front.png", "textures/sky/back.png" };
+							  "textures/sky/back.png", "textures/sky/front.png" };
 	model.addCubicTexture(textures);
-	transform.Scale(glm::vec3(100, 100, 100));
 }
 
 void SkyBoxObject::Start() {

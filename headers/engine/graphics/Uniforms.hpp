@@ -24,6 +24,7 @@ struct GlobalUniforms {
 struct Uniforms {
     alignas(16) glm::mat4 mvpMat;
     alignas(16) glm::mat4 modelMat;
+    alignas(16) glm::mat4 nMat;
     alignas(16) glm::mat4 cameraMat;
 };
 
