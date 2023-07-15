@@ -7,6 +7,7 @@
 SkyBoxObject::SkyBoxObject(Camera c) {
 	transform = Transform::identity();
 	camera = c;
+	acceptsGUBOs = false;
 }
 
 void SkyBoxObject::Instantiate() {
@@ -22,6 +23,7 @@ void SkyBoxObject::Instantiate() {
 							  "textures/sky/top.png",   "textures/sky/bottom.png",
 							  "textures/sky/back.png", "textures/sky/front.png" };
 	model.addCubicTexture(textures);
+	acceptsGUBOs = false;
 }
 
 void SkyBoxObject::Start() {
