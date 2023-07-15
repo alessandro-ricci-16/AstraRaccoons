@@ -19,11 +19,11 @@ void GameObject::setCollider(float radius, uint8_t collisionLayer, uint8_t colli
     }
 }
 
-void GameObject::Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix) {
+void GameObject::Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline) {
     // Don't do anything since this object has no mesh!
     // Recursively draw all children
     for (int i = 0; i < children.size(); i++) {
-        children.at(i)->Draw(commandBuffer, currentImage, activePipeline, cameraMatrix);
+        children.at(i)->Draw(commandBuffer, currentImage, activePipeline);
     }
 }
 

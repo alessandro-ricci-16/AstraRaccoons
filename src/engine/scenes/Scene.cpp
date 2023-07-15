@@ -10,7 +10,7 @@ void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
     glm::mat4 cameraMatrix = camera.getCameraMatrix();
     for (int i = 0; i < activeObjects.size(); i++) {
         GameObject* object = activeObjects[i];
-        object->Draw(commandBuffer, currentImage, this->activePipeline, cameraMatrix);
+        object->Draw(commandBuffer, currentImage, this->activePipeline);
     }
 }
 

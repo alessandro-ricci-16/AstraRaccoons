@@ -22,7 +22,7 @@ class MeshObject: public GameObject {
         virtual void Cleanup();
         void CommitUpdates(int currentimage, glm::mat4 cameraMatrix) override;
 
-        void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix) override;
+        void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline) override;
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_MESHOBJECT_HPP_
@@ -47,12 +47,12 @@ void MeshObject<Vert>::setModel(std::string name, ObjectVertexDescriptor* vertex
 }
 
 template <class Vert>
-void MeshObject<Vert>::Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix) {
+void MeshObject<Vert>::Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline) {
     //Draw the model
     model.Draw(commandBuffer, currentImage, activePipeline);
     //Recursively draw all children
     for (int i = 0; i < children.size(); i++) {
-        children.at(i)->Draw(commandBuffer, currentImage, activePipeline, cameraMatrix);
+        children.at(i)->Draw(commandBuffer, currentImage, activePipeline);
     }
     
 }

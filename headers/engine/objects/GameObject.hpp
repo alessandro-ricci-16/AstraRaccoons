@@ -31,7 +31,7 @@ class GameObject {
         virtual void compile(BaseProject* proj, GlobalUniforms* guboPtr);
         virtual void addChild(GameObject* child);
         virtual void setCollider(float radius, uint8_t collisionLayer, uint8_t collisionMask);
-        virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline, glm::mat4 cameraMatrix);
+        virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline);
 };
 
 class ICollidable {
