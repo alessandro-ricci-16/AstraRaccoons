@@ -33,8 +33,8 @@ void SpaceshipObject::Update() {
 	glm::vec3 mov, rot;
 	bool fire = false;
 	Inputs::getSixAxis(mov, rot, fire);
-	rot *= glm::vec3(1, -1, -1);
-	mov *= glm::vec3(-1, 1, 1);
+	rot *= glm::vec3(-1, -1, 1);
+	mov *= glm::vec3(1, 1, -1);
 	// increments velocity by movement * acceleration, decrements where there is no movement linearly to velocity
 	vel += (mov * acc - dec * vel) * Time::getDeltaT();
 	angVel += (rot * angAcc - angDec * angVel) * Time::getDeltaT();

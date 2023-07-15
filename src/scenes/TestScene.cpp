@@ -12,7 +12,7 @@ void TestScene::Instantiate() {
     //Set up the camera
     camera = Camera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
     camera.setTarget(&(object->transform));
-    camera.setTargetDistance(vec3(0, 6, -17));
+    camera.setTargetDistance(vec3(0, 6, 17));
     // Load skybox
     SkyBoxObject* skybox = new SkyBoxObject(camera);
     skybox->Instantiate();
