@@ -13,6 +13,7 @@ class MeshObject: public GameObject {
         virtual ~MeshObject();
 
         void setModel(std::string name, ObjectVertexDescriptor* vertexDescriptor);
+        void setModel(std::vector<Vert> vertices, std::vector<uint32_t> indices, ObjectVertexDescriptor* vertexDescriptor);
         void compile(BaseProject* proj, GlobalUniforms* guboPtr) override;
 
         virtual void Instantiate() = 0;
@@ -47,6 +48,11 @@ void MeshObject<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
 template <class Vert>
 void MeshObject<Vert>::setModel(std::string name, ObjectVertexDescriptor* vertexDescriptor) {
     model = ModelComponent<Vert>(name, vertexDescriptor);
+}
+
+template <class Vert>
+void MeshObject<Vert>::setModel(std::vector<Vert> vertices, std::vector<uint32_t> indices, ObjectVertexDescriptor* vertexDescriptor) {
+    model = ModelComponent<Vert>(vertices, indices, vertexDescriptor);
 }
 
 template <class Vert>

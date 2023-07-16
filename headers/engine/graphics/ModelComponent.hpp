@@ -23,7 +23,10 @@ class ModelComponent {
             int size;
         };
 
-        std::string modelName;
+        std::string modelName;          // For loaded models
+        std::vector<Vert> verts;        // For procedural meshes
+        std::vector<uint32_t> indices;  // For procedural meshes
+        bool isProcedural;
         std::string vertexStage, fragmentStage;
         std::vector<std::vector<std::string>> textureNames;
         std::vector<UniformEntry> additionalUniforms;
@@ -38,9 +41,11 @@ class ModelComponent {
 
    public:
         Uniforms uniforms;
+        bool isTransparent, backfaceCullingOn;
 
         ModelComponent() = default;
         ModelComponent(std::string name, ObjectVertexDescriptor* vertexDescriptor);
+        ModelComponent(std::vector<Vert> verts, std::vector<uint32_t> indices, ObjectVertexDescriptor* vertexDescriptor);
 
         void addTexture(std::string name);
         void addCubicTexture(std::vector<std::string> files);
@@ -66,6 +71,7 @@ class ModelComponent {
 #include "../base/Model.hpp"
 
 #include <unordered_map>
+#include "../base/Random.hpp"
 
 template <class Vert>
 ModelComponent<Vert>::ModelComponent(std::string name, ObjectVertexDescriptor* vertexDescriptor) {
@@ -79,6 +85,30 @@ ModelComponent<Vert>::ModelComponent(std::string name, ObjectVertexDescriptor* v
     id = hasher(name);
     this->vertexDescriptor = vertexDescriptor;
     isCompiled = false;
+    isProcedural = false;
+    isTransparent = false;
+    backfaceCullingOn = true;
+}
+
+template <class Vert>
+ModelComponent<Vert>::ModelComponent(std::vector<Vert> verts, std::vector<uint32_t> indices, ObjectVertexDescriptor* vertexDescriptor) {
+    this->verts = {};
+    this->indices = {};
+    copy(verts.begin(), verts.end(), back_inserter(this->verts));
+    copy(indices.begin(), indices.end(), back_inserter(this->indices));
+    modelName = "";
+    vertexStage = "";
+    fragmentStage = "";
+    textureNames = {};
+    textures = {};
+    // Generate the ID from the hash of the model name (used to recycle models)
+    std::hash<std::string> hasher;
+    id = (uint32_t)Random::randomInt(0, UINT32_MAX);
+    this->vertexDescriptor = vertexDescriptor;
+    isCompiled = false;
+    isProcedural = true;
+    isTransparent = false;
+    backfaceCullingOn = true;
 }
 
 template <class Vert>
@@ -145,19 +175,27 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
             }
             textures.push_back(tex);
         }
-        //Derive the model type from the file extension
-        std::filesystem::path modelPath = modelName;
-        std::string modelExtension = modelPath.extension().string();
-        ModelType modelType;
-        if (modelExtension == ".obj") {
-            modelType = OBJ;
-        } else if (modelExtension == ".gltf") {
-            modelType = GLTF;
+        if (!isProcedural) {
+            // Derive the model type from the file extension
+            std::filesystem::path modelPath = modelName;
+            std::string modelExtension = modelPath.extension().string();
+            ModelType modelType;
+            if (modelExtension == ".obj") {
+                modelType = OBJ;
+            } else if (modelExtension == ".gltf") {
+                modelType = GLTF;
+            } else {
+                modelType = MGCG;
+            }
+            model.init(proj, vd, modelName, modelType);
         } else {
-            modelType = MGCG;
+            model.vertices = verts;
+            model.indices = indices;
+            model.initMesh(proj, vd);
         }
-        model.init(proj, vd, modelName, modelType);
 
+        pipeline->isTransparent = isTransparent;
+        pipeline->backfaceCullingOn = backfaceCullingOn;
         //Compile the pipeline - this needs to be done even if all assets were compiled, since the pipeline may have been cleaned up
         //Add all necessary sets & descriptor bindings
         if (guboPtr != nullptr) {
