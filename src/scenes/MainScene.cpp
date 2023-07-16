@@ -1,11 +1,11 @@
-#include "../../headers/scenes/TestScene.hpp"
+#include "../../headers/scenes/MainScene.hpp"
 #include "../../headers/objects/SpaceshipObject.hpp"
 #include "../../headers/objects/SkyBoxObject.hpp"
 #include <headers/objects/TestCubeObject.hpp>
 #include <headers/objects/asteroids/SimpleAsteroidObject.hpp>
 #include <headers/engine/base/Time.hpp>
 
-void TestScene::Instantiate() {
+void MainScene::Instantiate() {
     //Load & compile a test model
     SpaceshipObject* object = new SpaceshipObject();
     object->Instantiate();
@@ -39,7 +39,7 @@ void TestScene::Instantiate() {
     gubos.eyePos = camera.getCameraPosition();
 }
 
-void TestScene::Update() {
+void MainScene::Update() {
     //Update scene-level objects - NOT GameObjects, they are automatically managed by the scene
     //Rotate the directional light over time
     //gubos.directionalLightDirection = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 1, 0)) * glm::vec4(gubos.directionalLightDirection , 1);
@@ -58,10 +58,10 @@ void TestScene::Update() {
     time += Time::getDeltaT();
 }
 
-void TestScene::Destroy() {
+void MainScene::Destroy() {
     //Perform destruction of local objects not covered under the standard scene lifecycle
 }
 
-void TestScene::Cleanup() {
+void MainScene::Cleanup() {
     //Perform cleanup of local objects not covered under the standard scene lifecycle
 }

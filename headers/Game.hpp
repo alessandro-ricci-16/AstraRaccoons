@@ -2,7 +2,7 @@
 #define GAME_DEFINED
 
 #include "engine/base/BaseProject.hpp"
-#include "scenes/TestScene.hpp"
+#include "scenes/MainScene.hpp"
 
 class Game: public BaseProject {
     protected:

@@ -1,5 +1,5 @@
 #include "../headers/Game.hpp"
-#include "../headers/scenes/TestScene.hpp"
+#include "../headers/scenes/MainScene.hpp"
 #include "../headers/engine/base/Time.hpp"
 
 Game::Game() {
@@ -32,10 +32,10 @@ void Game::onWindowResize(int w, int h) {
 }
 
 void Game::localInit() {
-	TestScene* testScene = new TestScene(&Ar);
-	testScene->proj = this;
-	testScene->Instantiate();
-	managedScenes.push_back(testScene);
+	MainScene* mainScene = new MainScene(&Ar);
+	mainScene->proj = this;
+	mainScene->Instantiate();
+	managedScenes.push_back(mainScene);
 }
 
 void Game::pipelinesAndDescriptorSetsInit() {
