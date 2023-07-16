@@ -22,6 +22,9 @@ class MeshObject: public GameObject {
         virtual void Cleanup();
         void CommitUpdates(int currentimage, glm::mat4 cameraMatrix) override;
 
+        int textureCount() override;
+        int uniformsCount() override;
+
         void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline) override;
 };
 
@@ -44,6 +47,24 @@ void MeshObject<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
 template <class Vert>
 void MeshObject<Vert>::setModel(std::string name, ObjectVertexDescriptor* vertexDescriptor) {
     model = ModelComponent<Vert>(name, vertexDescriptor);
+}
+
+template <class Vert>
+int MeshObject<Vert>::textureCount() {
+    int myTexCount = model.textureCount();
+    for (int i = 0; i < children.size(); i++) {
+        myTexCount += children[i]->textureCount();
+    }
+    return myTexCount;
+}
+
+template <class Vert>
+int MeshObject<Vert>::uniformsCount() {
+    int myUniformCount = model.uniformCount() + (acceptsGUBOs ? 1 : 0);
+    for (int i = 0; i < children.size(); i++) {
+        myUniformCount += children[i]->uniformsCount();
+    }
+    return myUniformCount;
 }
 
 template <class Vert>

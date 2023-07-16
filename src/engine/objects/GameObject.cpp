@@ -19,6 +19,22 @@ void GameObject::setCollider(float radius, uint8_t collisionLayer, uint8_t colli
     }
 }
 
+int GameObject::textureCount() {
+    int myTexCount = 0;
+    for (int i = 0; i < children.size(); i++) {
+        myTexCount += children[i]->textureCount();
+    }
+    return myTexCount;
+}
+
+int GameObject::uniformsCount() {
+    int myUniformCount = 0;
+    for (int i = 0; i < children.size(); i++) {
+        myUniformCount += children[i]->uniformsCount();
+    }
+    return myUniformCount;
+}
+
 void GameObject::Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline) {
     // Don't do anything since this object has no mesh!
     // Recursively draw all children

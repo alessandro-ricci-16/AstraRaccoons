@@ -5,6 +5,11 @@
 #include "../engine/scenes/Scene.hpp"
 
 class TestScene: public Scene {
+    private:
+        float lastSpawnTime;
+        float spawnDeltaTime;
+        GameObject* player;
+
     public:
         TestScene(float* ar) : Scene(ar) {}
         float time;

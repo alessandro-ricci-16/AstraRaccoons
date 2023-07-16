@@ -19,7 +19,7 @@ void Game::setWindowParameters() {
 
 	// Descriptor pool sizes
 	uniformBlocksInPool = 10;
-	texturesInPool = 6;
+	texturesInPool = 10;
 	setsInPool = 10;
 
 	Ar = (float)windowWidth / (float)windowHeight;
@@ -76,4 +76,8 @@ void Game::updateUniformBuffer(uint32_t currentImage) {
 
 void Game::recreateVulkanSwapChain() {
 	framebufferResized = true;
+	//Resize pools
+	uniformBlocksInPool = managedScenes[activeScene]->totalUniformsCount();
+	texturesInPool = managedScenes[activeScene]->totalTextureCount() + 2;
+	setsInPool = uniformBlocksInPool;
 }

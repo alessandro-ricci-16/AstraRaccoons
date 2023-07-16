@@ -3,6 +3,7 @@
 
 Scene::Scene(float* ar) {
     aspectRatio = ar;
+    modifiedActiveObjects = false;
 }
 
 void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
@@ -19,6 +20,7 @@ void Scene::addObject(GameObject* object) {
     if (dynamic_cast<ICollidable*>(this) != nullptr && object->collider != nullptr) {
         activeColliders[object->collider->getCollisionMask()].push_back(object->collider);
     }
+    modifiedActiveObjects = true;
 }
 
 void Scene::removeObject(GameObject* object) {
@@ -32,7 +34,23 @@ void Scene::removeObject(GameObject* object) {
     }
     activeObjects.erase(activeObjects.begin() + objectIdx);
     removedObjects.push_back(object);
-    ((Game*)proj)->recreateVulkanSwapChain();
+    modifiedActiveObjects = true;
+}
+
+int Scene::totalTextureCount() {
+    int texCount = 0;
+    for (int i = 0; i < activeObjects.size(); i++) {
+        texCount += activeObjects[i]->textureCount();
+    }
+    return texCount;
+}
+
+int Scene::totalUniformsCount() {
+    int uniformsCount = 0;
+    for (int i = 0; i < activeObjects.size(); i++) {
+        uniformsCount += activeObjects[i]->uniformsCount();
+    }
+    return uniformsCount;
 }
 
 void Scene::UpdateImpl(int currentimage) {
@@ -47,6 +65,10 @@ void Scene::UpdateImpl(int currentimage) {
     }
     //Now check for collisions
     CheckCollisions();
+    //Check if we need to recreate the swapchain
+    if (modifiedActiveObjects) {
+        ((Game*)proj)->recreateVulkanSwapChain();
+    }
 }
 
 void Scene::CheckCollisions() {
@@ -69,6 +91,7 @@ void Scene::CompileObjects() {
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->compile(proj, &gubos);
     }
+    modifiedActiveObjects = false;
 }
 
 void Scene::CleanupImpl() {

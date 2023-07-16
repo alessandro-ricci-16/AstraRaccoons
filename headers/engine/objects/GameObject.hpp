@@ -28,6 +28,9 @@ class GameObject {
         virtual void Destroy() = 0;
         virtual void Cleanup() = 0;
 
+        virtual int textureCount();
+        virtual int uniformsCount();
+
         virtual void compile(BaseProject* proj, GlobalUniforms* guboPtr);
         virtual void addChild(GameObject* child);
         virtual void setCollider(float radius, uint8_t collisionLayer, uint8_t collisionMask);

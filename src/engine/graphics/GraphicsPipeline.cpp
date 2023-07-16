@@ -31,7 +31,6 @@ void DSet::compile(BaseProject* proj) {
 	}
 	std::vector<DescriptorSetElement> extractedElements = {};
 	for (int i = 0; i < setElements.size(); i++) {
-		std::cout << "Element " << bindings[i].binding << " " << bindings[i].type << " - " << setElements[i].setElement.type << "\n";
 		extractedElements.push_back(setElements.at(i).setElement);
 	}
 
@@ -109,10 +108,8 @@ void GraphicsPipeline::addUniformBindingToLastSet(void* uniform, int uniformSize
 void GraphicsPipeline::compile(BaseProject* proj, VertexDescriptor* vertexDescriptor) {
 	// Compile descriptors & build the dsl pointer array
 	if (!isInitialized) {
-		std::cout << "Compiling pipeline \n";
 		std::vector<DescriptorSetLayout*> dslPointers;
 		for (int i = 0; i < descriptorSets.size(); i++) {
-			std::cout << "Set " << i << "\n";
 			descriptorSets.at(i)->compile(proj);
 			dslPointers.push_back(&(descriptorSets.at(i)->compiledSetLayout));
 		}
@@ -133,13 +130,11 @@ void GraphicsPipeline::compile(BaseProject* proj, VertexDescriptor* vertexDescri
 void GraphicsPipeline::bind(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline) {
 	//Bind the pipeline
 	if (activePipeline == nullptr || activePipeline->id != id) {
-		std::cout << "Binding pipeline\n";
 		compiledPipeline.bind(commandBuffer);
 		activePipeline = this;
 	}
 	//Map & bind datasets
 	for (int i = 0; i < descriptorSets.size(); i++) {
-		std::cout << "Binding set " << i << "\n";
 		descriptorSets.at(i)->bind(commandBuffer, activePipeline->compiledPipeline, i, currentImage);
 	}
 }
@@ -152,9 +147,11 @@ void GraphicsPipeline::commitUniforms(int currentImage) {
 }
 
 void GraphicsPipeline::cleanup() {
-	compiledPipeline.cleanup();
-	for (int i = 0; i < descriptorSets.size(); i++) {
-		descriptorSets.at(i)->cleanup();
+	if (isInitialized) {
+		compiledPipeline.cleanup();
+		for (int i = 0; i < descriptorSets.size(); i++) {
+			descriptorSets.at(i)->cleanup();
+		}
 	}
 }
 

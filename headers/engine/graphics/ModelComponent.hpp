@@ -50,6 +50,9 @@ class ModelComponent {
         void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline);
         void Commit(int currentImage);
 
+        int textureCount();
+        int uniformCount();
+
         void cleanup();
         void destroy();
 };
@@ -91,6 +94,16 @@ void ModelComponent<Vert>::addCubicTexture(std::vector<std::string> files) {
 template <class Vert>
 void ModelComponent<Vert>::addUniformData(void* uniformPtr, int size, VkShaderStageFlagBits stage) {
     additionalUniforms.push_back({ uniformPtr, size, stage });
+}
+
+template <class Vert>
+int ModelComponent<Vert>::textureCount() {
+    return textureNames.size();
+}
+
+template <class Vert>
+int ModelComponent<Vert>::uniformCount() {
+    return 1 + additionalUniforms.size();
 }
 
 template <class Vert>

@@ -2,6 +2,7 @@
 #include "../../headers/objects/SpaceshipObject.hpp"
 #include "../../headers/objects/SkyBoxObject.hpp"
 #include <headers/objects/TestCubeObject.hpp>
+#include <headers/objects/asteroids/SimpleAsteroidObject.hpp>
 #include <headers/engine/base/Time.hpp>
 
 void TestScene::Instantiate() {
@@ -9,6 +10,7 @@ void TestScene::Instantiate() {
     SpaceshipObject* object = new SpaceshipObject();
     object->Instantiate();
     addObject(object);
+    player = object;
     //Set up the camera
     camera = Camera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
     camera.setTarget(&(object->transform));
@@ -17,6 +19,9 @@ void TestScene::Instantiate() {
     SkyBoxObject* skybox = new SkyBoxObject(camera);
     skybox->Instantiate();
     addObject(skybox);
+    //Set up asteroid spawning
+    lastSpawnTime = 0;
+    spawnDeltaTime = 1.5; //Seconds
     //Set up lights
     gubos.pointLightPosition = glm::vec3(.5f, 0, 1.0f);
     gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -42,6 +47,14 @@ void TestScene::Update() {
     gubos.pointLightPosition = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 0, 1)) * glm::vec4(gubos.pointLightPosition, 1);
     //Move the spot light
     //gubos.spotlightPosition = glm::vec3(9.f * sin(time), 0, -2);
+
+    //Spawn new asteroids over time
+    if (time - lastSpawnTime >= spawnDeltaTime) {
+        SimpleAsteroidObject* asteroid = new SimpleAsteroidObject(&(player->transform));
+        asteroid->Instantiate();
+        addObject(asteroid);
+        lastSpawnTime = time;
+    }
     time += Time::getDeltaT();
 }
 

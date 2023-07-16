@@ -14,6 +14,7 @@ inline auto key_selector = [](auto pair){return pair.first;};
 class Scene {
     private:
         std::vector<GameObject*> removedObjects;
+        bool modifiedActiveObjects;
 
     protected:
         std::unordered_map<uint8_t, std::vector<Collider*>> activeColliders; //Maps the collision mask to the colliders with that mask
@@ -42,6 +43,10 @@ class Scene {
         void DestroyImpl();
         void CleanupImpl();
         void CompileObjects();
+
+        int totalTextureCount();
+        int totalUniformsCount();
+
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage);
         virtual void addObject(GameObject* object);
         virtual void removeObject(GameObject* object);
