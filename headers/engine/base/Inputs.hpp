@@ -8,6 +8,7 @@ class Inputs {
 	public:
 		static void getSixAxis(glm::vec3& m, glm::vec3& r, bool& fire);
 		static void handleGamePad(int id, glm::vec3& m, glm::vec3& r, bool& fire);
+		static bool isKeyPressed(int keymask);
 		static void setWindow(GLFWwindow* w);
 };
 

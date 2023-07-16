@@ -46,6 +46,7 @@ class Game: public BaseProject {
         // Very likely this will be where you will be writing the logic of your application.
         void updateUniformBuffer(uint32_t currentImage);
         void recreateVulkanSwapChain();
+        void switchToScene(int sceneID);
 };
 
 #endif /* GAME_DEFINED */

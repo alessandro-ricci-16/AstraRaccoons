@@ -28,6 +28,10 @@ void Inputs::getSixAxis(glm::vec3& mov, glm::vec3& rot, bool& fire) {
     rot = r;
 }
 
+bool Inputs::isKeyPressed(int keymask) {
+    return glfwGetKey(window, keymask);
+}
+
 void Inputs::handleGamePad(int id, glm::vec3& m, glm::vec3& r,
     bool& fire) {
     const float deadZone = 0.1f;

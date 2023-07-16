@@ -41,7 +41,7 @@ void Game::localInit() {
 	mainScene->proj = this;
 	mainScene->Instantiate();
 
-	//managedScenes.push_back(introScene);
+	managedScenes.push_back(introScene);
 	managedScenes.push_back(mainScene);
 }
 
@@ -84,7 +84,20 @@ void Game::updateUniformBuffer(uint32_t currentImage) {
 void Game::recreateVulkanSwapChain() {
 	framebufferResized = true;
 	//Resize pools
-	uniformBlocksInPool = managedScenes[activeScene]->totalUniformsCount();
-	texturesInPool = managedScenes[activeScene]->totalTextureCount() + 2;
+	uniformBlocksInPool = 0;
+	texturesInPool = 2;
+	for (int i = 0; i < managedScenes.size(); i++) {
+		uniformBlocksInPool += managedScenes.at(i)->totalUniformsCount();
+		texturesInPool += managedScenes.at(i)->totalTextureCount();
+	}
 	setsInPool = uniformBlocksInPool;
+}
+
+void Game::switchToScene(int sceneID) {
+	if (sceneID >= 0 && sceneID < managedScenes.size()) {
+		activeScene = sceneID;
+		recreateVulkanSwapChain();
+	} else {
+		std::cout << "WARNING: Attempting to switch to a non-existing scene. This attempt will be ignored.\n";
+	}
 }
