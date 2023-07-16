@@ -14,6 +14,10 @@ uint8_t Collider::getCollisionMask() {
     return collisionMask;
 }
 
+float Collider::getRadius() {
+    return radius;
+}
+
 void Collider::setParent(GameObject* object) {
     this->parent = object;
 }

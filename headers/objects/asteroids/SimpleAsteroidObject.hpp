@@ -12,6 +12,7 @@ struct SimpleAsteroidVertex {
 
 class SimpleAsteroidObject : public MeshObject<SimpleAsteroidVertex>, public ICollidable {
     private:
+        glm::vec3 velToUpdate;
         glm::vec3 vel;
         glm::vec3 angVel;
         Transform* playerTransform;

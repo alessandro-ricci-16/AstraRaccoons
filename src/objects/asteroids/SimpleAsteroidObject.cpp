@@ -27,7 +27,8 @@ void SimpleAsteroidObject::Instantiate() {
 							  "textures/sky/top.png",   "textures/sky/bottom.png",
 							  "textures/sky/back.png", "textures/sky/front.png" };
 	model.addCubicTexture(textures);
-	transform.Scale(glm::vec3(3));
+    float scaleRadius = 3;
+	transform.Scale(glm::vec3(scaleRadius));
     //Position the asteroid in a random point around the player at a random distance and with random velocities
     glm::vec3 playerPosition = transform.getPos();
     glm::vec3 randomDirection = glm::normalize(glm::vec3(Random::randomFloat(0, 1), Random::randomFloat(0, 1), Random::randomFloat(0, 1)));
@@ -41,9 +42,12 @@ void SimpleAsteroidObject::Instantiate() {
 
     transform.TranslateTo(position);
 	vel = velocity;
+    velToUpdate = vel;
 	angVel = randomRotationAxis * randomAngularVelocity;
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = true;
+    //Add collider
+    setCollider(scaleRadius, 0x2, 0x7); //Layer = 0b00000010 Mask = 0b00000111
 }
 
 void SimpleAsteroidObject::Start() {
@@ -51,8 +55,34 @@ void SimpleAsteroidObject::Start() {
 }
 
 void SimpleAsteroidObject::Update() {
+    vel = velToUpdate;
     transform.TranslateBy(vel * Time::getDeltaT());
 	transform.RotateBy(angVel * Time::getDeltaT());
 }
 
-void SimpleAsteroidObject::OnCollisionWith(GameObject* other) {}
+void SimpleAsteroidObject::OnCollisionWith(GameObject* other) {
+    if (other->collider != nullptr) {
+        switch (other->collider->getCollisionLayer()) {
+            case 0x1: {
+                // Collision with the spaceship
+                break;
+            }
+            case 0x2: {
+                //Collision with another asteroid - perfectly elastic collision
+                SimpleAsteroidObject* otherAsteroid = (SimpleAsteroidObject*)other;
+                glm::vec3 otherVelocity = otherAsteroid->vel;
+                float otherMass = otherAsteroid->collider->getRadius();
+                float mass = collider->getRadius();
+                velToUpdate = ((2 * otherMass * otherVelocity) + (vel * (mass - otherMass))) / (mass + otherMass);
+                break;
+            }
+            case 0x4: {
+                // Collision with a bullet
+                break;
+            }
+            default:
+                //Ignore other collisions (but this will never happen since they are already filtered beforehand :))
+                break;
+        }
+    }
+}

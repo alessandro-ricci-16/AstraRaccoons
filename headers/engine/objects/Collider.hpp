@@ -15,6 +15,7 @@ class Collider {
 
         uint8_t getCollisionLayer();
         uint8_t getCollisionMask();
+        float getRadius();
         void setParent(GameObject* object);
         bool checkCollisionWith(Collider* collider2);
 };
