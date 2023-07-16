@@ -11,7 +11,7 @@
 #define DAMP(start, end, dt) LERP(start, end, LERPTIME(dt));
 
 class Camera {
-    private:
+    protected:
         Transform* target;
         float FOVy;
         float nearPlane;
@@ -33,8 +33,8 @@ class Camera {
         void setTarget(Transform* targetTransform);
         void setTargetDistance(vec3 targetDistance);
 
-        glm::vec3 getCameraPosition();
-        glm::mat4 getCameraMatrix(); //Prj * View
+        virtual glm::vec3 getCameraPosition();
+        virtual glm::mat4 getCameraMatrix(); //Prj * View
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_ENGINE_OBJECTS_CAMERA_HPP_

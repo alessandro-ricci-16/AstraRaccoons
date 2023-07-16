@@ -1,5 +1,6 @@
 #include "../headers/Game.hpp"
 #include "../headers/scenes/MainScene.hpp"
+#include <headers/scenes/IntroScene.hpp>
 #include "../headers/engine/base/Time.hpp"
 
 Game::Game() {
@@ -32,9 +33,15 @@ void Game::onWindowResize(int w, int h) {
 }
 
 void Game::localInit() {
+	IntroScene* introScene = new IntroScene(&Ar);
+	introScene->proj = this;
+	introScene->Instantiate();
+
 	MainScene* mainScene = new MainScene(&Ar);
 	mainScene->proj = this;
 	mainScene->Instantiate();
+
+	//managedScenes.push_back(introScene);
 	managedScenes.push_back(mainScene);
 }
 

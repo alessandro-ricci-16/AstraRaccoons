@@ -43,6 +43,8 @@ class GraphicsPipeline {
         uint32_t id;
 
     public:
+        bool isTransparent, backfaceCullingOn;
+
         GraphicsPipeline() = default;
         GraphicsPipeline(std::string vertexShader, std::string fragmentShader);
 

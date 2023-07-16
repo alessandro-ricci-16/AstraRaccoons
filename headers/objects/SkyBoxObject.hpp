@@ -13,9 +13,9 @@ struct SkyBoxObjectVertex {
 
 class SkyBoxObject : public MeshObject<SkyBoxObjectVertex> {
 private:
-	Camera camera;
+	Camera* camera;
 public:
-	SkyBoxObject(Camera c);
+	SkyBoxObject(Camera* c);
 	void Instantiate();
 	void Start();
 	void Update();

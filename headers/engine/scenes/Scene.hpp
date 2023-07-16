@@ -18,7 +18,7 @@ class Scene {
 
     protected:
         std::unordered_map<uint8_t, std::vector<Collider*>> activeColliders; //Maps the collision mask to the colliders with that mask
-        Camera camera;
+        Camera* camera;
         float* aspectRatio;
         GlobalUniforms gubos;
 

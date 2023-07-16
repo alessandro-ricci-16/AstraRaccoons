@@ -12,9 +12,9 @@ void MainScene::Instantiate() {
     addObject(object);
     player = object;
     //Set up the camera
-    camera = Camera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
-    camera.setTarget(&(object->transform));
-    camera.setTargetDistance(vec3(0, 6, 17));
+    camera = new Camera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
+    camera->setTarget(&(object->transform));
+    camera->setTargetDistance(vec3(0, 6, 17));
     // Load skybox
     SkyBoxObject* skybox = new SkyBoxObject(camera);
     skybox->Instantiate();
@@ -36,7 +36,7 @@ void MainScene::Instantiate() {
     gubos.spotlightTargetDistance = 1.5f;
     gubos.spotlightCosIn = 0.92f;
     gubos.spotlightCosOut = 0.89f;
-    gubos.eyePos = camera.getCameraPosition();
+    gubos.eyePos = camera->getCameraPosition();
 }
 
 void MainScene::Update() {

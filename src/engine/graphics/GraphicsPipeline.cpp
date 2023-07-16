@@ -114,10 +114,18 @@ void GraphicsPipeline::compile(BaseProject* proj, VertexDescriptor* vertexDescri
 			dslPointers.push_back(&(descriptorSets.at(i)->compiledSetLayout));
 		}
 		compiledPipeline.init(proj, vertexDescriptor, vertexShaderName, fragmentShaderName, dslPointers);
+		compiledPipeline.transp = isTransparent;
+		if (!backfaceCullingOn) {
+			compiledPipeline.CM = VK_CULL_MODE_NONE;
+		}
 		isInitialized = true;
 		//Create the pipeline
 		compiledPipeline.create();
 	} else {
+		compiledPipeline.transp = isTransparent;
+		if (!backfaceCullingOn) {
+			compiledPipeline.CM = VK_CULL_MODE_NONE;
+		}
 		//Create the pipeline
 		compiledPipeline.create();
 		//Recompile the data sets (and not the DSLs)

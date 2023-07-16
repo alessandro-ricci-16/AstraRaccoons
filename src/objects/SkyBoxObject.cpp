@@ -4,7 +4,7 @@
 
 #include <ctime>
 
-SkyBoxObject::SkyBoxObject(Camera c) {
+SkyBoxObject::SkyBoxObject(Camera* c) {
 	transform = Transform::identity();
 	camera = c;
 	acceptsGUBOs = false;

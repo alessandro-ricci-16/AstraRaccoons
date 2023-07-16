@@ -58,8 +58,8 @@ void Scene::UpdateImpl(int currentimage) {
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->Update();
     }
-    glm::mat4 cameraMatrix = camera.getCameraMatrix();
-    gubos.eyePos = camera.getCameraPosition();
+    glm::mat4 cameraMatrix = camera->getCameraMatrix();
+    gubos.eyePos = camera->getCameraPosition();
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->CommitUpdates(currentimage, cameraMatrix);
     }
