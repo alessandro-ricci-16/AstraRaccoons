@@ -5,6 +5,7 @@
 #include <headers/objects/FaderPlaneObject.hpp>
 #include <headers/engine/base/Inputs.hpp>
 #include <headers/Game.hpp>
+#include <headers/scenes/AvailableScenes.hpp>
 
 void IntroScene::Instantiate() {
     // Load & compile a test model
@@ -35,7 +36,7 @@ void IntroScene::Update() {
     time += Time::getDeltaT();
 
     if (Inputs::isKeyPressed(GLFW_KEY_SPACE)) {
-        ((Game*)proj)->switchToScene(1);
+        ((Game*)proj)->switchToScene(AR_SCENE_MAIN);
     }
 }
 
