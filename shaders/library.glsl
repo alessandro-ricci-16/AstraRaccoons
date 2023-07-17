@@ -101,25 +101,35 @@ vec3 GGXDiffuseSpecular(vec3 V, vec3 N, vec3 L, vec3 Md, float F0, float metalli
 } //Diffuse + Specular already combined!
 
 // Spherical Harmonics
-vec3 sh(const vec3 sph[9], const in vec3 normal) {
-  float x = normal.x;
-  float y = normal.y;
-  float z = normal.z;
+vec3 sh(const in vec3 normal) {
+	const vec3 c[9] = {
+			vec3(0.136158, 0.163803, 0.259454),
+			vec3(0.0108949, -0.0153887, -0.0450592),
+			vec3(0.00551577, -0.0134505, -0.00767747),
+			vec3(0.0531763, 0.0883831, 0.0873933),
+			vec3(-0.00628636, 0.0018491, -0.00416013),
+			vec3(0.00671475, -0.0019917, -0.0099933),
+			vec3(-0.0417106, -0.0271285, -0.0179189),
+			vec3(-0.00668723, 0.0055851, 0.00755085),
+			vec3(0.0642979, 0.0727677, 0.058611)
+	};
+	float x = normal.x;
+	float y = normal.y;
+	float z = normal.z;
 
-  vec3 result = (
-    sph[0] +
+	vec3 result = (
+		c[0] +
 
-    sph[1] * x +
-    sph[2] * y +
-    sph[3] * z +
+		c[1] * x +
+		c[2] * y +
+		c[3] * z +
 
-    sph[4] * y * x +
-    sph[5] * y * z +
-    sph[6] * (3.0 * z * z - 1.0) +
-    sph[7] * z * x +
-    sph[8] * (x*x - y*y)
-  );
-
-  return max(result, vec3(0.0));
+		c[4] * z * x +
+		c[5] * y * z +
+		c[6] * y * x +
+		c[7] * (3.0 * z * z - 1.0) +
+		c[8] * (x*x - y*y)
+	);
+	return max(result, vec3(0.0));
 }
 

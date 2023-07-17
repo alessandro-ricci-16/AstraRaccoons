@@ -8,6 +8,7 @@ Scene::Scene(float* ar) {
 
 void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
     //For each object in the scene, bind its pipeline and draw (WITHOUT rebinding the pipeline if it uses the same one)
+    this->activePipeline = nullptr;
     for (int i = 0; i < activeObjects.size(); i++) {
         GameObject* object = activeObjects[i];
         object->Draw(commandBuffer, currentImage, this->activePipeline);
