@@ -81,16 +81,34 @@ void Game::updateUniformBuffer(uint32_t currentImage) {
 	managedScenes.at(activeScene)->UpdateImpl(currentImage);
 }
 
-void Game::recreateVulkanSwapChain() {
-	framebufferResized = true;
-	//Resize pools
-	uniformBlocksInPool = 0;
-	texturesInPool = 2;
-	for (int i = 0; i < managedScenes.size(); i++) {
-		uniformBlocksInPool += managedScenes.at(i)->totalUniformsCount();
-		texturesInPool += managedScenes.at(i)->totalTextureCount();
+void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
+	bool recreateFullSwapchain = !commandBufferOnly;
+	if (commandBufferOnly) {
+		int newUniformBlocksCount = 0;
+		int newTexturesCount = 0;
+		for (int i = 0; i < managedScenes.size(); i++) {
+			newUniformBlocksCount += managedScenes.at(i)->totalUniformsCount();
+			newTexturesCount += managedScenes.at(i)->totalTextureCount();
+		}
+		if (uniformBlocksInPool < newUniformBlocksCount || texturesInPool < newUniformBlocksCount) {
+			recreateFullSwapchain = true;
+		} else {
+			refillCommandBuffers();
+		}
+	} 
+	if (recreateFullSwapchain) {
+		framebufferResized = true;
+		//Resize pools
+		uniformBlocksInPool = 0;
+		texturesInPool = 2;
+		for (int i = 0; i < managedScenes.size(); i++) {
+			uniformBlocksInPool += managedScenes.at(i)->totalUniformsCount();
+			texturesInPool += managedScenes.at(i)->totalTextureCount();
+		}
+		texturesInPool *= 3;
+		uniformBlocksInPool *= 10;
+		setsInPool = uniformBlocksInPool;
 	}
-	setsInPool = uniformBlocksInPool;
 }
 
 void Game::switchToScene(int sceneID) {

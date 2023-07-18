@@ -1129,6 +1129,10 @@ void BaseProject::createCommandBuffers() {
         throw std::runtime_error("failed to allocate command buffers!");
     }
 
+    refillCommandBuffers();
+}
+
+void BaseProject::refillCommandBuffers() {
     for (size_t i = 0; i < commandBuffers.size(); i++) {
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -1218,10 +1222,10 @@ void BaseProject::drawFrame() {
         device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame],
         VK_NULL_HANDLE, &imageIndex);
 
-    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
         recreateSwapChain();
         return;
-    } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+    } else if (result != VK_SUCCESS) {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
 

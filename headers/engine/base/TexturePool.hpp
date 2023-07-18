@@ -18,7 +18,7 @@ class TexturePool {
         static void removeTexture(uint32_t hash);
         static void registerTextureUsage(uint32_t hash);
 
-       public:
+    public:
         static void addTextureIfNotPresent(std::string name, Texture* tex);
         static void addTextureIfNotPresent(std::vector<std::string> files, Texture* tex);
         static void registerTextureUsage(std::string name);

@@ -45,7 +45,7 @@ class Game: public BaseProject {
         // Here is where you update the uniforms.
         // Very likely this will be where you will be writing the logic of your application.
         void updateUniformBuffer(uint32_t currentImage);
-        void recreateVulkanSwapChain();
+        void recreateVulkanSwapChain(bool commandBufferOnly = false);
         void switchToScene(int sceneID);
 };
 

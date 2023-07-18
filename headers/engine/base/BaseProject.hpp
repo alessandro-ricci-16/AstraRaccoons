@@ -133,6 +133,7 @@ class BaseProject {
 		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		void createDescriptorPool();
 		void createCommandBuffers();
+		void refillCommandBuffers();
 		void createSyncObjects();
 		void mainLoop();
 		void drawFrame();
