@@ -49,13 +49,13 @@ void MainScene::Update() {
     //gubos.spotlightPosition = glm::vec3(9.f * sin(time), 0, -2);
 
     //Spawn new asteroids over time
-    if (time - lastSpawnTime >= spawnDeltaTime) {
+    float absTime = Time::getAbsoluteTime();
+    if (absTime - lastSpawnTime >= spawnDeltaTime) {
         SimpleAsteroidObject* asteroid = new SimpleAsteroidObject(&(player->transform));
         asteroid->Instantiate();
         addObject(asteroid);
-        lastSpawnTime = time;
+        lastSpawnTime = absTime;
     }
-    time += Time::getDeltaT();
 }
 
 void MainScene::Destroy() {

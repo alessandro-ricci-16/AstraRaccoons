@@ -30,10 +30,6 @@ void IntroScene::Instantiate() {
 void IntroScene::Update() {
     // Update scene-level objects - NOT GameObjects, they are automatically
     // managed by the scene Rotate the directional light over time
-    // Rotate the look at target to rotate the camera slowly over time
-    lookAtTarget->TranslateTo(glm::rotate(glm::mat4(1), (float)fmod(0.35f * time, 360), glm::vec3(0, 1, 0)) * glm::vec4(0, 0, -1, 1));
-
-    time += Time::getDeltaT();
 
     if (Inputs::isKeyPressed(GLFW_KEY_SPACE)) {
         ((Game*)proj)->switchToScene(AR_SCENE_MAIN);

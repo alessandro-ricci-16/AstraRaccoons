@@ -25,10 +25,14 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         bool reloading = false;
         float timer = 0.0f;
 
-        const float fireRate = 1.0f;
-        const float shotSpeed = 50.0f;
+        const float fireRate = 0.2f;
+        const float shotSpeed = 75.0f;
         const float shotRange = 100.0f;
         const float shotDamage = 10.0f;
+        const float shotThickness = 0.2f;
+
+        const glm::vec3 shotColor = glm::vec3(1, 0, 0);
+        glm::vec3 shotOffset = glm::vec3(1.3f, -0.1f, 0.7f);
 
     public:
         void Instantiate();

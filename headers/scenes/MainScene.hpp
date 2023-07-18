@@ -12,7 +12,6 @@ class MainScene: public Scene {
 
     public:
         MainScene(float* ar) : Scene(ar) {}
-        float time;
         void Instantiate();
         void Update();
         void Destroy();

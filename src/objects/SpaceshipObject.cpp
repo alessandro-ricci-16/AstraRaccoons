@@ -35,13 +35,18 @@ void SpaceshipObject::Update() {
 	glm::vec3 mov, rot;
 	Inputs::getSixAxis(mov, rot, fire);
 	rot *= glm::vec3(-1, -1, 1);
-	mov *= glm::vec3(1, 1, -1);
+	mov.z *= -1;
+
 	// increments velocity by movement * acceleration, decrements where there is no movement linearly to velocity
 	vel += (mov * acc - dec * vel) * delT;
 	angVel += (rot * angAcc - angDec * angVel) * delT;
+
 	transform.TranslateLocalBy(vel * delT);
 	transform.RotateBy(angVel * delT);
+
+	// shooting
 	if (reloading) {
+		// wait fireRate time before beeing ready to shot another pew
 		timer += delT;
 		if (timer >= fireRate) {
 			timer = 0;
@@ -50,9 +55,11 @@ void SpaceshipObject::Update() {
 	}
 	else if (fire) {
 		reloading = true;
-		Pew* pew = new Pew(transform, shotSpeed, shotRange, shotDamage, glm::vec3(1, 0, 0));
+		glm::vec3 finalShotSpeed = glm::vec3(0, 0, -shotSpeed) + vel; // negative z for the same reason mov.z is multiplied by -1
+		Pew* pew = new Pew(transform, shotOffset, finalShotSpeed, shotRange, shotDamage, shotThickness, shotColor);
 		pew->Instantiate();
 		parentScene->addObject(pew);
+		shotOffset.x *= -1; // pew left / right
 	}
 }
 

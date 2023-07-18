@@ -20,8 +20,9 @@ class Pew : public MeshObject<PewVertex> {
         glm::vec3 initialPos;
         float range;
         float damage;
+        float thickness;
     public:
-        Pew(Transform parent, float speed, float range, float damage, glm::vec3 color);
+        Pew(Transform parent, glm::vec3 offset, glm::vec3 speed, float range, float damage, float thickness, glm::vec3 color);
         void Instantiate();
         void Start();
         void Update();

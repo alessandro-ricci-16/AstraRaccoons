@@ -7,7 +7,6 @@
 class IntroScene: public Scene {
     private:
         Transform* lookAtTarget;
-        float time;
 
     public:
         IntroScene(float* ar) : Scene(ar) {}

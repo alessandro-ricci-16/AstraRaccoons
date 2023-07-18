@@ -6,10 +6,12 @@
 class Time {
 private:
     static std::chrono::steady_clock::time_point lastTime;
+    static float absoluteTime;
     static float delT;
 
 public:
     static void computeDeltaT();
+    static float getAbsoluteTime();
     static float getDeltaT();
     static void pRoFiLinG();
 };

@@ -5,13 +5,15 @@
 #include "../../headers/engine/scenes/Scene.hpp"
 #include "../../headers/objects/Pew.hpp"
 
-Pew::Pew(Transform parent, float _speed, float _range, float _damage, glm::vec3 _color) {
+Pew::Pew(Transform parent, glm::vec3 offset, glm::vec3 _speed, float _range, float _damage, float _thickness, glm::vec3 _color) {
 	transform = parent;
 	transform.ScaleTo(glm::vec3(1, 1, 1));
+	transform.TranslateLocalBy(offset);
 	initialPos = transform.getPos();
-	speed = glm::vec3(0, 0, -_speed);
+	speed = _speed;
 	range = _range;
 	damage = _damage;
+	thickness = _thickness;
 	color = { _color };
 }
 
@@ -20,7 +22,7 @@ void Pew::Instantiate() {
 	ObjectVertexDescriptor* vertexDescriptor = new ObjectVertexDescriptor();
 	vertexDescriptor->addBinding(sizeof(PewVertex), true);
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(PewVertex, pos), sizeof(glm::vec3), POSITION);
-	float length = 1.0f, thickness = 0.25f;
+	float length = 4 * thickness;
 	std::vector<PewVertex> verts = { {glm::vec3(-thickness / 2, -thickness / 2, 0)},
 										   {glm::vec3(thickness / 2, -thickness / 2, 0)},
 											{glm::vec3(thickness / 2, thickness / 2, 0)},
@@ -49,8 +51,6 @@ void Pew::Instantiate() {
 	model.backfaceCullingOn = true;
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = false;
-
-	transform.TranslateTo(initialPos);
 }
 
 void Pew::Start() {}
@@ -58,6 +58,7 @@ void Pew::Start() {}
 void Pew::Update() {
 	transform.TranslateLocalBy(speed * Time::getDeltaT());
 	if (glm::length(transform.getPos() - initialPos) >= range) {
+		// kill the pew when it reaches the full range
 		parentScene->removeObject(this);
 	}
 }
