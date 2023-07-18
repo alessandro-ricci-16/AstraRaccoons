@@ -34,5 +34,5 @@ void TestCubeObject::Update() {
 }
 
 void TestCubeObject::OnCollisionWith(GameObject* other) {
-    ((Scene*)parentScene)->removeObject(this);
+    parentScene->removeObject(this);
 }

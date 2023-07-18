@@ -1283,7 +1283,7 @@ void BaseProject::drawFrame() {
 }
 
 void BaseProject::recreateSwapChain() {
-    std::cout << "Recreating swap chain:\n";
+    std::cout << "Recreating swap chain\n";
     int width = 0, height = 0;
     glfwGetFramebufferSize(window, &width, &height);
 

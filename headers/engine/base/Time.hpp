@@ -11,6 +11,7 @@ private:
 public:
     static void computeDeltaT();
     static float getDeltaT();
+    static void pRoFiLinG();
 };
 
 #endif //__TIME_

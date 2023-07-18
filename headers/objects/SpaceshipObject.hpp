@@ -21,6 +21,15 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         const float angAcc = 250.0f;
         const float angDec = 2.0f;
 
+        bool fire = false;
+        bool reloading = false;
+        float timer = 0.0f;
+
+        const float fireRate = 1.0f;
+        const float shotSpeed = 50.0f;
+        const float shotRange = 100.0f;
+        const float shotDamage = 10.0f;
+
     public:
         void Instantiate();
         void Start();

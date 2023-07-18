@@ -15,10 +15,7 @@ void Transform::TranslateBy(vec3 by) {
 }
 
 void Transform::TranslateLocalBy(vec3 by) {
-	vec3 ux = vec3(rotationMatrix * vec4(1, 0, 0, 1));
-	vec3 uy = vec3(rotationMatrix * vec4(0, 1, 0, 1));
-	vec3 uz = vec3(rotationMatrix * vec4(0, 0, 1, 1));
-	by = by.x * ux + by.y * uy + by.z * uz;
+	by = by.x * ux() + by.y * uy() + by.z * uz();
 	TranslateBy(by);
 }
 
@@ -37,12 +34,28 @@ void Transform::Scale(vec3 by) {
 	scaleMatrix = scale(scaleMatrix, by);
 }
 
+void Transform::ScaleTo(vec3 to) {
+	scaleMatrix = scale(mat4(1), to);
+}
+
 mat4 Transform::getMatrix() {
 	return translationMatrix * rotationMatrix * scaleMatrix;
 }
 
 vec3 Transform::getPos() {
 	return vec3(translationMatrix[3]);
+}
+
+vec3 Transform::ux() {
+	return vec3(rotationMatrix * vec4(1, 0, 0, 1));
+}
+
+vec3 Transform::uy() {
+	return vec3(rotationMatrix * vec4(0, 1, 0, 1));
+}
+
+vec3 Transform::uz() {
+	return vec3(rotationMatrix * vec4(0, 0, 1, 1));
 }
 
 Transform Transform::identity() {

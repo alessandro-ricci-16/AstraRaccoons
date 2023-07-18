@@ -13,3 +13,8 @@ void Time::computeDeltaT() {
 float Time::getDeltaT() {
     return delT;
 }
+
+void Time::pRoFiLinG() {
+    computeDeltaT();
+    std::cout << delT << "\n";
+}

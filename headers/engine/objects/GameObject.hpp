@@ -6,6 +6,7 @@
 #include "../graphics/ModelComponent.hpp"
 
 class Collider;
+class Scene;
 
 class GameObject {
     protected:
@@ -16,7 +17,7 @@ class GameObject {
     public:
         Transform transform;
         Collider* collider;
-        void* parentScene;
+        Scene* parentScene;
 
         GameObject();
         virtual ~GameObject();
