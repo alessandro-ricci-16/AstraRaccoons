@@ -51,5 +51,5 @@ void main() {
 	vec3 spotLightSpecular = BlinnSpecular(gubo.eyePos, Norm, spotLightDir, albedo * gubo.spotlightColor.xyz, 160);
 	vec3 spotLightColor = (spotLightDiffuse + spotLightSpecular) * Spotlight(gubo.spotlightPosition, gubo.spotlightColor.xyz, gubo.spotlightDirection, fragPos, gubo.spotlightDecayFactor, gubo.spotlightTargetDistance, gubo.spotlightCosIn, gubo.spotlightCosOut);
 	//Sum everything
-	outColor = vec4(clamp(dirLightColor + pointLightColor + spotLightColor, 0, 1), 1);
+	outColor = vec4(clamp(spotLightColor, 0, 1), 1);
 }

@@ -14,7 +14,7 @@ void IntroScene::Instantiate() {
     // Set up the camera
     camera = new OrbitingCamera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
     camera->setTarget(lookAtTarget);
-    camera->setTargetDistance(vec3(0, 0, 1));
+    camera->setTargetDistance(vec3(0));
     // Load skybox
     SkyBoxObject* skybox = new SkyBoxObject(camera);
     skybox->Instantiate();

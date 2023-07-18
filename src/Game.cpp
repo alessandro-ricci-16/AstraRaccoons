@@ -1,6 +1,7 @@
 #include "../headers/Game.hpp"
 #include "../headers/scenes/MainScene.hpp"
 #include <headers/scenes/IntroScene.hpp>
+#include <headers/scenes/TestScene.hpp>
 #include "../headers/engine/base/Time.hpp"
 
 Game::Game() {
@@ -33,6 +34,13 @@ void Game::onWindowResize(int w, int h) {
 }
 
 void Game::localInit() {
+	#ifdef DEBUG_LIGHTS
+	TestScene* testScene = new TestScene(&Ar);
+	testScene->proj = this;
+	testScene->Instantiate();
+
+	managedScenes.push_back(testScene);
+	#else
 	IntroScene* introScene = new IntroScene(&Ar);
 	introScene->proj = this;
 	introScene->Instantiate();
@@ -43,6 +51,7 @@ void Game::localInit() {
 
 	managedScenes.push_back(introScene);
 	managedScenes.push_back(mainScene);
+	#endif
 }
 
 void Game::pipelinesAndDescriptorSetsInit() {

@@ -16,7 +16,7 @@ vec3 Spotlight(vec3 lightPos, vec3 lightCol, vec3 lightDir, vec3 fragPos, float 
 	vec3 lightDirection = normalize(dir);
 	float decay = pow(baseDist / length(dir), decayExp);
 	vec3 lightColor = lightCol;
-	float cosalpha = dot(lightDirection, normalize(lightDir));
+	float cosalpha = dot(lightDirection, -normalize(lightDir));
 	float coneDimming = clamp((cosalpha - cosout) / (cosin - cosout), 0, 1);
 	lightColor = lightColor * decay * coneDimming;
 
