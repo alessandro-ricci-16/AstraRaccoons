@@ -48,7 +48,7 @@ void Game::localInit() {
 void Game::pipelinesAndDescriptorSetsInit() {
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes.at(i)->proj = this;
-		managedScenes.at(i)->CompileObjects();
+		managedScenes.at(i)->CompileObjects(false);
 	}
 }
 
@@ -83,30 +83,28 @@ void Game::updateUniformBuffer(uint32_t currentImage) {
 
 void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
 	bool recreateFullSwapchain = !commandBufferOnly;
+	int newUniformBlocksCount = 0;
+	int newTexturesCount = 2;
 	if (commandBufferOnly) {
-		int newUniformBlocksCount = 0;
-		int newTexturesCount = 0;
 		for (int i = 0; i < managedScenes.size(); i++) {
 			newUniformBlocksCount += managedScenes.at(i)->totalUniformsCount();
 			newTexturesCount += managedScenes.at(i)->totalTextureCount();
 		}
-		if (uniformBlocksInPool < newUniformBlocksCount || texturesInPool < newUniformBlocksCount) {
+		if (uniformBlocksInPool < newUniformBlocksCount || texturesInPool < newTexturesCount) {
 			recreateFullSwapchain = true;
 		} else {
+			for (int i = 0; i < managedScenes.size(); i++) {
+				managedScenes.at(i)->proj = this;
+				managedScenes.at(i)->CompileObjects(true);
+			}
 			refillCommandBuffers();
 		}
-	} 
+	}
 	if (recreateFullSwapchain) {
-		framebufferResized = true;
+		RebuildPipeline();
 		//Resize pools
-		uniformBlocksInPool = 0;
-		texturesInPool = 2;
-		for (int i = 0; i < managedScenes.size(); i++) {
-			uniformBlocksInPool += managedScenes.at(i)->totalUniformsCount();
-			texturesInPool += managedScenes.at(i)->totalTextureCount();
-		}
-		texturesInPool *= 3;
-		uniformBlocksInPool *= 10;
+		uniformBlocksInPool = newUniformBlocksCount * 10;
+		texturesInPool = newTexturesCount * 5;
 		setsInPool = uniformBlocksInPool;
 	}
 }

@@ -13,6 +13,7 @@ inline auto key_selector = [](auto pair){return pair.first;};
 
 class Scene {
     private:
+        std::vector<GameObject*> addedObjects;
         std::vector<GameObject*> removedObjects;
         bool modifiedActiveObjects;
 
@@ -42,7 +43,7 @@ class Scene {
         void UpdateImpl(int currentImage);
         void DestroyImpl();
         void CleanupImpl();
-        void CompileObjects();
+        void CompileObjects(bool addedOnly);
 
         int totalTextureCount();
         int totalUniformsCount();

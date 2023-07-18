@@ -18,6 +18,7 @@ void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
 void Scene::addObject(GameObject* object) {
     object->parentScene = this;
     activeObjects.push_back(object);
+    addedObjects.push_back(object);
     if (dynamic_cast<ICollidable*>(this) != nullptr && object->collider != nullptr) {
         activeColliders[object->collider->getCollisionMask()].push_back(object->collider);
     }
@@ -34,6 +35,13 @@ void Scene::removeObject(GameObject* object) {
         }
     }
     activeObjects.erase(activeObjects.begin() + objectIdx);
+    for (int i = 0; i < addedObjects.size(); i++) {
+        if (addedObjects[i] == object) {
+            objectIdx = i;
+            break;
+        }
+    }
+    addedObjects.erase(addedObjects.begin() + objectIdx);
     removedObjects.push_back(object);
     modifiedActiveObjects = true;
 }
@@ -68,7 +76,7 @@ void Scene::UpdateImpl(int currentimage) {
     CheckCollisions();
     //Check if we need to recreate the swapchain
     if (modifiedActiveObjects) {
-        ((Game*)proj)->recreateVulkanSwapChain();
+        ((Game*)proj)->recreateVulkanSwapChain(true);
     }
 }
 
@@ -88,10 +96,12 @@ void Scene::CheckCollisions() {
     }
 }
 
-void Scene::CompileObjects() {
-    for (int i = 0; i < activeObjects.size(); i++) {
-        activeObjects[i]->compile(proj, &gubos);
+void Scene::CompileObjects(bool addedOnly) {
+    std::vector<GameObject*> objectsToCompile = addedOnly ? addedObjects : activeObjects;
+    for (int i = 0; i < objectsToCompile.size(); i++) {
+        objectsToCompile[i]->compile(proj, &gubos);
     }
+    addedObjects.clear();
     modifiedActiveObjects = false;
 }
 
