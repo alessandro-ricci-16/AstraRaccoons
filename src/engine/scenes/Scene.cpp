@@ -26,24 +26,34 @@ void Scene::addObject(GameObject* object) {
 }
 
 void Scene::removeObject(GameObject* object) {
-    object->parentScene = nullptr;
-    int objectIdx = 0;
-    for (int i = 0; i < activeObjects.size(); i++) {
-        if (activeObjects[i] == object) {
-            objectIdx = i;
-            break;
-        }
-    }
-    activeObjects.erase(activeObjects.begin() + objectIdx);
-    for (int i = 0; i < addedObjects.size(); i++) {
-        if (addedObjects[i] == object) {
-            objectIdx = i;
-            break;
-        }
-    }
-    addedObjects.erase(addedObjects.begin() + objectIdx);
     removedObjects.push_back(object);
     modifiedActiveObjects = true;
+}
+
+void Scene::applyObjectRemoval() {
+    for (int i = 0; i < removedObjects.size(); i++) {
+        GameObject* object = removedObjects[i];
+        object->parentScene = nullptr;
+        int objectIdx = 0;
+        for (int i = 0; i < activeObjects.size(); i++) {
+            if (activeObjects[i] == object) {
+                objectIdx = i;
+                break;
+            }
+        }
+        activeObjects.erase(activeObjects.begin() + objectIdx);
+        for (int i = 0; i < addedObjects.size(); i++) {
+            if (addedObjects[i] == object) {
+                objectIdx = i;
+                break;
+            }
+        }
+        addedObjects.erase(addedObjects.begin() + objectIdx);
+        object->Cleanup();
+        object->Destroy();
+        delete object;
+    }
+    removedObjects.clear();
 }
 
 int Scene::totalTextureCount() {
@@ -74,6 +84,8 @@ void Scene::UpdateImpl(int currentimage) {
     }
     //Now check for collisions
     CheckCollisions();
+    //Apply object removals
+    applyObjectRemoval();
     //Check if we need to recreate the swapchain
     if (modifiedActiveObjects) {
         ((Game*)proj)->recreateVulkanSwapChain(true);

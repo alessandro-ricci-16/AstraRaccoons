@@ -51,6 +51,7 @@ class Scene {
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage);
         virtual void addObject(GameObject* object);
         virtual void removeObject(GameObject* object);
+        void applyObjectRemoval();
 
     private:
         void CheckCollisions();
