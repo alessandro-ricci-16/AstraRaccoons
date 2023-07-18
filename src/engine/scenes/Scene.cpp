@@ -42,13 +42,16 @@ void Scene::applyObjectRemoval() {
             }
         }
         activeObjects.erase(activeObjects.begin() + objectIdx);
-        for (int i = 0; i < addedObjects.size(); i++) {
-            if (addedObjects[i] == object) {
-                objectIdx = i;
-                break;
+        if (addedObjects.size() > 0) {
+            objectIdx = 0;
+            for (int i = 0; i < addedObjects.size(); i++) {
+                if (addedObjects[i] == object) {
+                    objectIdx = i;
+                    break;
+                }
             }
+            addedObjects.erase(addedObjects.begin() + objectIdx);
         }
-        addedObjects.erase(addedObjects.begin() + objectIdx);
         object->Cleanup();
         object->Destroy();
         delete object;
