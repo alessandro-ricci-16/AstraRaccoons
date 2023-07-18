@@ -45,6 +45,8 @@ void DSet::compile(BaseProject* proj) {
 }
 
 void DSet::map(int currentImage) {
+	if (!isCompiled || datasetsCleanedUp) { return; }
+
 	for (int i = 0; i < setElements.size(); i++) {
 		//Map all uniforms
 		DSetElement setElement = setElements.at(i);

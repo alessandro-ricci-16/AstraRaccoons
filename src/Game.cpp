@@ -98,6 +98,8 @@ void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
 		newUniformBlocksCount += managedScenes.at(i)->totalUniformsCount();
 		newTexturesCount += managedScenes.at(i)->totalTextureCount();
 	}
+	newUniformBlocksCount *= swapChainImages.size();
+	newTexturesCount  *= swapChainImages.size();
 	if (commandBufferOnly) {
 		if (uniformBlocksInPool < newUniformBlocksCount || texturesInPool < newTexturesCount) {
 			recreateFullSwapchain = true;

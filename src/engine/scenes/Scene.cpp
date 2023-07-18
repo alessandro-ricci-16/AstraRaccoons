@@ -4,6 +4,7 @@
 Scene::Scene(float* ar) {
     aspectRatio = ar;
     modifiedActiveObjects = false;
+    isUpdatingScene = false;
 }
 
 void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
@@ -16,11 +17,15 @@ void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
 }
 
 void Scene::addObject(GameObject* object) {
-    object->parentScene = this;
-    activeObjects.push_back(object);
-    addedObjects.push_back(object);
-    if (dynamic_cast<ICollidable*>(this) != nullptr && object->collider != nullptr) {
-        activeColliders[object->collider->getCollisionMask()].push_back(object->collider);
+    if (isUpdatingScene) {
+        addedObjects.push_back(object);
+    } else {
+        object->parentScene = this;
+        activeObjects.push_back(object);
+        addedObjects.push_back(object);
+        if (dynamic_cast<ICollidable*>(this) != nullptr && object->collider != nullptr) {
+            activeColliders[object->collider->getCollisionMask()].push_back(object->collider);
+        }
     }
     modifiedActiveObjects = true;
 }
@@ -31,6 +36,15 @@ void Scene::removeObject(GameObject* object) {
 }
 
 void Scene::applyObjectRemoval() {
+    for (int i = 0; i < addedObjects.size(); i++) {
+        GameObject* object = addedObjects[i];
+        object->parentScene = this;
+        activeObjects.push_back(object);
+        if (dynamic_cast<ICollidable*>(this) != nullptr && object->collider != nullptr) {
+            activeColliders[object->collider->getCollisionMask()].push_back(object->collider);
+        }
+    }
+    
     for (int i = 0; i < removedObjects.size(); i++) {
         GameObject* object = removedObjects[i];
         object->parentScene = nullptr;
@@ -43,14 +57,16 @@ void Scene::applyObjectRemoval() {
         }
         activeObjects.erase(activeObjects.begin() + objectIdx);
         if (addedObjects.size() > 0) {
-            objectIdx = 0;
+            objectIdx = -1;
             for (int i = 0; i < addedObjects.size(); i++) {
                 if (addedObjects[i] == object) {
                     objectIdx = i;
                     break;
                 }
             }
-            addedObjects.erase(addedObjects.begin() + objectIdx);
+            if (objectIdx > 0) {
+                addedObjects.erase(addedObjects.begin() + objectIdx);
+            }
         }
         object->Cleanup();
         object->Destroy();
@@ -76,10 +92,12 @@ int Scene::totalUniformsCount() {
 }
 
 void Scene::UpdateImpl(int currentimage) {
+    isUpdatingScene = true;
     Update();
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->Update();
     }
+    isUpdatingScene = false;
     glm::mat4 cameraMatrix = camera->getCameraMatrix();
     gubos.eyePos = camera->getCameraPosition();
     for (int i = 0; i < activeObjects.size(); i++) {

@@ -16,6 +16,7 @@ class Scene {
         std::vector<GameObject*> addedObjects;
         std::vector<GameObject*> removedObjects;
         bool modifiedActiveObjects;
+        bool isUpdatingScene;
 
     protected:
         std::unordered_map<uint8_t, std::vector<Collider*>> activeColliders; //Maps the collision mask to the colliders with that mask
