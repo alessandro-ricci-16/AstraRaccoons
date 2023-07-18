@@ -1,10 +1,13 @@
 #include "../../../headers/engine/graphics/GraphicsPipeline.hpp"
 #include <unordered_map>
 
+DSet* GraphicsPipeline::guboSet = nullptr;
+
 DSet::DSet() {
 	bindings = {};
 	setElements = {};
 	isCompiled = false;
+	datasetsCleanedUp = true;
 }
 
 void DSet::addTextureBinding(Texture* tex, VkShaderStageFlags shaderStage) {
@@ -29,12 +32,15 @@ void DSet::compile(BaseProject* proj) {
 		compiledSetLayout.init(proj, bindings);
 		isCompiled = true;
 	}
-	std::vector<DescriptorSetElement> extractedElements = {};
-	for (int i = 0; i < setElements.size(); i++) {
-		extractedElements.push_back(setElements.at(i).setElement);
-	}
+	
+	if (datasetsCleanedUp) {
+		std::vector<DescriptorSetElement> extractedElements = {};
+		for (int i = 0; i < setElements.size(); i++) {
+			extractedElements.push_back(setElements.at(i).setElement);
+		}
 
-	compiledSet.init(proj, &compiledSetLayout, extractedElements);
+		compiledSet.init(proj, &compiledSetLayout, extractedElements);
+	}
 	datasetsCleanedUp = false;
 }
 
@@ -50,7 +56,9 @@ void DSet::map(int currentImage) {
 }
 
 void DSet::cleanup() {
-	compiledSet.cleanup();
+	if (!datasetsCleanedUp) {
+		compiledSet.cleanup();
+	}
 	datasetsCleanedUp = true;
 }
 
@@ -58,7 +66,11 @@ void DSet::destroy() {
 	if (!datasetsCleanedUp) {
 		cleanup();
 	}
-	compiledSetLayout.cleanup();
+	if (isCompiled) {
+		compiledSetLayout.cleanup();
+	}
+	isCompiled = false;
+	datasetsCleanedUp = true;
 }
 
 void DSet::bind(VkCommandBuffer commandBuffer, Pipeline& pipeline, int setId, int currentImage) {
@@ -82,15 +94,29 @@ GraphicsPipeline::GraphicsPipeline(std::string vertexShader, std::string fragmen
 	isInitialized = false;
 }
 
-void GraphicsPipeline::addSet() {
-	DSet* dset = new DSet();
+void GraphicsPipeline::addSet(bool isGUBOSet) {
+	DSet* dset;
+	if (isGUBOSet) {
+		if (GraphicsPipeline::guboSet == nullptr) {
+			dset = new DSet();
+			isUsingCommonGUBOs = false;
+			GraphicsPipeline::guboSet = dset;
+		} else {
+			dset = GraphicsPipeline::guboSet;
+			isUsingCommonGUBOs = true;
+		}
+	} else {
+		dset = new DSet();
+		isUsingCommonGUBOs = false;
+	}
 	descriptorSets.push_back(dset);
 }
 
 void GraphicsPipeline::addTextureBindingToLastSet(Texture* tex, VkShaderStageFlags shaderStage) {
 	if (descriptorSets.empty()) {
-		addSet();
+		addSet(false);
 	}
+	if (isUsingCommonGUBOs) { return; }
 
 	DSet* lastDSet = descriptorSets.at(descriptorSets.size() - 1);
 	lastDSet->addTextureBinding(tex, shaderStage);
@@ -98,8 +124,9 @@ void GraphicsPipeline::addTextureBindingToLastSet(Texture* tex, VkShaderStageFla
 
 void GraphicsPipeline::addUniformBindingToLastSet(void* uniform, int uniformSize, VkShaderStageFlags shaderStage) {
 	if (descriptorSets.empty()) {
-		addSet();
+		addSet(false);
 	}
+	if (isUsingCommonGUBOs) { return; }
 
 	DSet* lastDSet = descriptorSets.at(descriptorSets.size() - 1);
 	lastDSet->addUniformBinding(uniform, uniformSize, shaderStage);
@@ -168,7 +195,10 @@ void GraphicsPipeline::destroy() {
 	isInitialized = false;
 	for (int i = 0; i < descriptorSets.size(); i++) {
 		descriptorSets.at(i)->destroy();
-		delete descriptorSets.at(i);
+		if (descriptorSets[i] == GraphicsPipeline::guboSet && GraphicsPipeline::guboSet != nullptr) {
+			delete descriptorSets.at(i);
+			GraphicsPipeline::guboSet = nullptr;
+		}
 	}
 	descriptorSets = {};
 }

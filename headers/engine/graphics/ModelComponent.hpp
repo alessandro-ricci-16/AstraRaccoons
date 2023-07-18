@@ -200,11 +200,11 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
         //Add all necessary sets & descriptor bindings
         if (guboPtr != nullptr) {
             //Bind Global uniforms
-            pipeline->addSet();
+            pipeline->addSet(true);
             pipeline->addUniformBindingToLastSet(guboPtr, sizeof(GlobalUniforms), VK_SHADER_STAGE_ALL_GRAPHICS);
         }
         //Bind model uniforms
-        pipeline->addSet();
+        pipeline->addSet(false);
         pipeline->addUniformBindingToLastSet(&uniforms, sizeof(Uniforms), VK_SHADER_STAGE_ALL_GRAPHICS);
         //Bind all textures in order
         for (int i = 0; i < textures.size(); i++) {
@@ -214,7 +214,7 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
         //Bind each additional uniform in a separate set
         for (int i = 0; i < additionalUniforms.size(); i++) {
             UniformEntry entry = additionalUniforms.at(i);
-            pipeline->addSet();
+            pipeline->addSet(false);
             pipeline->addUniformBindingToLastSet(entry.uniformPtr, entry.size, entry.stage);
         }
     }

@@ -37,8 +37,9 @@ class GraphicsPipeline {
     private:
         std::string vertexShaderName, fragmentShaderName;
         std::vector<DSet*> descriptorSets;
+        static DSet* guboSet;
         Pipeline compiledPipeline;
-        bool isInitialized;
+        bool isInitialized, isUsingCommonGUBOs;
     protected:
         uint32_t id;
 
@@ -48,7 +49,7 @@ class GraphicsPipeline {
         GraphicsPipeline() = default;
         GraphicsPipeline(std::string vertexShader, std::string fragmentShader);
 
-        void addSet();
+        void addSet(bool isGUBOSet);
         void addTextureBindingToLastSet(Texture* tex, VkShaderStageFlags shaderStage);
         void addUniformBindingToLastSet(void* uniform, int uniformSize, VkShaderStageFlags shaderStage);
         void compile(BaseProject* proj, VertexDescriptor* vertexDescriptor);
