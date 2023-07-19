@@ -17,30 +17,20 @@ void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
 }
 
 void Scene::addObject(GameObject* object) {
-    if (isUpdatingScene) {
-        addedObjects.push_back(object);
-    } else {
-        object->parentScene = this;
-        activeObjects.push_back(object);
-        addedObjects.push_back(object);
-        if (dynamic_cast<ICollidable*>(this) != nullptr && object->collider != nullptr) {
-            activeColliders[object->collider->getCollisionMask()].push_back(object->collider);
-        }
-    }
-    modifiedActiveObjects = true;
+    addedObjects.push_back(object);
 }
 
 void Scene::removeObject(GameObject* object) {
     removedObjects.push_back(object);
-    modifiedActiveObjects = true;
 }
 
-void Scene::applyObjectRemoval() {
+void Scene::applyObjectModifications() {
     for (int i = 0; i < addedObjects.size(); i++) {
         GameObject* object = addedObjects[i];
         object->parentScene = this;
         activeObjects.push_back(object);
-        if (dynamic_cast<ICollidable*>(this) != nullptr && object->collider != nullptr) {
+        modifiedActiveObjects = true;
+        if (dynamic_cast<ICollidable*>(object) != nullptr && object->collider != nullptr) {
             activeColliders[object->collider->getCollisionMask()].push_back(object->collider);
         }
     }
@@ -48,30 +38,35 @@ void Scene::applyObjectRemoval() {
     for (int i = 0; i < removedObjects.size(); i++) {
         GameObject* object = removedObjects[i];
         object->parentScene = nullptr;
-        int objectIdx = 0;
+        int objectIdx = -1;
         for (int i = 0; i < activeObjects.size(); i++) {
             if (activeObjects[i] == object) {
                 objectIdx = i;
                 break;
             }
         }
-        activeObjects.erase(activeObjects.begin() + objectIdx);
-        if (addedObjects.size() > 0) {
+        if (objectIdx >= 0) {
+            modifiedActiveObjects = true;
+            activeObjects.erase(activeObjects.begin() + objectIdx);
+        }
+        if (object->collider != nullptr) {
             objectIdx = -1;
-            for (int i = 0; i < addedObjects.size(); i++) {
-                if (addedObjects[i] == object) {
+            auto colliders = activeColliders[object->collider->getCollisionMask()];
+            for (int i = 0; i < colliders.size(); i++) {
+                if (colliders[i] == object->collider) {
                     objectIdx = i;
                     break;
                 }
             }
-            if (objectIdx > 0) {
-                addedObjects.erase(addedObjects.begin() + objectIdx);
+            if (objectIdx >= 0) {
+                activeColliders[object->collider->getCollisionMask()].erase(colliders.begin() + objectIdx);
             }
         }
         object->Cleanup();
         object->Destroy();
         delete object;
     }
+    addedObjects.clear();
     removedObjects.clear();
 }
 
@@ -130,11 +125,10 @@ void Scene::CheckCollisions() {
 }
 
 void Scene::CompileObjects(bool addedOnly) {
-    std::vector<GameObject*> objectsToCompile = addedOnly ? addedObjects : activeObjects;
+    std::vector<GameObject*> objectsToCompile = activeObjects;//addedOnly ? addedObjects : activeObjects;
     for (int i = 0; i < objectsToCompile.size(); i++) {
         objectsToCompile[i]->compile(proj, &gubos);
     }
-    addedObjects.clear();
     modifiedActiveObjects = false;
 }
 
@@ -142,12 +136,6 @@ void Scene::CleanupImpl() {
     for (int i = 0; i < activeObjects.size(); i++) {
         activeObjects[i]->Cleanup();
     }
-    //Destroy objects that have been removed until now
-    for (int i = 0; i < removedObjects.size(); i++) {
-        removedObjects[i]->Cleanup();
-        removedObjects[i]->Destroy();
-    }
-    removedObjects = {};
     Cleanup();
 }
 
@@ -157,13 +145,7 @@ void Scene::DestroyImpl() {
         delete activeObjects.at(i);
     }
     Destroy();
-    activeObjects = {};
-    for (int i = 0; i < removedObjects.size(); i++) {
-        removedObjects[i]->Cleanup();
-        removedObjects[i]->Destroy();
-        delete removedObjects.at(i);
-    }
-    removedObjects = {};
+    activeObjects.clear();
 }
 
 Scene::~Scene() {

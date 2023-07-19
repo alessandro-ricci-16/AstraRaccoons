@@ -8,6 +8,8 @@
 
 template <class Vert>
 class MeshObject: public GameObject {
+    private:
+        bool isCompiled = false;
     public:
         ModelComponent<Vert> model;
         virtual ~MeshObject();
@@ -39,7 +41,10 @@ class MeshObject: public GameObject {
 
 template <class Vert>
 void MeshObject<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
-    model.compile(proj, acceptsGUBOs ? guboPtr : nullptr);
+    if (!isCompiled) {
+        model.compile(proj, acceptsGUBOs ? guboPtr : nullptr);
+        isCompiled = true;
+    }
     for (int i = 0; i < children.size(); i++) {
         children.at(i)->compile(proj, guboPtr);
     }
@@ -102,6 +107,7 @@ void MeshObject<Vert>::CommitUpdates(int currentImage, glm::mat4 cameraMatrix) {
 template <class Vert>
 void MeshObject<Vert>::Destroy() {
     model.destroy();
+    isCompiled = false;
     for (int i = 0; i < children.size(); i++) {
         children.at(i)->Destroy();
     }
@@ -110,6 +116,7 @@ void MeshObject<Vert>::Destroy() {
 template <class Vert>
 void MeshObject<Vert>::Cleanup() {
     model.cleanup();
+    isCompiled = false;
     for (int i = 0; i < children.size(); i++) {
         children.at(i)->Cleanup();
     }
