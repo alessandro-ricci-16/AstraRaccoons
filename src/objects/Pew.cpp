@@ -22,7 +22,7 @@ void Pew::Instantiate() {
 	ObjectVertexDescriptor* vertexDescriptor = new ObjectVertexDescriptor();
 	vertexDescriptor->addBinding(sizeof(PewVertex), true);
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(PewVertex, pos), sizeof(glm::vec3), POSITION);
-	float length = 4 * thickness;
+	float length = 6 * thickness;
 	std::vector<PewVertex> verts = { {glm::vec3(-thickness / 2, -thickness / 2, 0)},
 										   {glm::vec3(thickness / 2, -thickness / 2, 0)},
 											{glm::vec3(thickness / 2, thickness / 2, 0)},

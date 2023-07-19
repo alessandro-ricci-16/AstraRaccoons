@@ -1,6 +1,7 @@
 #include "../../headers/scenes/MainScene.hpp"
 #include "../../headers/objects/SpaceshipObject.hpp"
 #include "../../headers/objects/SkyBoxObject.hpp"
+#include "../../headers/engine/base/Random.hpp"
 #include <headers/objects/TestCubeObject.hpp>
 #include <headers/objects/asteroids/SimpleAsteroidObject.hpp>
 #include <headers/engine/base/Time.hpp>
@@ -21,8 +22,8 @@ void MainScene::Instantiate() {
     addObject(skybox);
     //Set up asteroid spawning
     lastSpawnTime = 0;
-    spawnDeltaTime = 1.5; //Seconds
-    //Set up lights
+    spawnDeltaTime = 3; // seconds
+    // Set up lights
     gubos.pointLightPosition = glm::vec3(.5f, 0, 1.0f);
     gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     gubos.pointLightDecayFactor = 2; // Inverse-linear
@@ -37,6 +38,12 @@ void MainScene::Instantiate() {
     gubos.spotlightCosIn = 0.92f;
     gubos.spotlightCosOut = 0.89f;
     gubos.eyePos = camera->getCameraPosition();
+    // Spawn initial asteroids
+    for (int i = 0; i < initialAsteroids; i++) {
+        SimpleAsteroidObject* asteroid = new SimpleAsteroidObject(&(player->transform), Random::randomFloat(1, 6));
+        asteroid->Instantiate();
+        addObject(asteroid);
+    }
 }
 
 void MainScene::Update() {

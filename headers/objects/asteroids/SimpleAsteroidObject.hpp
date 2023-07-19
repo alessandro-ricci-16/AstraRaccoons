@@ -17,7 +17,7 @@ class SimpleAsteroidObject : public MeshObject<SimpleAsteroidVertex>, public ICo
         glm::vec3 angVel;
         Transform* playerTransform;
         float scale, scaleToUpdate;
-        const float minScale = 1.5f;
+        float minScale = 1.5f;
 
     public:
         SimpleAsteroidObject(Transform* playerTransform, float initialScale);
