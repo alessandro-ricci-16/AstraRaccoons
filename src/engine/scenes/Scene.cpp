@@ -25,6 +25,7 @@ void Scene::removeObject(GameObject* object) {
 }
 
 void Scene::applyObjectModifications() {
+    // adding new objects
     for (int i = 0; i < addedObjects.size(); i++) {
         GameObject* object = addedObjects[i];
         object->parentScene = this;
@@ -34,39 +35,34 @@ void Scene::applyObjectModifications() {
             activeColliders[object->collider->getCollisionMask()].push_back(object->collider);
         }
     }
-    
+    addedObjects.clear();
+    // removing objects
     for (int i = 0; i < removedObjects.size(); i++) {
-        GameObject* object = removedObjects[i];
-        object->parentScene = nullptr;
-        int objectIdx = -1;
-        for (int i = 0; i < activeObjects.size(); i++) {
-            if (activeObjects[i] == object) {
-                objectIdx = i;
-                break;
-            }
-        }
-        if (objectIdx >= 0) {
-            modifiedActiveObjects = true;
-            activeObjects.erase(activeObjects.begin() + objectIdx);
-        }
-        if (object->collider != nullptr) {
-            objectIdx = -1;
-            auto colliders = activeColliders[object->collider->getCollisionMask()];
+        GameObject* objectToRemove = removedObjects[i];
+        objectToRemove->parentScene = nullptr;
+        // remove collider
+        if (objectToRemove->collider != nullptr) {
+            auto colliders = activeColliders[objectToRemove->collider->getCollisionMask()];
             for (int i = 0; i < colliders.size(); i++) {
-                if (colliders[i] == object->collider) {
-                    objectIdx = i;
+                if (colliders[i] == objectToRemove->collider) {
+                    colliders.erase(colliders.begin() + i);
                     break;
                 }
             }
-            if (objectIdx >= 0) {
-                activeColliders[object->collider->getCollisionMask()].erase(colliders.begin() + objectIdx);
+        }
+        // remove from active objects
+        for (int i = 0; i < activeObjects.size(); i++) {
+            if (activeObjects[i] == objectToRemove) {
+                modifiedActiveObjects = true;
+                activeObjects.erase(activeObjects.begin() + i);
+                break;
             }
         }
-        object->Cleanup();
-        object->Destroy();
-        delete object;
+
+        objectToRemove->Cleanup();
+        objectToRemove->Destroy();
+        delete objectToRemove;
     }
-    addedObjects.clear();
     removedObjects.clear();
 }
 
@@ -125,7 +121,7 @@ void Scene::CheckCollisions() {
 }
 
 void Scene::CompileObjects(bool addedOnly) {
-    std::vector<GameObject*> objectsToCompile = activeObjects;//addedOnly ? addedObjects : activeObjects;
+    std::vector<GameObject*> objectsToCompile = activeObjects;
     for (int i = 0; i < objectsToCompile.size(); i++) {
         objectsToCompile[i]->compile(proj, &gubos);
     }

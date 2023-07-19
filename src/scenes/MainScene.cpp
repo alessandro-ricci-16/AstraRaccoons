@@ -51,7 +51,7 @@ void MainScene::Update() {
     //Spawn new asteroids over time
     float absTime = Time::getAbsoluteTime();
     if (absTime - lastSpawnTime >= spawnDeltaTime) {
-        SimpleAsteroidObject* asteroid = new SimpleAsteroidObject(&(player->transform));
+        SimpleAsteroidObject* asteroid = new SimpleAsteroidObject(&(player->transform), 5.0f);
         asteroid->Instantiate();
         addObject(asteroid);
         lastSpawnTime = absTime;

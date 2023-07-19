@@ -22,17 +22,21 @@ void Collider::setParent(GameObject* object) {
     this->parent = object;
 }
 
+void Collider::setRadius(float _radius) {
+    radius = _radius;
+}
+
 bool Collider::checkCollisionWith(Collider* collider2) {
-    //Check masks
+    // Check masks
     bool maskCheck = (collisionMask & collider2->collisionLayer) != 0;
     if (!maskCheck) return false;
-    //Get the origin of this collider
-    glm::vec3 localOrigin = (parent->transform.getMatrix()) * glm::vec4(0, 0, 0, 1);
-    //Get the origin of the other collider
-    glm::vec3 otherOrigin = (collider2->parent->transform.getMatrix()) * glm::vec4(0, 0, 0, 1);
-    //Check their relative distance
+    // Get the origin of this collider
+    glm::vec3 localOrigin = parent->transform.getPos();
+    // Get the origin of the other collider
+    glm::vec3 otherOrigin = collider2->parent->transform.getPos();
+    // Check their relative distance
     float colliderDistance = glm::distance(localOrigin, otherOrigin);
-    //Subtract radii
+    // Subtract radii
     float subtractedDistance = colliderDistance - radius - collider2->radius;
     //If the last value is negative, we have a collision!
     return subtractedDistance < 0;

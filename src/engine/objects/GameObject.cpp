@@ -62,4 +62,6 @@ GameObject::~GameObject() {
         delete children.at(i);
     }
     children.clear();
+    if (collider != nullptr)
+        delete collider;
 }
