@@ -101,7 +101,7 @@ void Scene::UpdateImpl(int currentimage) {
     //Now check for collisions
     CheckCollisions();
     //Apply object removals
-    applyObjectRemoval();
+    applyObjectModifications();
     //Check if we need to recreate the swapchain
     if (modifiedActiveObjects) {
         ((Game*)proj)->recreateVulkanSwapChain(true);
