@@ -55,6 +55,8 @@ class GraphicsPipeline {
         void compile(BaseProject* proj, VertexDescriptor* vertexDescriptor);
         void cleanup();
         void destroy();
+        static void cleanupGUBOs();
+        static void destroyGUBOs();
 
         void commitUniforms(int currentImage);
         void bind(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline);

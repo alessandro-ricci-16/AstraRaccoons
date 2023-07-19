@@ -69,6 +69,7 @@ void Game::pipelinesAndDescriptorSetsCleanup() {
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes.at(i)->CleanupImpl();
 	}
+	GraphicsPipeline::cleanupGUBOs();
 }
 
 void Game::localCleanup() {
@@ -77,6 +78,7 @@ void Game::localCleanup() {
 		delete managedScenes.at(i);
 	}
 	managedScenes = {};
+	GraphicsPipeline::destroyGUBOs();
 }
 
 void Game::populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage) {

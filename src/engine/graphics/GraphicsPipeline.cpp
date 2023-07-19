@@ -187,7 +187,9 @@ void GraphicsPipeline::cleanup() {
 	if (isInitialized) {
 		compiledPipeline.cleanup();
 		for (int i = 0; i < descriptorSets.size(); i++) {
-			descriptorSets.at(i)->cleanup();
+			if (descriptorSets[i] != GraphicsPipeline::guboSet) {
+				descriptorSets.at(i)->cleanup();
+			}
 		}
 	}
 }
@@ -196,11 +198,24 @@ void GraphicsPipeline::destroy() {
 	compiledPipeline.destroy();
 	isInitialized = false;
 	for (int i = 0; i < descriptorSets.size(); i++) {
-		descriptorSets.at(i)->destroy();
-		if (descriptorSets[i] == GraphicsPipeline::guboSet && GraphicsPipeline::guboSet != nullptr) {
-			delete descriptorSets.at(i);
-			GraphicsPipeline::guboSet = nullptr;
+		if (descriptorSets[i] != GraphicsPipeline::guboSet) {
+			descriptorSets.at(i)->destroy();
+			delete descriptorSets[i];
 		}
 	}
-	descriptorSets = {};
+	descriptorSets.clear();
+}
+
+void GraphicsPipeline::cleanupGUBOs() {
+	if (GraphicsPipeline::guboSet != nullptr) {
+		GraphicsPipeline::guboSet->cleanup();
+	}
+}
+
+void GraphicsPipeline::destroyGUBOs() {
+	if (GraphicsPipeline::guboSet != nullptr) {
+		GraphicsPipeline::guboSet->destroy();
+		delete GraphicsPipeline::guboSet;
+		GraphicsPipeline::guboSet = nullptr;
+	}
 }
