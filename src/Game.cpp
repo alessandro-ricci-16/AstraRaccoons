@@ -52,6 +52,10 @@ void Game::localInit() {
 	managedScenes.push_back(introScene);
 	managedScenes.push_back(mainScene);
 	#endif
+	for (int i = 0; i < managedScenes.size(); i++) {
+		managedScenes[i]->applyObjectModifications();
+	}
+	
 }
 
 void Game::pipelinesAndDescriptorSetsInit() {

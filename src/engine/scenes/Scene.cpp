@@ -64,6 +64,10 @@ void Scene::applyObjectModifications() {
         delete objectToRemove;
     }
     removedObjects.clear();
+    // Check if we need to recreate the swapchain
+    if (modifiedActiveObjects) {
+        ((Game*)proj)->recreateVulkanSwapChain(true);
+    }
 }
 
 int Scene::totalTextureCount() {
@@ -98,10 +102,6 @@ void Scene::UpdateImpl(int currentimage) {
     CheckCollisions();
     //Apply object removals
     applyObjectModifications();
-    //Check if we need to recreate the swapchain
-    if (modifiedActiveObjects) {
-        ((Game*)proj)->recreateVulkanSwapChain(true);
-    }
 }
 
 void Scene::CheckCollisions() {
