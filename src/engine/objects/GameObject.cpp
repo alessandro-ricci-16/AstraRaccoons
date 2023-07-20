@@ -14,8 +14,7 @@ void GameObject::setCollider(float radius, uint8_t collisionLayer, uint8_t colli
     if (dynamic_cast<ICollidable*>(this) == nullptr) {
         std::cout << "WARNING: Trying to set a collider to object " << this << " which does not conform to ICollidable! For safety, a collider will not be added to this object.\n";
     } else {
-        collider = new Collider(radius, collisionLayer, collisionMask);
-        collider->setParent(this);
+        collider = new Collider(this, radius, collisionLayer, collisionMask);
     }
 }
 

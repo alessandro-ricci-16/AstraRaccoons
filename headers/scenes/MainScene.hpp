@@ -9,6 +9,7 @@ class MainScene: public Scene {
         float lastSpawnTime;
         float spawnDeltaTime;
         GameObject* player;
+        const unsigned int initialAsteroids = 10;
 
     public:
         MainScene(float* ar) : Scene(ar) {}

@@ -7,7 +7,6 @@
 #include "../graphics/GraphicsPipeline.hpp"
 #include "../objects/Camera.hpp"
 #include "../graphics/Uniforms.hpp"
-#include <unordered_map>
 
 inline auto key_selector = [](auto pair){return pair.first;};
 
@@ -19,7 +18,7 @@ class Scene {
         bool isUpdatingScene;
 
     protected:
-        std::unordered_map<uint8_t, std::vector<Collider*>> activeColliders; //Maps the collision mask to the colliders with that mask
+        std::vector<Collider*> activeColliders; // list of all active colliders in game
         Camera* camera;
         float* aspectRatio;
         GlobalUniforms gubos;

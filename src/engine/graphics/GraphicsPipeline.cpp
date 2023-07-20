@@ -94,6 +94,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vertexShader, std::string fragmen
 	std::hash<std::string> hasher;
 	id = hasher(concatNames);
 	isInitialized = false;
+	isDestroyed = true;
 }
 
 void GraphicsPipeline::addSet(bool isGUBOSet) {
@@ -162,9 +163,13 @@ void GraphicsPipeline::compile(BaseProject* proj, VertexDescriptor* vertexDescri
 			descriptorSets.at(i)->compile(proj);
 		}
 	}
+	isDestroyed = false;
 }
 
 void GraphicsPipeline::bind(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline) {
+	if (isDestroyed) {
+		std::runtime_error("BINDING DESTROYED PIPELINE!");
+	}
 	//Bind the pipeline
 	if (activePipeline == nullptr || activePipeline->id != id) {
 		compiledPipeline.bind(commandBuffer);
@@ -204,6 +209,7 @@ void GraphicsPipeline::destroy() {
 		}
 	}
 	descriptorSets.clear();
+	isDestroyed = true;
 }
 
 void GraphicsPipeline::cleanupGUBOs() {

@@ -16,7 +16,7 @@ class GameObject {
 
     public:
         Transform transform;
-        Collider* collider;
+        Collider* collider = nullptr;
         Scene* parentScene;
 
         GameObject();
