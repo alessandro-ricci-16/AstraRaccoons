@@ -14,6 +14,7 @@ set(GLFWHEADPATH "C:/VulkanSDK/glfw-3.3.8.bin.WIN64/include")
 # Set the include directories
 include_directories(
     ${PROJECT_SOURCE_DIR}/headers
+    ${PROJECT_SOURCE_DIR}
     ${VKHEADPATH}
     ${GLFWHEADPATH}
 )
@@ -31,5 +32,9 @@ link_libraries(
 # Set the source files
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
+# Set the header files
+file(GLOB_RECURSE HEADERS "headers/*.hpp")
+
 # Create the executable
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+

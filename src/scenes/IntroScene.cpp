@@ -3,6 +3,7 @@
 #include <headers/scenes/IntroScene.hpp>
 #include <headers/engine/objects/OrbitingCamera.hpp>
 #include <headers/objects/FaderPlaneObject.hpp>
+#include <headers/objects/TextMaker.hpp>
 #include <headers/engine/base/Inputs.hpp>
 #include <headers/Game.hpp>
 #include <headers/scenes/AvailableScenes.hpp>
@@ -23,6 +24,10 @@ void IntroScene::Instantiate() {
     FaderPlaneObject* fader = new FaderPlaneObject();
     fader->Instantiate();
     addObject(fader);
+    // Text
+    TextMaker* txt = new TextMaker();
+    txt->Instantiate();
+    addObject(txt);
 
     gubos.eyePos = camera->getCameraPosition();
 }
