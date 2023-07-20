@@ -39,7 +39,6 @@ private:
 
 public:
 	void Instantiate();
-	void Start();
 	void Update();
 	void createTextMesh();// std::vector<TextVertex> verts, std::vector<uint32_t> indices);
 };

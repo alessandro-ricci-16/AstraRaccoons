@@ -14,7 +14,6 @@ class TestPlaneObject : public MeshObject<TestPlaneVertex>, public ICollidable {
    public:
     bool moves;
     void Instantiate();
-    void Start();
     void Update();
     void OnCollisionWith(GameObject* other);
 };

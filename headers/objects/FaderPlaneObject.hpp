@@ -12,7 +12,6 @@ struct FaderPlaneVertex {
 class FaderPlaneObject : public MeshObject<FaderPlaneVertex> {
     public:
         void Instantiate();
-        void Start();
         void Update();
 };
 

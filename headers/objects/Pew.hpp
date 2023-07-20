@@ -25,7 +25,6 @@ class Pew : public MeshObject<PewVertex>, public ICollidable {
         Pew(Transform parent, glm::vec3 offset, glm::vec3 speed, float range, float damage, float thickness, glm::vec3 color);
         float getDamage();
         void Instantiate();
-        void Start();
         void Update();
         void OnCollisionWith(GameObject* other);
 };

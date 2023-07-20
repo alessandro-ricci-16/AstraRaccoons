@@ -29,7 +29,7 @@ void SpaceshipObject::Instantiate() {
 }
 
 void SpaceshipObject::Update() {
-	float delT = Time::getDeltaT();
+	float delT = Time::getFixedDeltaT(); // always with scale 1
 	glm::vec3 mov, rot;
 	Inputs::getSixAxis(mov, rot, fire);
 	rot *= glm::vec3(-1, -1, 1);

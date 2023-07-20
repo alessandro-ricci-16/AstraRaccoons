@@ -22,10 +22,10 @@ private:
 public:
     AbstractAsteroidObject(Transform* playerTransform, float initialScale);
 
-    void Instantiate();
-    void Start();
+    virtual void Instantiate();
     void Update();
     void OnCollisionWith(GameObject* other);
+    virtual std::string getModelName() = 0;
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_ASTEROIDS_ABSTRACTASTEROIDOBJECT_HPP_

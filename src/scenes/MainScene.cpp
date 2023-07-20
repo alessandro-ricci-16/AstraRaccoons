@@ -3,7 +3,7 @@
 #include "../../headers/objects/SkyBoxObject.hpp"
 #include "../../headers/engine/base/Random.hpp"
 #include <headers/objects/TestCubeObject.hpp>
-#include <headers/objects/asteroids/AbstractAsteroidObject.hpp>
+#include <headers/objects/asteroids/Pietrino.hpp>
 #include <headers/engine/base/Time.hpp>
 
 void MainScene::Instantiate() {
@@ -40,7 +40,7 @@ void MainScene::Instantiate() {
     gubos.eyePos = camera->getCameraPosition();
     // Spawn initial asteroids
     for (int i = 0; i < initialAsteroids; i++) {
-        AbstractAsteroidObject* asteroid = new AbstractAsteroidObject(&(player->transform), Random::randomFloat(1, 6));
+        AbstractAsteroidObject* asteroid = new Pietrino(&(player->transform), Random::randomFloat(1, 6));
         asteroid->Instantiate();
         addObject(asteroid);
     }
@@ -58,7 +58,7 @@ void MainScene::Update() {
     //Spawn new asteroids over time
     float absTime = Time::getAbsoluteTime();
     if (absTime - lastSpawnTime >= spawnDeltaTime) {
-        AbstractAsteroidObject* asteroid = new AbstractAsteroidObject(&(player->transform), 5.0f);
+        AbstractAsteroidObject* asteroid = new Pietrino(&(player->transform), 5.0f);
         asteroid->Instantiate();
         addObject(asteroid);
         lastSpawnTime = absTime;

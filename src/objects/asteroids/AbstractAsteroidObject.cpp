@@ -1,5 +1,4 @@
 #define MESHOBJECT_IMPLEMENTATION
-#include <ctime>
 
 #include "../../../headers/engine/base/Time.hpp"
 #include "../../../headers/engine/scenes/Scene.hpp"
@@ -23,14 +22,6 @@ void AbstractAsteroidObject::Instantiate() {
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(AbstractAsteroidVertex, pos), sizeof(glm::vec3), POSITION);
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32_SFLOAT, offsetof(AbstractAsteroidVertex, uv), sizeof(glm::vec2), UV);
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(AbstractAsteroidVertex, norm), sizeof(glm::vec3), NORMAL);
-	setModel("models/Sphere.gltf", vertexDescriptor);
-	model.setShader("shaders/asteroids/SimpleAsteroidShader_Vert.spv", "shaders/asteroids/SimpleAsteroidShader_Frag.spv");
-	model.addTexture("textures/asteroids/copper/Albedo.png");
-	model.addTexture("textures/asteroids/copper/RoughnessMetalness.png");
-	const std::vector<std::string> textures = { "textures/sky/right.png", "textures/sky/left.png",
-							  "textures/sky/top.png",   "textures/sky/bottom.png",
-							  "textures/sky/back.png", "textures/sky/front.png" };
-	model.addCubicTexture(textures);
 	//Position the asteroid in a random point around the player at a random distance and with random velocities
 	glm::vec3 playerPosition = transform.getPos();
 	glm::vec3 randomDirection = glm::normalize(glm::vec3(Random::randomFloat(-1, 1), Random::randomFloat(-1, 1), Random::randomFloat(-1, 1)));
@@ -50,6 +41,7 @@ void AbstractAsteroidObject::Instantiate() {
 	acceptsGUBOs = true;
 	//Add collider
 	setCollider(scale, 0x2, 0x7); // Layer = 0b00000010 Mask = 0b00000111
+	setModel(getModelName(), vertexDescriptor);
 }
 
 void AbstractAsteroidObject::Update() {

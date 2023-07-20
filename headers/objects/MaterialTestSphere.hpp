@@ -14,7 +14,6 @@ class TestSphereObject : public MeshObject<TestSphereVertex>, public ICollidable
    public:
     bool moves;
     void Instantiate();
-    void Start();
     void Update();
     void OnCollisionWith(GameObject* other);
 };

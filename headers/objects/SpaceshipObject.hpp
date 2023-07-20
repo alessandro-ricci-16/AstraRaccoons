@@ -36,7 +36,6 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
 
     public:
         void Instantiate();
-        void Start();
         void Update();
         void OnCollisionWith(GameObject* other);
 };
