@@ -19,6 +19,8 @@ private:
     float scale, scaleToUpdate;
     float minScale = 1.5f;
 
+    void receiveDamage(float damage);
+
 public:
     AbstractAsteroidObject(Transform* playerTransform, float initialScale);
 

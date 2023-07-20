@@ -92,7 +92,7 @@ void AbstractAsteroidObject::OnCollisionWith(GameObject* other) {
 	}
 }
 
-void SimpleAsteroidObject::receiveDamage(float damage) {
+void AbstractAsteroidObject::receiveDamage(float damage) {
 	// new scale^3 = scale^3 - (3/4pi)*damage, scales volume linearly wrt to damage
 	scaleToUpdate = std::cbrtf(std::pow(scale, 3) - 0.238732414637843f * damage);
 	// destroy myself if i'm too small

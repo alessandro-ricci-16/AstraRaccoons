@@ -86,7 +86,7 @@ void MainScene::WillDisappear() {
     spaceship->resetLives();
     //Add initial asteroids
     for (int i = 0; i < initialAsteroids; i++) {
-        SimpleAsteroidObject* asteroid = new SimpleAsteroidObject(&(player->transform), Random::randomFloat(1, 6));
+        AbstractAsteroidObject* asteroid = new Pietrino(&(player->transform), Random::randomFloat(1, 6));
         asteroid->Instantiate();
         addObject(asteroid);
     }
