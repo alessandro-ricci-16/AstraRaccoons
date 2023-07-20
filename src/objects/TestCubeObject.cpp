@@ -15,7 +15,7 @@ void TestCubeObject::Instantiate() {
     setModel("models/Cube.obj", vertexDescriptor);
 	model.setShader("shaders/Shader_Vert.spv", "shaders/Shader_Frag.spv");
 	model.addTexture("textures/Checker.png");
-    transform.TranslateTo(glm::vec3(0, 0, -1));
+    transform.TranslateTo(glm::vec3(0, 0, 0));
     //Add the collider
     setCollider(1, 1, 1);
     // Enable GUBOs -- REQUIRED if the shader uses them!

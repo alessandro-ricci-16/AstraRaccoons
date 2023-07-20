@@ -8,6 +8,7 @@ struct AbstractAsteroidVertex {
     glm::vec3 pos;
     glm::vec2 uv;
     glm::vec3 norm;
+    glm::vec4 tan;
 };
 
 class AbstractAsteroidObject : public MeshObject<AbstractAsteroidVertex>, public ICollidable {
@@ -17,7 +18,7 @@ private:
     glm::vec3 angVel;
     Transform* playerTransform;
     float scale, scaleToUpdate;
-    float minScale = 1.5f;
+    float minScale = 1.25f;
 
     void receiveDamage(float damage);
 

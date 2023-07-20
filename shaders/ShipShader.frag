@@ -72,7 +72,7 @@ void main() {
 	vec3 V = normalize(gubo.eyePos - fragPos);
 
 	vec3 DiffSpec = GGXDiffuseSpecular(V, Norm, L, albedoCol, 0.3f, metallic, roughness);
-	vec3 Ambient = sh(Norm) * DiffSpec * (1 - emission) * 2; // *2 to remove
+	vec3 Ambient = sh(Norm) * albedoCol * (1 - emission);
 	vec3 emissionColor = emission * albedoCol;
 	
 	//For cubemap reflections

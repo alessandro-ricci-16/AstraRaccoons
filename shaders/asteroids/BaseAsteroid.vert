@@ -11,14 +11,17 @@ layout(set = 1, binding = 0) uniform UniformBufferObject {
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec2 inUV;
 layout(location = 2) in vec3 inNormal;
+layout(location = 3) in vec4 inTan;
 
 layout(location = 0) out vec3 outPosition;
 layout(location = 1) out vec3 outNormal;
 layout(location = 2) out vec2 outUV;
+layout(location = 3) out vec4 outTan;
 
 void main() {
 	gl_Position = ubo.mvpMat * vec4(inPosition, 1.0);
 	outPosition = (ubo.modelMat * vec4(inPosition, 1.0)).xyz;
 	outUV = inUV;
 	outNormal = (ubo.nMat * vec4(inNormal, 0)).xyz;
+	outTan = vec4((ubo.nMat * vec4(inTan.xyz, 0)).xyz, inTan.w);
 }

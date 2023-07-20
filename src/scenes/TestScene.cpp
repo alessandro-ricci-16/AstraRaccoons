@@ -14,9 +14,9 @@ void TestScene::Instantiate() {
     addObject(object);
     lookAtTarget = new Transform(glm::mat4(1), glm::mat4(1), glm::mat4(1));
     // Set up the camera
-    camera = new OrbitingCamera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
+    camera = new Camera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
     camera->setTarget(lookAtTarget);
-    camera->setTargetDistance(vec3(0, 0, 2));
+    camera->setTargetDistance(vec3(5, 2, 5));
 
     gubos.pointLightPosition = glm::vec3(.5f, 0, 1.0f);
     gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);

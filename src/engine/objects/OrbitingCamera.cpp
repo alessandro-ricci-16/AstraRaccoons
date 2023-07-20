@@ -1,4 +1,4 @@
-#include <headers/engine/objects/OrbitingCamera.hpp>
+#include "../../../headers/engine/objects/OrbitingCamera.hpp"
 #include "../../../headers/engine/base/Time.hpp"
 
 glm::mat4 OrbitingCamera::getCameraMatrix() {
@@ -11,5 +11,5 @@ glm::mat4 OrbitingCamera::getCameraMatrix() {
 
 glm::vec3 OrbitingCamera::getCameraPosition() {
 	float absTime = Time::getAbsoluteTime();
-	return target->getPos() + glm::vec3(glm::cos(0.35f * absTime), 0, glm::sin(0.35f * absTime));
+	return target->getPos() + glm::vec3(glm::cos(0.35f * absTime), 0, glm::sin(0.35f * absTime)) * distance + glm::vec3(0, distance.y, 0);
 }

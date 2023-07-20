@@ -13,7 +13,7 @@ void MainScene::Instantiate() {
     addObject(object);
     player = object;
     //Set up the camera
-    camera = new Camera(glm::radians(90.0f), 0.1f, 100.0f, aspectRatio);
+    camera = new Camera(glm::radians(90.0f), 0.1f, 300.0f, aspectRatio);
     camera->setTarget(&(object->transform));
     camera->setTargetDistance(vec3(0, 6, 17));
     // Load skybox
@@ -22,7 +22,7 @@ void MainScene::Instantiate() {
     addObject(skybox);
     //Set up asteroid spawning
     lastSpawnTime = 0;
-    spawnDeltaTime = 3; // seconds
+    spawnDeltaTime = 2; // seconds
     // Set up lights
     gubos.pointLightPosition = glm::vec3(.5f, 0, 1.0f);
     gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
