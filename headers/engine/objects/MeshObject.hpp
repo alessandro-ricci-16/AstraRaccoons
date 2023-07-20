@@ -19,7 +19,6 @@ class MeshObject: public GameObject {
         void compile(BaseProject* proj, GlobalUniforms* guboPtr) override;
 
         virtual void Instantiate() = 0;
-        virtual void Start() = 0;
         virtual void Update() = 0;
         virtual void Destroy();
         virtual void Cleanup();

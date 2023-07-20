@@ -25,8 +25,6 @@ void TestSphereObject::Instantiate() {
     acceptsGUBOs = true;
 }
 
-void TestSphereObject::Start() {}
-
 void TestSphereObject::Update() {
 }
 

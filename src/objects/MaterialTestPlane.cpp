@@ -26,8 +26,6 @@ void TestPlaneObject::Instantiate() {
     acceptsGUBOs = true;
 }
 
-void TestPlaneObject::Start() {}
-
 void TestPlaneObject::Update() {}
 
 void TestPlaneObject::OnCollisionWith(GameObject* other) {}

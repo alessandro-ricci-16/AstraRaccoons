@@ -28,8 +28,6 @@ void SpaceshipObject::Instantiate() {
 	acceptsGUBOs = true;
 }
 
-void SpaceshipObject::Start() {}
-
 void SpaceshipObject::Update() {
 	float delT = Time::getDeltaT();
 	glm::vec3 mov, rot;

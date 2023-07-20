@@ -22,10 +22,6 @@ void TestCubeObject::Instantiate() {
     acceptsGUBOs = true;
 }
 
-void TestCubeObject::Start() {
-
-}
-
 void TestCubeObject::Update() {
     transform.Rotate(20*Time::getDeltaT(), glm::vec3(1, 0, 0));
     if (moves) {

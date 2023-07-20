@@ -55,8 +55,6 @@ void Pew::Instantiate() {
 	acceptsGUBOs = false;
 }
 
-void Pew::Start() {}
-
 void Pew::Update() {
 	transform.TranslateLocalBy(speed * Time::getDeltaT());
 	if (glm::distance(transform.getPos(), initialPos) >= range) {

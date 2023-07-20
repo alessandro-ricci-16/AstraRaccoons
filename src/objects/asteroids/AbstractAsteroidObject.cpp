@@ -3,26 +3,26 @@
 
 #include "../../../headers/engine/base/Time.hpp"
 #include "../../../headers/engine/scenes/Scene.hpp"
-#include "../../../headers/objects/asteroids/SimpleAsteroidObject.hpp"
+#include "../../../headers/objects/asteroids/AbstractAsteroidObject.hpp"
 #include "../../../headers/objects/Pew.hpp"
 #include "../../../headers/engine/base/Random.hpp"
 
-SimpleAsteroidObject::SimpleAsteroidObject(Transform* playerTransform, float _initialScale) {
+AbstractAsteroidObject::AbstractAsteroidObject(Transform* _playerTransform, float _initialScale) {
 	transform = Transform::identity();
 	scale = _initialScale;
 	minScale = std::min(scale, 1.5f);
 	scaleToUpdate = scale;
 	transform.ScaleTo(glm::vec3(scale));
-	this->playerTransform = playerTransform;
+	playerTransform = _playerTransform;
 }
 
-void SimpleAsteroidObject::Instantiate() {
+void AbstractAsteroidObject::Instantiate() {
 	// Load the model component
 	ObjectVertexDescriptor* vertexDescriptor = new ObjectVertexDescriptor();
-	vertexDescriptor->addBinding(sizeof(SimpleAsteroidVertex), true);
-	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(SimpleAsteroidVertex, pos), sizeof(glm::vec3), POSITION);
-	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32_SFLOAT, offsetof(SimpleAsteroidVertex, uv), sizeof(glm::vec2), UV);
-	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(SimpleAsteroidVertex, norm), sizeof(glm::vec3), NORMAL);
+	vertexDescriptor->addBinding(sizeof(AbstractAsteroidVertex), true);
+	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(AbstractAsteroidVertex, pos), sizeof(glm::vec3), POSITION);
+	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32_SFLOAT, offsetof(AbstractAsteroidVertex, uv), sizeof(glm::vec2), UV);
+	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(AbstractAsteroidVertex, norm), sizeof(glm::vec3), NORMAL);
 	setModel("models/Sphere.gltf", vertexDescriptor);
 	model.setShader("shaders/asteroids/SimpleAsteroidShader_Vert.spv", "shaders/asteroids/SimpleAsteroidShader_Frag.spv");
 	model.addTexture("textures/asteroids/copper/Albedo.png");
@@ -52,11 +52,7 @@ void SimpleAsteroidObject::Instantiate() {
 	setCollider(scale, 0x2, 0x7); // Layer = 0b00000010 Mask = 0b00000111
 }
 
-void SimpleAsteroidObject::Start() {
-
-}
-
-void SimpleAsteroidObject::Update() {
+void AbstractAsteroidObject::Update() {
 	vel = velToUpdate;
 	transform.TranslateBy(vel * Time::getDeltaT());
 	transform.RotateBy(angVel * Time::getDeltaT());
@@ -67,7 +63,7 @@ void SimpleAsteroidObject::Update() {
 	}
 }
 
-void SimpleAsteroidObject::OnCollisionWith(GameObject* other) {
+void AbstractAsteroidObject::OnCollisionWith(GameObject* other) {
 	if (other->collider != nullptr) {
 		switch (other->collider->getCollisionLayer()) {
 		case 0x1: {
@@ -76,7 +72,7 @@ void SimpleAsteroidObject::OnCollisionWith(GameObject* other) {
 		}
 		case 0x2: {
 			// Collision with another asteroid - perfectly elastic collision
-			SimpleAsteroidObject* otherAsteroid = (SimpleAsteroidObject*)other;
+			AbstractAsteroidObject* otherAsteroid = (AbstractAsteroidObject*)other;
 			glm::vec3 otherVelocity = otherAsteroid->vel;
 			float otherMass = otherAsteroid->collider->getRadius();
 			float mass = collider->getRadius();

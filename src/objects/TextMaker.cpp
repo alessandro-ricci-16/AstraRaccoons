@@ -34,9 +34,6 @@ void TextMaker::Instantiate() {
 	model.backfaceCullingOn = false;
 }
 
-void TextMaker::Start() {
-}
-
 void TextMaker::Update() {
 }
 
