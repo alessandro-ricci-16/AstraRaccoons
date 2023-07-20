@@ -39,7 +39,7 @@ class GraphicsPipeline {
         std::vector<DSet*> descriptorSets;
         static DSet* guboSet;
         Pipeline compiledPipeline;
-        bool isInitialized, isUsingCommonGUBOs;
+        bool isInitialized, isUsingCommonGUBOs, isDestroyed;
     protected:
         uint32_t id;
 

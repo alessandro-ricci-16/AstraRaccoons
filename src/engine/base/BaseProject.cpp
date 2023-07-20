@@ -1129,47 +1129,52 @@ void BaseProject::createCommandBuffers() {
         throw std::runtime_error("failed to allocate command buffers!");
     }
 
-    refillCommandBuffers();
+	for (size_t i = 0; i < commandBuffers.size(); i++) {
+		VkCommandBufferBeginInfo beginInfo{};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		beginInfo.flags = 0;                   // Optional
+		beginInfo.pInheritanceInfo = nullptr;  // Optional
+		
+		if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
+			throw std::runtime_error(
+									 "failed to begin recording command buffer!");
+		}
+		
+		VkRenderPassBeginInfo renderPassInfo{};
+		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		renderPassInfo.renderPass = renderPass;
+		renderPassInfo.framebuffer = swapChainFramebuffers[i];
+		renderPassInfo.renderArea.offset = {0, 0};
+		renderPassInfo.renderArea.extent = swapChainExtent;
+		
+		std::array<VkClearValue, 2> clearValues{};
+		clearValues[0].color = initialBackgroundColor;
+		clearValues[1].depthStencil = {1.0f, 0};
+		
+		renderPassInfo.clearValueCount =
+		static_cast<uint32_t>(clearValues.size());
+		renderPassInfo.pClearValues = clearValues.data();
+		
+		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo,
+							 VK_SUBPASS_CONTENTS_INLINE);
+		
+		populateCommandBuffer(commandBuffers[i], i);
+		
+		vkCmdEndRenderPass(commandBuffers[i]);
+		
+		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
+			throw std::runtime_error("failed to record command buffer!");
+		}
+	}
 }
 
 void BaseProject::refillCommandBuffers() {
-    for (size_t i = 0; i < commandBuffers.size(); i++) {
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        beginInfo.flags = 0;                   // Optional
-        beginInfo.pInheritanceInfo = nullptr;  // Optional
-
-        if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
-            throw std::runtime_error(
-                "failed to begin recording command buffer!");
-        }
-
-        VkRenderPassBeginInfo renderPassInfo{};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = renderPass;
-        renderPassInfo.framebuffer = swapChainFramebuffers[i];
-        renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent = swapChainExtent;
-
-        std::array<VkClearValue, 2> clearValues{};
-        clearValues[0].color = initialBackgroundColor;
-        clearValues[1].depthStencil = {1.0f, 0};
-
-        renderPassInfo.clearValueCount =
-            static_cast<uint32_t>(clearValues.size());
-        renderPassInfo.pClearValues = clearValues.data();
-
-        vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo,
-                             VK_SUBPASS_CONTENTS_INLINE);
-
-        populateCommandBuffer(commandBuffers[i], i);
-
-        vkCmdEndRenderPass(commandBuffers[i]);
-
-        if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
-            throw std::runtime_error("failed to record command buffer!");
-        }
-    }
+	vkDeviceWaitIdle(device);
+	vkFreeCommandBuffers(device, commandPool,
+						 static_cast<uint32_t>(commandBuffers.size()),
+						 commandBuffers.data());
+	std::cout << "Recreated command buffers\n";
+	createCommandBuffers();
 }
 
 void BaseProject::createSyncObjects() {
