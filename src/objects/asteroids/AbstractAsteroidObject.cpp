@@ -5,6 +5,7 @@
 #include "../../../headers/objects/asteroids/AbstractAsteroidObject.hpp"
 #include "../../../headers/objects/Pew.hpp"
 #include "../../../headers/engine/base/Random.hpp"
+#include <headers/objects/SpaceshipObject.hpp>
 
 AbstractAsteroidObject::AbstractAsteroidObject(Transform* _playerTransform, float _initialScale) {
 	transform = Transform::identity();
@@ -59,7 +60,14 @@ void AbstractAsteroidObject::OnCollisionWith(GameObject* other) {
 	if (other->collider != nullptr) {
 		switch (other->collider->getCollisionLayer()) {
 		case 0x1: {
-			// Collision with the spaceship
+			// Collision with the spaceship - bounce (as if the other asteroid had infinite mass & zero velocity) & receive damage
+			SpaceshipObject* spaceship = (SpaceshipObject*)other;
+			glm::vec3 otherVelocity = spaceship->getVelocity();
+			float otherMass = 20.f;
+			float mass = collider->getRadius();
+			velToUpdate = ((2 * otherMass * otherVelocity) + (vel * (mass - otherMass))) / (mass + otherMass);
+			float relativeVelMagnitude = length(otherVelocity - vel);
+			receiveDamage(3 * max(relativeVelMagnitude - 5, 0.f));
 			break;
 		}
 		case 0x2: {
@@ -74,11 +82,7 @@ void AbstractAsteroidObject::OnCollisionWith(GameObject* other) {
 		case 0x4: {
 			// Collision with a bullet
 			Pew* pew = (Pew*)other;
-			// new scale^3 = scale^3 - (3/4pi)*damage, scales volume linearly wrt to damage
-			scaleToUpdate = std::cbrtf(std::pow(scale, 3) - 0.238732414637843f * pew->getDamage());
-			// destroy myself if i'm too small
-			if (scaleToUpdate < minScale)
-				parentScene->removeObject(this);
+			receiveDamage(pew->getDamage());
 			break;
 		}
 		default:
@@ -86,4 +90,12 @@ void AbstractAsteroidObject::OnCollisionWith(GameObject* other) {
 			break;
 		}
 	}
+}
+
+void SimpleAsteroidObject::receiveDamage(float damage) {
+	// new scale^3 = scale^3 - (3/4pi)*damage, scales volume linearly wrt to damage
+	scaleToUpdate = std::cbrtf(std::pow(scale, 3) - 0.238732414637843f * damage);
+	// destroy myself if i'm too small
+	if (scaleToUpdate < minScale)
+	parentScene->removeObject(this);
 }

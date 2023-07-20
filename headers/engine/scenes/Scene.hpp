@@ -10,12 +10,15 @@
 
 inline auto key_selector = [](auto pair){return pair.first;};
 
+class Game;
+
 class Scene {
     private:
         std::vector<GameObject*> addedObjects;
         std::vector<GameObject*> removedObjects;
         bool modifiedActiveObjects;
         bool isUpdatingScene;
+        int requestedSceneToSwitch = -1;
 
     protected:
         std::vector<Collider*> activeColliders; // list of all active colliders in game
@@ -25,7 +28,7 @@ class Scene {
 
     public:
         std::vector<GameObject*> activeObjects;
-        BaseProject* proj;
+        Game* proj;
         GraphicsPipeline* activePipeline;
         
         Scene(float* ar);
@@ -39,6 +42,8 @@ class Scene {
         virtual void Cleanup() = 0;
         //Called when the scene has to be destroyed
         virtual void Destroy() = 0;
+        //Called when the scene is about to disappear due to scene switch
+        virtual void WillDisappear() = 0;
 
         void UpdateImpl(int currentImage);
         void DestroyImpl();
@@ -52,6 +57,7 @@ class Scene {
         virtual void addObject(GameObject* object);
         virtual void removeObject(GameObject* object);
         void applyObjectModifications();
+        void requestSceneSwitch(int newScene);
 
     private:
         void CheckCollisions();

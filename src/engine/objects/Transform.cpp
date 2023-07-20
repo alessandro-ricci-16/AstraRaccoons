@@ -19,6 +19,13 @@ void Transform::TranslateLocalBy(vec3 by) {
 	TranslateBy(by);
 }
 
+void Transform::RotateTo(vec3 rot) {
+    quat qe = angleAxis(radians(rot.z), vec3(0, 0, 1)) *
+		angleAxis(radians(rot.y), vec3(0, 1, 0)) *
+		angleAxis(radians(rot.x), vec3(1, 0, 0));
+	rotationMatrix = mat4(qe);
+}
+
 void Transform::Rotate(float by, vec3 around) {
 	rotationMatrix = rotate(rotationMatrix, radians(by), around);
 }

@@ -5,6 +5,12 @@
 #include "../../headers/objects/SpaceshipObject.hpp"
 #include "../../headers/engine/base/Inputs.hpp"
 #include "../../headers/objects/Pew.hpp"
+#include <headers/Game.hpp>
+#include <headers/scenes/AvailableScenes.hpp>
+
+glm::vec3 SpaceshipObject::getVelocity() {
+	return vel;
+}
 
 void SpaceshipObject::Instantiate() {
 	// Load the model component
@@ -17,6 +23,7 @@ void SpaceshipObject::Instantiate() {
 	model.setShader("shaders/ShipShader_Vert.spv", "shaders/ShipShader_Frag.spv");
 	model.addTexture("textures/spaceship/Albedo.png");
 	model.addTexture("textures/spaceship/MetallicRoughnessEmission.png");
+	model.addUniformData(&additionalUniforms, sizeof(SpaceshipUniforms), VK_SHADER_STAGE_FRAGMENT_BIT);
 	const std::vector<std::string> textures = { "textures/sky/right.png", "textures/sky/left.png",
 							  "textures/sky/top.png",   "textures/sky/bottom.png",
 							  "textures/sky/back.png", "textures/sky/front.png" };
@@ -24,14 +31,25 @@ void SpaceshipObject::Instantiate() {
 	transform.Scale(glm::vec3(0.3f));
 	vel = glm::vec3(0.0f);
 	angVel = glm::vec3(0.0f);
+	setCollider(5, 0x01, 0x02);
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = true;
 }
 
 void SpaceshipObject::Update() {
 	float delT = Time::getFixedDeltaT(); // always with scale 1
+	disabledKeysTimer -= delT;
+
 	glm::vec3 mov, rot;
 	Inputs::getSixAxis(mov, rot, fire);
+	if (disabledKeysTimer > 0) {
+		mov = glm::vec3(0);
+		rot = glm::vec3(0);
+		additionalUniforms.flashingColor = baseFlashingColor * sin(disabledKeysTimer * 5);
+	} else {
+		additionalUniforms.flashingColor = glm::vec4(0);
+	}
+
 	rot *= glm::vec3(-1, -1, 1);
 	mov.z *= -1;
 
@@ -50,8 +68,7 @@ void SpaceshipObject::Update() {
 			timer = 0;
 			reloading = false;
 		}
-	}
-	else if (fire) {
+	} else if (fire) {
 		reloading = true;
 		glm::vec3 finalShotSpeed = glm::vec3(0, 0, -shotSpeed) + vel; // negative z for the same reason mov.z is multiplied by -1
 		Pew* pew = new Pew(transform, shotOffset, finalShotSpeed, shotRange, shotDamage, shotThickness, shotColor);
@@ -62,5 +79,22 @@ void SpaceshipObject::Update() {
 }
 
 void SpaceshipObject::OnCollisionWith(GameObject* other) {
+	//Collision is assumed to be only with asteroids
+	if (!hadRecentCollision()) {
+		lives -= 1;
+		if (lives <= 0) {
+			parentScene->requestSceneSwitch(AR_SCENE_GAME_OVER);
+			disabledKeysTimer = 0;
+		} else {
+			disabledKeysTimer = disabledKeysDefaultTimer;
+		}
+	}
+}
 
+void SpaceshipObject::resetLives() {
+	lives = maxLives;
+}
+
+bool SpaceshipObject::hadRecentCollision() {
+	return disabledKeysTimer > 0;
 }

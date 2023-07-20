@@ -23,6 +23,7 @@ class Transform {
         void TranslateLocalBy(vec3 by);
         void Rotate(float by, vec3 around);
         void RotateBy(vec3 by);
+        void RotateTo(vec3 rot);
         void Scale(vec3 by);
         void ScaleTo(vec3 to);
         vec3 getPos();

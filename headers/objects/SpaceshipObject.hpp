@@ -10,8 +10,14 @@ struct SpaceshipVertex {
     glm::vec3 norm;
 };
 
+struct SpaceshipUniforms {
+    alignas(16) glm::vec4 flashingColor;
+};
+
 class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
     private:
+        SpaceshipUniforms additionalUniforms;
+
         glm::vec3 vel;
         glm::vec3 angVel;
         // maxVel = a/d
@@ -31,13 +37,25 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         const float shotDamage = 20.0f;
         const float shotThickness = 0.2f;
 
+        int lives = 3;
+        const int maxLives = 3;
+
+        float disabledKeysTimer = 0.0f;
+        const float disabledKeysDefaultTimer = 2.2f;
+        const glm::vec4 baseFlashingColor = glm::vec4(0.878f, 0.224f, 0.024f, 0.35f);
+
         const glm::vec3 shotColor = glm::vec3(1, 0, 0);
         glm::vec3 shotOffset = glm::vec3(1.3f, -0.1f, -0.7f);
 
     public:
+        glm::vec3 getVelocity();
+        bool hadRecentCollision();
+
         void Instantiate();
         void Update();
         void OnCollisionWith(GameObject* other);
+
+        void resetLives();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_SPACESHIP_HPP_

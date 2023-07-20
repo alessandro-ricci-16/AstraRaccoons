@@ -32,6 +32,7 @@ class Camera {
 
         void setTarget(Transform* targetTransform);
         void setTargetDistance(vec3 targetDistance);
+        void reset();
 
         virtual glm::vec3 getCameraPosition();
         virtual glm::mat4 getCameraMatrix(); //Prj * View

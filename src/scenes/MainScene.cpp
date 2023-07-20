@@ -72,3 +72,24 @@ void MainScene::Destroy() {
 void MainScene::Cleanup() {
     //Perform cleanup of local objects not covered under the standard scene lifecycle
 }
+
+void MainScene::WillDisappear() {
+    //Cleanup the scene & prepare for a scene reswitch
+    //Clear all but the first 2 objects (spaceship & skybox)
+    for (int i = 2; i < activeObjects.size(); i++) {
+        removeObject(activeObjects[i]);
+    }
+    //Reset the spaceship
+    SpaceshipObject* spaceship = (SpaceshipObject*)activeObjects[0];
+    spaceship->transform.TranslateTo(glm::vec3(0));
+    spaceship->transform.RotateTo(glm::vec3(0));
+    spaceship->resetLives();
+    //Add initial asteroids
+    for (int i = 0; i < initialAsteroids; i++) {
+        SimpleAsteroidObject* asteroid = new SimpleAsteroidObject(&(player->transform), Random::randomFloat(1, 6));
+        asteroid->Instantiate();
+        addObject(asteroid);
+    }
+    camera->reset();
+    //applyObjectModifications();
+}

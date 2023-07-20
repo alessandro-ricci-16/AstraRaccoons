@@ -1,14 +1,14 @@
+#include <headers/Game.hpp>
+#include <headers/engine/base/Inputs.hpp>
 #include <headers/engine/base/Time.hpp>
-#include <headers/objects/SkyBoxObject.hpp>
-#include <headers/scenes/IntroScene.hpp>
 #include <headers/engine/objects/OrbitingCamera.hpp>
 #include <headers/objects/FaderPlaneObject.hpp>
+#include <headers/objects/SkyBoxObject.hpp>
 #include <headers/objects/TextMaker.hpp>
-#include <headers/engine/base/Inputs.hpp>
-#include <headers/Game.hpp>
 #include <headers/scenes/AvailableScenes.hpp>
+#include <headers/scenes/GameOverScene.hpp>
 
-void IntroScene::Instantiate() {
+void GameOverScene::Instantiate() {
     // Load & compile a test model
     lookAtTarget = new Transform();
     lookAtTarget->TranslateTo(glm::vec3(0, 0, -1));
@@ -32,23 +32,25 @@ void IntroScene::Instantiate() {
     gubos.eyePos = camera->getCameraPosition();
 }
 
-void IntroScene::Update() {
+void GameOverScene::Update() {
     // Update scene-level objects - NOT GameObjects, they are automatically
     // managed by the scene Rotate the directional light over time
 
     if (Inputs::isKeyPressed(GLFW_KEY_SPACE)) {
-        requestSceneSwitch(AR_SCENE_MAIN);
+        ((Game*)proj)->switchToScene(AR_SCENE_MAIN);
     }
 }
 
-void IntroScene::Destroy() {
+void GameOverScene::Destroy() {
     // Perform destruction of local objects not covered under the standard scene
     // lifecycle
 }
 
-void IntroScene::Cleanup() {
+void GameOverScene::Cleanup() {
     // Perform cleanup of local objects not covered under the standard scene
     // lifecycle
 }
 
-void IntroScene::WillDisappear() {}
+void GameOverScene::WillDisappear() {
+    // Cleanup the scene & prepare for a scene reswitch
+}

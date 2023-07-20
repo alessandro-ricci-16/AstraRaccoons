@@ -42,3 +42,23 @@ bool Collider::checkCollisionWith(Collider* collider2) {
 	//If the last value is negative, we have a collision!
 	return subtractedDistance < 0;
 }
+
+void Collider::compensateCompenetrations(Collider* collider2) {
+	// Check masks
+	bool maskCheck = (collisionMask & collider2->collisionLayer) != 0;
+	if (!maskCheck) return;
+	// Get the origin of this collider
+	glm::vec3 localOrigin = getParent()->transform.getPos();
+	// Get the origin of the other collider
+	glm::vec3 otherOrigin = collider2->getParent()->transform.getPos();
+	// Check their relative distance
+	float colliderDistance = glm::distance(localOrigin, otherOrigin);
+	// Subtract radii
+	float subtractedDistance = colliderDistance - radius - collider2->radius;
+	
+	if (subtractedDistance < 0) {
+		glm::vec3 translationVector = (localOrigin - otherOrigin) * -subtractedDistance * 0.5f / colliderDistance;
+		getParent()->transform.TranslateBy(translationVector);
+		collider2->getParent()->transform.TranslateBy(-translationVector);
+	}
+}

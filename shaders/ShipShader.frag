@@ -30,6 +30,10 @@ layout(set = 1, binding = 1) uniform sampler2D albedo;
 layout(set = 1, binding = 2) uniform sampler2D metallicRoughnessEmission;
 layout(set = 1, binding = 3) uniform samplerCube skybox;
 
+layout(set = 2, binding = 0) uniform SpaceshipUniforms {
+	vec4 flashingColor;
+} spaceshipUniforms;
+
 const float beta = 0.2f;
 const float g = 1.5;
 
@@ -78,5 +82,5 @@ void main() {
 	float F0 = pow(reflectivity, 4);
 	vec3 reflectionColor = texture(skybox, R).xyz * F0;
 	
-	outColor = vec4(clamp(DiffSpec + Ambient + emissionColor + reflectionColor, 0.0, 1.0), 1.0f);
+	outColor = vec4(clamp(DiffSpec + Ambient + emissionColor + reflectionColor + (spaceshipUniforms.flashingColor.xyz * spaceshipUniforms.flashingColor.w), 0.0, 1.0), 1.0f);
 }

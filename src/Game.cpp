@@ -2,6 +2,7 @@
 #include "../headers/scenes/MainScene.hpp"
 #include <headers/scenes/IntroScene.hpp>
 #include <headers/scenes/TestScene.hpp>
+#include <headers/scenes/GameOverScene.hpp>
 #include "../headers/engine/base/Time.hpp"
 
 Game::Game() {
@@ -49,8 +50,13 @@ void Game::localInit() {
 	mainScene->proj = this;
 	mainScene->Instantiate();
 
+	GameOverScene* gameOverScene = new GameOverScene(&Ar);
+	gameOverScene->proj = this;
+	gameOverScene->Instantiate();
+
 	managedScenes.push_back(introScene);
 	managedScenes.push_back(mainScene);
+	managedScenes.push_back(gameOverScene);
 	#endif
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes[i]->applyObjectModifications();
@@ -126,6 +132,7 @@ void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
 
 void Game::switchToScene(int sceneID) {
 	if (sceneID >= 0 && sceneID < managedScenes.size()) {
+		managedScenes[activeScene]->WillDisappear();
 		activeScene = sceneID;
 		recreateVulkanSwapChain();
 	} else {

@@ -101,6 +101,11 @@ void Scene::UpdateImpl(int currentimage) {
 	CheckCollisions();
 	//Apply object removals
 	applyObjectModifications();
+	//Switch scene if needed
+	if (requestedSceneToSwitch >= 0) {
+		proj->switchToScene(requestedSceneToSwitch);
+		requestedSceneToSwitch = -1;
+	}
 }
 
 void Scene::CheckCollisions() {
@@ -116,8 +121,11 @@ void Scene::CheckCollisions() {
 				GameObject* objectA = colliderA->getParent();
 				GameObject* objectB = colliderB->getParent();
 				if (objectA && objectB) { // both not null
-					(dynamic_cast<ICollidable*>(objectA))->OnCollisionWith(objectB);
-					(dynamic_cast<ICollidable*>(objectB))->OnCollisionWith(objectA);
+					ICollidable* collidableA = (dynamic_cast<ICollidable*>(objectA));
+					ICollidable* collidableB = (dynamic_cast<ICollidable*>(objectB));
+					colliderA->compensateCompenetrations(colliderB);
+					collidableA->OnCollisionWith(objectB);
+					collidableB->OnCollisionWith(objectA);
 				}
 			}
 		}
@@ -130,6 +138,10 @@ void Scene::CompileObjects(bool addedOnly) {
 		objectsToCompile[i]->compile(proj, &gubos);
 	}
 	modifiedActiveObjects = false;
+}
+
+void Scene::requestSceneSwitch(int newScene) {
+	requestedSceneToSwitch = newScene;
 }
 
 void Scene::CleanupImpl() {

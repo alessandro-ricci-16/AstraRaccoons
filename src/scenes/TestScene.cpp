@@ -50,3 +50,5 @@ void TestScene::Cleanup() {
     // Perform cleanup of local objects not covered under the standard scene
     // lifecycle
 }
+
+void TestScene::WillDisappear() {}

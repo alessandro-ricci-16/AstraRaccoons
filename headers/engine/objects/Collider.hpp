@@ -19,6 +19,7 @@ class Collider {
         float getRadius();
         void setRadius(float radius);
         bool checkCollisionWith(Collider* collider2);
+        void compensateCompenetrations(Collider* collider2);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_COLLIDER_HPP_
