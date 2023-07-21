@@ -60,6 +60,8 @@ void SpaceshipObject::Update() {
 	} else {
 		additionalUniforms.flashingColor = glm::vec4(0);
 	}
+	firingAllowed = firingAllowed || !fire;
+	fire = fire && firingAllowed;
 
 	rot *= glm::vec3(-1, -1, 1);
 	mov.z *= -1;
@@ -96,6 +98,9 @@ void SpaceshipObject::OnCollisionWith(Collider* other) {
 		if (lives <= 0) {
 			parentScene->requestSceneSwitch(AR_SCENE_GAME_OVER);
 			disabledKeysTimer = 0;
+			firingAllowed = false;
+			vel = glm::vec3(0.0f);
+			angVel = glm::vec3(0.0f);
 		} else {
 			disabledKeysTimer = disabledKeysDefaultTimer;
 		}
