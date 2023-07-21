@@ -30,6 +30,7 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
 
         bool fire = false;
         bool reloading = true;
+        bool firingAllowed = false;
         float timer = 0.0f;
 
         const float fireRate = 0.1f;
@@ -44,6 +45,7 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         float disabledKeysTimer = 0.0f;
         const float disabledKeysDefaultTimer = 2.2f;
         const glm::vec4 baseFlashingColor = glm::vec4(0.878f, 0.224f, 0.024f, 0.35f);
+        bool flashingEnabled = false;
 
         const glm::vec3 shotColor = glm::vec3(1, 0, 0);
         glm::vec3 shotOffset = glm::vec3(1.3f, -0.1f, -0.7f);
