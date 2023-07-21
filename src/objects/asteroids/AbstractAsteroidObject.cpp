@@ -7,9 +7,9 @@
 #include "../../../headers/engine/base/Random.hpp"
 #include <headers/objects/SpaceshipObject.hpp>
 
-AbstractAsteroidObject::AbstractAsteroidObject(Transform* _playerTransform, float _initialScale) {
+AbstractAsteroidObject::AbstractAsteroidObject(Transform* _playerTransform) {
 	transform = Transform::identity();
-	scale = _initialScale;
+	scale = Random::randomFloat(1.25f, 6);
 	minScale = std::min(scale, 1.5f);
 	scaleToUpdate = scale;
 	transform.ScaleTo(glm::vec3(scale));

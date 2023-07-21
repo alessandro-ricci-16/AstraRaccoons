@@ -1,8 +1,8 @@
 #ifndef __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_ASTEROIDS_ABSTRACTASTEROIDOBJECT_HPP_
 #define __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_ASTEROIDS_ABSTRACTASTEROIDOBJECT_HPP_
 
-#include <headers/engine/base/includes.hpp>
-#include <headers/engine/objects/MeshObject.hpp>
+#include "../../engine/base/includes.hpp"
+#include "../../engine/objects/MeshObject.hpp"
 
 struct AbstractAsteroidVertex {
     glm::vec3 pos;
@@ -23,7 +23,7 @@ private:
     void receiveDamage(float damage);
 
 public:
-    AbstractAsteroidObject(Transform* playerTransform, float initialScale);
+    AbstractAsteroidObject(Transform* playerTransform);
 
     virtual void Instantiate();
     void Update();

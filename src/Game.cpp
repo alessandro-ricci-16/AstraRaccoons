@@ -4,11 +4,12 @@
 #include <headers/scenes/TestScene.hpp>
 #include <headers/scenes/GameOverScene.hpp>
 #include "../headers/engine/base/Time.hpp"
+#include "../headers/engine/base/Random.hpp"
 
 Game::Game() {
 	managedScenes = {};
-
 	activeScene = 0;
+	Random::initialize();
 }
 
 // Here you set the main application parameters

@@ -6,6 +6,7 @@
 layout(location = 0) in vec3 fragPos;
 layout(location = 1) in vec3 fragNorm;
 layout(location = 2) in vec2 fragUV;
+layout(location = 3) in vec4 fragTan;
 
 layout(location = 0) out vec4 outColor;
 
@@ -27,21 +28,28 @@ layout(set = 0, binding = 0) uniform GlobalUniformBufferObject {
 } gubo;
 
 layout(set = 1, binding = 1) uniform sampler2D albedo;
-layout(set = 1, binding = 2) uniform sampler2D metallicRoughness;
-layout(set = 1, binding = 3) uniform samplerCube skybox;
+layout(set = 1, binding = 2) uniform sampler2D metallicRoughnessAmbientOcclusion;
+layout(set = 1, binding = 3) uniform sampler2D normals;
+layout(set = 1, binding = 4) uniform samplerCube skybox;
 
 const float beta = 0.2f;
 const float g = 1.5;
 
 void main() {
 	vec3 Norm = normalize(fragNorm);
-	//vec3 Tan = normalize(fragTan.xyz - Norm * dot(fragTan.xyz, Norm));
-
+	vec3 Tan = normalize(fragTan.xyz - Norm * dot(fragTan.xyz, Norm));
+	vec3 Bitan = cross(Norm, Tan) * fragTan.w;
+	mat3 tbn = mat3(Tan, Bitan, Norm);
+	vec3 nMap = (texture(normals, fragUV).rgb * 2 - 1);
+	nMap.xy *= 1.2;
+	vec3 N = normalize(tbn * nMap);
+	
 	vec3 albedoCol = texture(albedo, fragUV).rgb;
 
-	vec4 MR = texture(metallicRoughness, fragUV);
-	float roughness = MR.g;
-	float metallic = MR.r;
+	vec4 MRAO = texture(metallicRoughnessAmbientOcclusion, fragUV);
+	float roughness = MRAO.g;
+	float metallic = MRAO.r;
+	float ao = pow(MRAO.b, 2);
 	
 	vec3 L = gubo.directionalLightDirection;
 	vec3 lightColor = gubo.directionalLightColor.rgb;
@@ -49,15 +57,16 @@ void main() {
 	vec3 V = normalize(gubo.eyePos - fragPos);
 
 	float reflectivity = 1 - roughness;
-	float F0 = pow(reflectivity, 4);
+	float F0 = pow(reflectivity, 16);
 
-	vec3 DiffSpec = GGXDiffuseSpecular(V, Norm, L, albedoCol, F0, metallic, roughness);
+	vec3 DiffSpec = GGXDiffuseSpecular(V, N, L, albedoCol, F0, metallic, roughness);
+	vec3 Ambient = sh(N) * albedoCol;
 	
 	//For cubemap reflections
 	vec3 I = -normalize(gubo.eyePos - fragPos);
     vec3 R = reflect(I, Norm);
 
-	vec3 reflectionColor = texture(skybox, R).xyz * F0;
+	vec3 reflectionColor = texture(skybox, R).xyz * F0 * metallic;
 	
-	outColor = vec4(clamp(DiffSpec + reflectionColor, 0.0, 1.0), 1.0f);
+	outColor = vec4(clamp((DiffSpec + Ambient + reflectionColor) * ao, 0.0, 1.0), 1.0f);
 }

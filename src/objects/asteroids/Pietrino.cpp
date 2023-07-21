@@ -3,6 +3,11 @@
 #include "../../../headers/engine/scenes/Scene.hpp"
 #include "../../../headers/objects/asteroids/Pietrino.hpp"
 
+// register to asteroid factory
+#define ASTEROIDFACTORY_IMPLEMENTATION
+#include "../../../headers/objects/asteroids/AsteroidFactory.hpp"
+static const bool PietrinoRegistered = (AsteroidFactory::registerAsteroid<Pietrino>(), true);
+
 void Pietrino::Instantiate() {
 	AbstractAsteroidObject::Instantiate();
 
