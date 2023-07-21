@@ -31,6 +31,7 @@ class Transform {
         vec3 uy();
         vec3 uz();
         mat4 getMatrix();
+        vec3 getWorldPositionOfLocal(glm::vec3 localPos);
 
         static Transform identity();
 };

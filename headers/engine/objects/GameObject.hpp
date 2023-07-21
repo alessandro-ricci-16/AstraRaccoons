@@ -10,17 +10,19 @@ class Scene;
 
 class GameObject {
     protected:
-        GameObject* parentObject;
+        GameObject* parentObject = nullptr;
         std::vector<GameObject*> children;
         bool acceptsGUBOs;
 
     public:
         Transform transform;
-        Collider* collider = nullptr;
+        std::vector<Collider*> colliders;
         Scene* parentScene;
 
         GameObject();
         virtual ~GameObject();
+
+        void UpdateImpl();
 
         virtual void Instantiate() = 0;
         virtual void Update() = 0;
@@ -33,13 +35,10 @@ class GameObject {
 
         virtual void compile(BaseProject* proj, GlobalUniforms* guboPtr);
         virtual void addChild(GameObject* child);
-        virtual void setCollider(float radius, uint8_t collisionLayer, uint8_t collisionMask);
+        virtual void addCollider(glm::vec3 origin, float radius, uint8_t collisionLayer, uint8_t collisionMask);
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline);
-};
 
-class ICollidable {
-    public:
-        virtual void OnCollisionWith(GameObject* other) = 0;
+        mat4 getFullMatrix();
 };
 
 #endif

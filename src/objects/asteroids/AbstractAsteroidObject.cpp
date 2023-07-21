@@ -42,7 +42,7 @@ void AbstractAsteroidObject::Instantiate() {
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = true;
 	//Add collider
-	setCollider(scale, 0x2, 0x7); // Layer = 0b00000010 Mask = 0b00000111
+	addCollider(glm::vec3(0), scale, 0x2, 0x7); // Layer = 0b00000010 Mask = 0b00000111
 	setModel(getModelName(), vertexDescriptor);
 }
 
@@ -57,19 +57,20 @@ void AbstractAsteroidObject::Update() {
 		parentScene->removeObject(this);
 	else {
 		transform.ScaleTo(glm::vec3(scale));
-		collider->setRadius(scale);
+		colliders[0]->setRadius(scale);
 	}
 }
 
-void AbstractAsteroidObject::OnCollisionWith(GameObject* other) {
-	if (other->collider != nullptr) {
-		switch (other->collider->getCollisionLayer()) {
+void AbstractAsteroidObject::OnCollisionWith(Collider* other) {
+	if (other != nullptr) {
+		GameObject* parent = other->getParent();
+		switch (other->getCollisionLayer()) {
 		case 0x1: {
 			// Collision with the spaceship - bounce (as if the other asteroid had infinite mass & zero velocity) & receive damage
-			SpaceshipObject* spaceship = (SpaceshipObject*)other;
+			SpaceshipObject* spaceship = (SpaceshipObject*)parent;
 			glm::vec3 otherVelocity = spaceship->getVelocity();
 			float otherMass = 20.f;
-			float mass = collider->getRadius();
+			float mass = colliders[0]->getRadius();
 			velToUpdate = ((2 * otherMass * otherVelocity) + (vel * (mass - otherMass))) / (mass + otherMass);
 			float relativeVelMagnitude = length(otherVelocity - vel);
 			receiveDamage(3 * max(relativeVelMagnitude - 5, 0.f));
@@ -77,16 +78,16 @@ void AbstractAsteroidObject::OnCollisionWith(GameObject* other) {
 		}
 		case 0x2: {
 			// Collision with another asteroid - perfectly elastic collision
-			AbstractAsteroidObject* otherAsteroid = (AbstractAsteroidObject*)other;
+			AbstractAsteroidObject* otherAsteroid = (AbstractAsteroidObject*)parent;
 			glm::vec3 otherVelocity = otherAsteroid->vel;
-			float otherMass = otherAsteroid->collider->getRadius();
-			float mass = collider->getRadius();
+			float otherMass = otherAsteroid->colliders[0]->getRadius();
+			float mass = colliders[0]->getRadius();
 			velToUpdate = ((2 * otherMass * otherVelocity) + (vel * (mass - otherMass))) / (mass + otherMass);
 			break;
 		}
 		case 0x4: {
 			// Collision with a bullet
-			Pew* pew = (Pew*)other;
+			Pew* pew = (Pew*)parent;
 			receiveDamage(pew->getDamage());
 			break;
 		}

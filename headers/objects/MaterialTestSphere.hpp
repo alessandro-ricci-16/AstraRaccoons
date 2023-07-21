@@ -15,7 +15,7 @@ class TestSphereObject : public MeshObject<TestSphereVertex>, public ICollidable
     bool moves;
     void Instantiate();
     void Update();
-    void OnCollisionWith(GameObject* other);
+    void OnCollisionWith(Collider* other);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_MATERIALTESTSPHERE_HPP_

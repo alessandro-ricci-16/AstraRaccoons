@@ -65,6 +65,10 @@ vec3 Transform::uz() {
 	return vec3(rotationMatrix * vec4(0, 0, 1, 1));
 }
 
+vec3 Transform::getWorldPositionOfLocal(glm::vec3 localPos) {
+	return getMatrix() * vec4(localPos, 1);
+}
+
 Transform Transform::identity() {
 	return Transform(mat4(1), mat4(1), mat4(1));
 }

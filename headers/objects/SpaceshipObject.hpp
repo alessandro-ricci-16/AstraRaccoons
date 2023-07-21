@@ -3,6 +3,7 @@
 
 #include <headers/engine/base/includes.hpp>
 #include <headers/engine/objects/MeshObject.hpp>
+#include <headers/engine/objects/Collider.hpp>
 
 struct SpaceshipVertex {
     glm::vec3 pos;
@@ -53,7 +54,7 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
 
         void Instantiate();
         void Update();
-        void OnCollisionWith(GameObject* other);
+        void OnCollisionWith(Collider* other);
 
         void resetLives();
 };

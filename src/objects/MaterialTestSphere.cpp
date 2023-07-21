@@ -28,5 +28,5 @@ void TestSphereObject::Instantiate() {
 void TestSphereObject::Update() {
 }
 
-void TestSphereObject::OnCollisionWith(GameObject* other) {
+void TestSphereObject::OnCollisionWith(Collider* other) {
 }

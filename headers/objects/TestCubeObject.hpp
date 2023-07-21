@@ -3,6 +3,7 @@
 
 #include "../engine/base/includes.hpp"
 #include "../engine/objects/MeshObject.hpp"
+#include <headers/engine/objects/Collider.hpp>
 
 struct TestCubeVertex {
     glm::vec3 pos;
@@ -15,7 +16,7 @@ class TestCubeObject: public MeshObject<TestCubeVertex>, public ICollidable {
         bool moves;
         void Instantiate();
         void Update();
-        void OnCollisionWith(GameObject* other);
+        void OnCollisionWith(Collider* other);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_TESTCUBEOBJECT_HPP_

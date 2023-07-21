@@ -31,9 +31,10 @@ void Scene::applyObjectModifications() {
 		objectToAdd->parentScene = this;
 		activeObjects.push_back(objectToAdd);
 		modifiedActiveObjects = true;
-		if (objectToAdd->collider != nullptr) {
-			activeColliders.push_back(objectToAdd->collider);
+		for (int i = 0; i < objectToAdd->colliders.size(); i++) {
+			activeColliders.push_back(objectToAdd->colliders[i]);
 		}
+		
 	}
 	addedObjects.clear();
 	// removing objects
@@ -41,11 +42,13 @@ void Scene::applyObjectModifications() {
 		GameObject* objectToRemove = removedObjects[i];
 		objectToRemove->parentScene = nullptr;
 		// remove collider
-		if (objectToRemove->collider != nullptr) {
+		if (!objectToRemove->colliders.empty()) {
 			for (int i = 0; i < activeColliders.size(); i++) {
-				if (activeColliders[i] == objectToRemove->collider) {
-					activeColliders.erase(activeColliders.begin() + i);
-					break;
+				for (int j = 0; j < objectToRemove->colliders.size(); j++) {
+					if (activeColliders[i] == objectToRemove->colliders[j]) {
+						activeColliders.erase(activeColliders.begin() + i);
+						break;
+					}
 				}
 			}
 		}
@@ -89,7 +92,7 @@ void Scene::UpdateImpl(int currentimage) {
 	isUpdatingScene = true;
 	Update();
 	for (int i = 0; i < activeObjects.size(); i++) {
-		activeObjects[i]->Update();
+		activeObjects[i]->UpdateImpl();
 	}
 	isUpdatingScene = false;
 	glm::mat4 cameraMatrix = camera->getCameraMatrix();
@@ -124,8 +127,8 @@ void Scene::CheckCollisions() {
 					ICollidable* collidableA = (dynamic_cast<ICollidable*>(objectA));
 					ICollidable* collidableB = (dynamic_cast<ICollidable*>(objectB));
 					colliderA->compensateCompenetrations(colliderB);
-					collidableA->OnCollisionWith(objectB);
-					collidableB->OnCollisionWith(objectA);
+					collidableA->OnCollisionWith(colliderB);
+					collidableB->OnCollisionWith(colliderA);
 				}
 			}
 		}

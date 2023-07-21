@@ -5,6 +5,7 @@
 #include <headers/objects/TestCubeObject.hpp>
 #include <headers/objects/asteroids/Pietrino.hpp>
 #include <headers/engine/base/Time.hpp>
+#include <headers/objects/MaterialTestSphere.hpp>
 
 void MainScene::Instantiate() {
     //Load & compile a test model
