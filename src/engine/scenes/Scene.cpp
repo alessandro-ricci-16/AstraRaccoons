@@ -98,13 +98,13 @@ void Scene::UpdateImpl(int currentimage) {
 	}
 	//Now check for collisions
 	CheckCollisions();
-	//Apply object removals
-	applyObjectModifications();
-	//Switch scene if needed
-	if (requestedSceneToSwitch >= 0) {
-		proj->switchToScene(requestedSceneToSwitch);
-		requestedSceneToSwitch = -1;
+	//If scene switch was requested and granted, then call WillDisappear
+	if (sceneSwitchRequested) {
+		sceneSwitchRequested = false;
+		WillDisappear();
 	}
+	//Apply object modifications happened mid-frame
+	applyObjectModifications();
 }
 
 void Scene::CheckCollisions() {
@@ -140,7 +140,7 @@ void Scene::CompileObjects(bool addedOnly) {
 }
 
 void Scene::requestSceneSwitch(int newScene) {
-	requestedSceneToSwitch = newScene;
+	sceneSwitchRequested = proj->requestSwitchToScene(newScene);
 }
 
 void Scene::CleanupImpl() {

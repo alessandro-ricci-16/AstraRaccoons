@@ -55,8 +55,16 @@ void MainScene::Update() {
 	//Move the spot light
 	//gubos.spotlightPosition = glm::vec3(9.f * sin(time), 0, -2);
 
+    float absTime = Time::getAbsoluteTime();
+    if (restartFlag) {
+        restartFlag = false;
+        // Add initial asteroids
+        for (int i = 0; i < initialAsteroids; i++) {
+            AsteroidFactory::spawnRandomAsteroid(this, &(player->transform));
+        }
+        lastSpawnTime = absTime;
+    }
 	//Spawn new asteroids over time
-	float absTime = Time::getAbsoluteTime();
 	if (absTime - lastSpawnTime >= spawnDeltaTime) {
 		AsteroidFactory::spawnRandomAsteroid(this, &(player->transform));
 		lastSpawnTime = absTime;
@@ -88,9 +96,7 @@ void MainScene::WillDisappear() {
     spaceship->transform.TranslateTo(glm::vec3(0));
     spaceship->transform.RotateTo(glm::vec3(0));
     spaceship->resetLives();
-    //Add initial asteroids
-    for (int i = 0; i < initialAsteroids; i++)
-		AsteroidFactory::spawnRandomAsteroid(this, &(player->transform));
+    restartFlag = true;
     camera->reset();
     //applyObjectModifications();
 }

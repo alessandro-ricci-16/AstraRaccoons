@@ -1171,9 +1171,11 @@ void BaseProject::createCommandBuffers() {
 
 void BaseProject::refillCommandBuffers() {
 	vkDeviceWaitIdle(device);
-	vkFreeCommandBuffers(device, commandPool,
+	if (commandBuffers.size() > 0) {
+        vkFreeCommandBuffers(device, commandPool,
 						 static_cast<uint32_t>(commandBuffers.size()),
 						 commandBuffers.data());
+    }
 	createCommandBuffers();
 }
 

@@ -18,7 +18,7 @@ class Scene {
         std::set<GameObject*> removedObjects;
         bool modifiedActiveObjects;
         bool isUpdatingScene;
-        int requestedSceneToSwitch = -1;
+        bool sceneSwitchRequested = false;
 
     protected:
         std::set<Collider*> activeColliders; // list of all active colliders in game

@@ -10,6 +10,7 @@ class MainScene: public Scene {
         float spawnDeltaTime;
         GameObject* player;
         const unsigned int initialAsteroids = 10;
+        bool restartFlag = false;
 
     public:
         MainScene(float* ar) : Scene(ar) {}

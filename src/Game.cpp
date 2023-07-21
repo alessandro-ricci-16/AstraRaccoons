@@ -101,6 +101,7 @@ void Game::updateUniformBuffer(uint32_t currentImage) {
 	}
 	//Update the active scene
 	managedScenes.at(activeScene)->UpdateImpl(currentImage);
+	performSceneSwitchIfRequested();
 }
 
 void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
@@ -131,12 +132,23 @@ void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
 	}
 }
 
-void Game::switchToScene(int sceneID) {
+bool Game::requestSwitchToScene(int sceneID) {
 	if (sceneID >= 0 && sceneID < managedScenes.size()) {
-		managedScenes[activeScene]->WillDisappear();
-		activeScene = sceneID;
-		recreateVulkanSwapChain();
+		nextSceneToSwitch = sceneID;
+		sceneSwitchRequested = true;
 	} else {
+		sceneSwitchRequested = false;
+		std::cout << "WARNING: Attempting to switch to a non-existing scene. This attempt will be ignored. (requested scene: " << sceneID << ")\n";
+	}
+	return sceneSwitchRequested;
+}
+
+void Game::performSceneSwitchIfRequested() {
+    if (nextSceneToSwitch >= 0 && nextSceneToSwitch < managedScenes.size() && sceneSwitchRequested) {
+		activeScene = nextSceneToSwitch;
+		sceneSwitchRequested = false;
+		recreateVulkanSwapChain(true);
+	} else if (sceneSwitchRequested) {
 		std::cout << "WARNING: Attempting to switch to a non-existing scene. This attempt will be ignored.\n";
 	}
 }
