@@ -50,7 +50,7 @@ void Pew::Instantiate() {
 	model.isTransparent = false;
 	model.backfaceCullingOn = true;
 	// add collider
-	setCollider(thickness, 0x4, 0x2); // Layer = 0b00000100 Mask = 0b00000010, i.e. collides only with asteroids having layer 0x2
+	addCollider(glm::vec3(0), thickness, 0x4, 0x2); // Layer = 0b00000100 Mask = 0b00000010, i.e. collides only with asteroids having layer 0x2
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = false;
 }
@@ -63,7 +63,7 @@ void Pew::Update() {
 	}
 }
 
-void Pew::OnCollisionWith(GameObject* other) {
+void Pew::OnCollisionWith(Collider* other) {
 	parentScene->removeObject(this);
 }
 

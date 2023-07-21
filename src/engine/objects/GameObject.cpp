@@ -10,11 +10,11 @@ void GameObject::addChild(GameObject* child) {
     children.push_back(child);
 }
 
-void GameObject::setCollider(float radius, uint8_t collisionLayer, uint8_t collisionMask) {
+void GameObject::addCollider(glm::vec3 origin, float radius, uint8_t collisionLayer, uint8_t collisionMask) {
     if (dynamic_cast<ICollidable*>(this) == nullptr) {
         std::cout << "WARNING: Trying to set a collider to object " << this << " which does not conform to ICollidable! For safety, a collider will not be added to this object.\n";
     } else {
-        collider = new Collider(this, radius, collisionLayer, collisionMask);
+        colliders.push_back(new Collider(this, radius, collisionLayer, collisionMask, origin));
     }
 }
 
@@ -56,11 +56,28 @@ void GameObject::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
     }
 }
 
+mat4 GameObject::getFullMatrix() {
+    if (parentObject == nullptr) {
+        return transform.getMatrix();
+    } else {
+        return parentObject->getFullMatrix() * transform.getMatrix();
+    }
+}
+
+void GameObject::UpdateImpl() {
+    Update();
+    for (int i = 0; i < children.size(); i++) {
+        children[i]->UpdateImpl();
+    }
+}
+
 GameObject::~GameObject() {
     for (int i = 0; i < children.size(); i++) {
         delete children.at(i);
     }
     children.clear();
-    if (collider != nullptr)
-        delete collider;
+    for (int i = 0; i < colliders.size(); i++) {
+        delete colliders[i];
+    }
+    colliders.clear();
 }

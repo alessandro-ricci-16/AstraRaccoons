@@ -3,6 +3,7 @@
 
 #include "../../engine/base/includes.hpp"
 #include "../../engine/objects/MeshObject.hpp"
+#include "../../engine/objects/Collider.hpp"
 
 struct AbstractAsteroidVertex {
     glm::vec3 pos;
@@ -27,7 +28,7 @@ public:
 
     virtual void Instantiate();
     void Update();
-    void OnCollisionWith(GameObject* other);
+    void OnCollisionWith(Collider* other);
     virtual std::string getModelName() = 0;
 };
 

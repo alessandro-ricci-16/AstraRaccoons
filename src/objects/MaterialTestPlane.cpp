@@ -28,4 +28,4 @@ void TestPlaneObject::Instantiate() {
 
 void TestPlaneObject::Update() {}
 
-void TestPlaneObject::OnCollisionWith(GameObject* other) {}
+void TestPlaneObject::OnCollisionWith(Collider* other) {}

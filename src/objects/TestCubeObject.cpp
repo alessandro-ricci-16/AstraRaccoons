@@ -17,7 +17,7 @@ void TestCubeObject::Instantiate() {
 	model.addTexture("textures/Checker.png");
     transform.TranslateTo(glm::vec3(0, 0, 0));
     //Add the collider
-    setCollider(1, 1, 1);
+    addCollider(glm::vec3(0), 1, 1, 1);
     // Enable GUBOs -- REQUIRED if the shader uses them!
     acceptsGUBOs = true;
 }
@@ -29,6 +29,6 @@ void TestCubeObject::Update() {
     }
 }
 
-void TestCubeObject::OnCollisionWith(GameObject* other) {
+void TestCubeObject::OnCollisionWith(Collider* other) {
     parentScene->removeObject(this);
 }

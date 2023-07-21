@@ -28,10 +28,21 @@ void SpaceshipObject::Instantiate() {
 							  "textures/sky/top.png",   "textures/sky/bottom.png",
 							  "textures/sky/back.png", "textures/sky/front.png" };
 	model.addCubicTexture(textures);
-	transform.Scale(glm::vec3(0.3f));
+	float scale = 0.3f;
+	transform.Scale(glm::vec3(scale));
 	vel = glm::vec3(0.0f);
 	angVel = glm::vec3(0.0f);
-	setCollider(5, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -14.26), 2.05f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -12.32), 2.05f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -10.48), 2.05f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -8.72), 2.05f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -6.72), 2.05f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -4.82), 2.05f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -2.84), 2.05f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(0), 4.06f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(-5.83, 0, 2.03), 5.f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(5.83, 0, 2.03), 5.f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(0, 0, 5.18), 5.f * 0.62f * scale, 0x01, 0x02);
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = true;
 }
@@ -78,7 +89,7 @@ void SpaceshipObject::Update() {
 	}
 }
 
-void SpaceshipObject::OnCollisionWith(GameObject* other) {
+void SpaceshipObject::OnCollisionWith(Collider* other) {
 	//Collision is assumed to be only with asteroids
 	if (!hadRecentCollision()) {
 		lives -= 1;

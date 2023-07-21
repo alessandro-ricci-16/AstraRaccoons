@@ -14,20 +14,20 @@ class Game;
 
 class Scene {
     private:
-        std::vector<GameObject*> addedObjects;
-        std::vector<GameObject*> removedObjects;
+        std::set<GameObject*> addedObjects;
+        std::set<GameObject*> removedObjects;
         bool modifiedActiveObjects;
         bool isUpdatingScene;
         int requestedSceneToSwitch = -1;
 
     protected:
-        std::vector<Collider*> activeColliders; // list of all active colliders in game
+        std::set<Collider*> activeColliders; // list of all active colliders in game
         Camera* camera;
         float* aspectRatio;
         GlobalUniforms gubos;
 
     public:
-        std::vector<GameObject*> activeObjects;
+        std::set<GameObject*> activeObjects;
         Game* proj;
         GraphicsPipeline* activePipeline;
         
