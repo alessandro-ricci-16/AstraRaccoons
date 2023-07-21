@@ -25,7 +25,7 @@ void AbstractAsteroidObject::Instantiate() {
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(AbstractAsteroidVertex, norm), sizeof(glm::vec3), NORMAL);
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32A32_SFLOAT, offsetof(AbstractAsteroidVertex, tan), sizeof(glm::vec4), TANGENT);
 	//Position the asteroid in a random point around the player at a random distance and with random velocities
-	glm::vec3 playerPosition = transform.getPos();
+	glm::vec3 playerPosition = playerTransform->getPos();
 	glm::vec3 randomDirection = glm::normalize(glm::vec3(Random::randomFloat(-1, 1), Random::randomFloat(-1, 1), Random::randomFloat(-1, 1)));
 	float randomDistance = Random::randomFloat(50, 150);
 	float randomVelocity = Random::randomFloat(1.5f, 8);
