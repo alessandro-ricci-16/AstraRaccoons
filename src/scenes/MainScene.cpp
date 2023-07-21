@@ -77,11 +77,17 @@ void MainScene::Cleanup() {
 void MainScene::WillDisappear() {
     //Cleanup the scene & prepare for a scene reswitch
     //Clear all but the first 2 objects (spaceship & skybox)
-    for (int i = 2; i < activeObjects.size(); i++) {
-        removeObject(activeObjects[i]);
+    SpaceshipObject* spaceship;
+    for (GameObject* activeObject: activeObjects) {
+        SpaceshipObject* sp = dynamic_cast<SpaceshipObject*>(activeObject);
+        SkyBoxObject* sk = dynamic_cast<SkyBoxObject*>(activeObject);
+        if (sp == nullptr && sk == nullptr) {
+            removeObject(activeObject);
+        } else if (sp != nullptr) {
+            spaceship = sp;
+        }
     }
     //Reset the spaceship
-    SpaceshipObject* spaceship = (SpaceshipObject*)activeObjects[0];
     spaceship->transform.TranslateTo(glm::vec3(0));
     spaceship->transform.RotateTo(glm::vec3(0));
     spaceship->resetLives();

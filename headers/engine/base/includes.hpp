@@ -9,11 +9,13 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include <optional>
 #include <set>
 #include <stdexcept>
-#include <vector>
 #include <unordered_map>
+#include <vector>
+#include <list>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES

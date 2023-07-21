@@ -10,53 +10,49 @@ Scene::Scene(float* ar) {
 void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
 	//For each object in the scene, bind its pipeline and draw (WITHOUT rebinding the pipeline if it uses the same one)
 	this->activePipeline = nullptr;
-	for (int i = 0; i < activeObjects.size(); i++) {
-		GameObject* object = activeObjects[i];
+	for (GameObject* object: activeObjects) {
 		object->Draw(commandBuffer, currentImage, this->activePipeline);
 	}
 }
 
 void Scene::addObject(GameObject* object) {
-	addedObjects.push_back(object);
+	addedObjects.insert(object);
 }
 
 void Scene::removeObject(GameObject* object) {
-	removedObjects.push_back(object);
+	removedObjects.insert(object);
 }
 
 void Scene::applyObjectModifications() {
 	// adding new objects
-	for (int i = 0; i < addedObjects.size(); i++) {
-		GameObject* objectToAdd = addedObjects[i];
+	for (GameObject* objectToAdd: addedObjects) {
 		objectToAdd->parentScene = this;
-		activeObjects.push_back(objectToAdd);
+		activeObjects.insert(objectToAdd);
 		modifiedActiveObjects = true;
 		for (int i = 0; i < objectToAdd->colliders.size(); i++) {
-			activeColliders.push_back(objectToAdd->colliders[i]);
+			activeColliders.insert(objectToAdd->colliders[i]);
 		}
-		
 	}
 	addedObjects.clear();
 	// removing objects
-	for (int i = 0; i < removedObjects.size(); i++) {
-		GameObject* objectToRemove = removedObjects[i];
+	for (GameObject* objectToRemove: removedObjects) {
 		objectToRemove->parentScene = nullptr;
 		// remove collider
 		if (!objectToRemove->colliders.empty()) {
-			for (int i = 0; i < activeColliders.size(); i++) {
-				for (int j = 0; j < objectToRemove->colliders.size(); j++) {
-					if (activeColliders[i] == objectToRemove->colliders[j]) {
-						activeColliders.erase(activeColliders.begin() + i);
+			for (int j = 0; j < objectToRemove->colliders.size(); j++) {
+				for (Collider* activeCollider: activeColliders) {
+					if (activeCollider == objectToRemove->colliders[j]) {
+						activeColliders.erase(activeCollider);
 						break;
 					}
 				}
 			}
 		}
 		// remove from active objects
-		for (int i = 0; i < activeObjects.size(); i++) {
-			if (activeObjects[i] == objectToRemove) {
+		for (GameObject* activeObject: activeObjects) {
+			if (activeObject == objectToRemove) {
 				modifiedActiveObjects = true;
-				activeObjects.erase(activeObjects.begin() + i);
+				activeObjects.erase(activeObject);
 				break;
 			}
 		}
@@ -74,16 +70,16 @@ void Scene::applyObjectModifications() {
 
 int Scene::totalTextureCount() {
 	int texCount = 0;
-	for (int i = 0; i < activeObjects.size(); i++) {
-		texCount += activeObjects[i]->textureCount();
+	for (GameObject* activeObject: activeObjects) {
+		texCount += activeObject->textureCount();
 	}
 	return texCount;
 }
 
 int Scene::totalUniformsCount() {
 	int uniformsCount = 0;
-	for (int i = 0; i < activeObjects.size(); i++) {
-		uniformsCount += activeObjects[i]->uniformsCount();
+	for (GameObject* activeObject: activeObjects) {
+		uniformsCount += activeObject->uniformsCount();
 	}
 	return uniformsCount;
 }
@@ -91,14 +87,14 @@ int Scene::totalUniformsCount() {
 void Scene::UpdateImpl(int currentimage) {
 	isUpdatingScene = true;
 	Update();
-	for (int i = 0; i < activeObjects.size(); i++) {
-		activeObjects[i]->UpdateImpl();
+	for (GameObject* activeObject: activeObjects) {
+		activeObject->UpdateImpl();
 	}
 	isUpdatingScene = false;
 	glm::mat4 cameraMatrix = camera->getCameraMatrix();
 	gubos.eyePos = camera->getCameraPosition();
-	for (int i = 0; i < activeObjects.size(); i++) {
-		activeObjects[i]->CommitUpdates(currentimage, cameraMatrix);
+	for (GameObject* activeObject: activeObjects) {
+		activeObject->CommitUpdates(currentimage, cameraMatrix);
 	}
 	//Now check for collisions
 	CheckCollisions();
@@ -112,13 +108,14 @@ void Scene::UpdateImpl(int currentimage) {
 }
 
 void Scene::CheckCollisions() {
-	int nColliders = activeColliders.size();
+	std::vector<Collider*> activeCollidersList(activeColliders.begin(), activeColliders.end());
+	int nColliders = activeCollidersList.size();
 	if (nColliders < 2) return;
 
 	for (int i = 0; i < nColliders; i++) {
-		Collider* colliderA = activeColliders[i];
+		Collider* colliderA = activeCollidersList[i];
 		for (int j = i + 1; j < nColliders && colliderA != nullptr; j++) {
-			Collider* colliderB = activeColliders[j];
+			Collider* colliderB = activeCollidersList[j];
 			bool collision = (colliderB != nullptr) && colliderA->checkCollisionWith(colliderB);
 			if (collision) {
 				GameObject* objectA = colliderA->getParent();
@@ -136,9 +133,8 @@ void Scene::CheckCollisions() {
 }
 
 void Scene::CompileObjects(bool addedOnly) {
-	std::vector<GameObject*> objectsToCompile = activeObjects;
-	for (int i = 0; i < objectsToCompile.size(); i++) {
-		objectsToCompile[i]->compile(proj, &gubos);
+	for (GameObject* activeObject: activeObjects) {
+		activeObject->compile(proj, &gubos);
 	}
 	modifiedActiveObjects = false;
 }
@@ -148,16 +144,16 @@ void Scene::requestSceneSwitch(int newScene) {
 }
 
 void Scene::CleanupImpl() {
-	for (int i = 0; i < activeObjects.size(); i++) {
-		activeObjects[i]->Cleanup();
+	for (GameObject* activeObject: activeObjects) {
+		activeObject->Cleanup();
 	}
 	Cleanup();
 }
 
 void Scene::DestroyImpl() {
-	for (int i = 0; i < activeObjects.size(); i++) {
-		activeObjects[i]->Destroy();
-		delete activeObjects.at(i);
+	for (GameObject* activeObject: activeObjects) {
+		activeObject->Destroy();
+		delete activeObject;
 	}
 	Destroy();
 	activeObjects.clear();
