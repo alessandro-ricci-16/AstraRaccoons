@@ -22,6 +22,7 @@ private:
     float minScale = 1.25f;
 
     void receiveDamage(float damage);
+    void initializeRandom();
 
 public:
     AbstractAsteroidObject(Transform* playerTransform);

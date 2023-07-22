@@ -10,10 +10,28 @@
 AbstractAsteroidObject::AbstractAsteroidObject(Transform* _playerTransform) {
 	transform = Transform::identity();
 	scaleToUpdate = Random::randomFloat(1.25f, 6);
-	minScale = std::min(scale, 1.5f);
+	minScale = std::min(scaleToUpdate, 1.5f);
+	playerTransform = _playerTransform;
+}
+
+void AbstractAsteroidObject::initializeRandom() {
+	//Position the asteroid in a random point around the player at a random distance and with random velocities
+	glm::vec3 randomDirection = glm::normalize(glm::vec3(Random::randomFloat(-1, 1), Random::randomFloat(-1, 1), Random::randomFloat(-1, 1)));
+	float randomDistance = Random::randomFloat(80, 160);
+	float randomVelocity = Random::randomFloat(1.5f, 8);
+	float randomAngularVelocity = Random::randomFloat(10, 90);
+	glm::vec3 randomRotationAxis = glm::normalize(glm::vec3(Random::randomFloat(-1, 1), Random::randomFloat(-1, 1), Random::randomFloat(-1, 1)));
+
+	glm::vec3 position = playerTransform->getPos() + randomDistance * randomDirection;
+	glm::vec3 velocity = -randomDirection * randomVelocity;
+
+	transform.TranslateTo(position);
+	vel = velocity;
+	velToUpdate = vel;
+	angVel = randomRotationAxis * randomAngularVelocity;
+
 	scale = 0.0f; // pop "animation"
 	transform.ScaleTo(glm::vec3(scale));
-	playerTransform = _playerTransform;
 }
 
 void AbstractAsteroidObject::Instantiate() {
@@ -24,21 +42,7 @@ void AbstractAsteroidObject::Instantiate() {
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32_SFLOAT, offsetof(AbstractAsteroidVertex, uv), sizeof(glm::vec2), UV);
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(AbstractAsteroidVertex, norm), sizeof(glm::vec3), NORMAL);
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32B32A32_SFLOAT, offsetof(AbstractAsteroidVertex, tan), sizeof(glm::vec4), TANGENT);
-	//Position the asteroid in a random point around the player at a random distance and with random velocities
-	glm::vec3 playerPosition = playerTransform->getPos();
-	glm::vec3 randomDirection = glm::normalize(glm::vec3(Random::randomFloat(-1, 1), Random::randomFloat(-1, 1), Random::randomFloat(-1, 1)));
-	float randomDistance = Random::randomFloat(80, 160);
-	float randomVelocity = Random::randomFloat(1.5f, 8);
-	float randomAngularVelocity = Random::randomFloat(10, 90);
-	glm::vec3 randomRotationAxis = glm::normalize(glm::vec3(Random::randomFloat(-1, 1), Random::randomFloat(-1, 1), Random::randomFloat(-1, 1)));
-
-	glm::vec3 position = playerPosition + randomDistance * randomDirection;
-	glm::vec3 velocity = -randomDirection * randomVelocity;
-
-	transform.TranslateTo(position);
-	vel = velocity;
-	velToUpdate = vel;
-	angVel = randomRotationAxis * randomAngularVelocity;
+	initializeRandom();
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = true;
 	//Add collider
@@ -54,6 +58,9 @@ void AbstractAsteroidObject::Update() {
 	scale = DAMP(scale, scaleToUpdate, delT);
 	transform.ScaleTo(glm::vec3(scale));
 	colliders[0]->setRadius(scale);
+	if (glm::distance(transform.getPos(), playerTransform->getPos()) > 300) {
+		initializeRandom();
+	}
 }
 
 void AbstractAsteroidObject::OnCollisionWith(Collider* other) {
