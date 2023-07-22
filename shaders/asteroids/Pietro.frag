@@ -50,16 +50,27 @@ void main() {
 	float roughness = MRAO.g;
 	float metallic = MRAO.r;
 	float ao = pow(MRAO.b, 2);
-	
-	vec3 L = gubo.directionalLightDirection;
-	vec3 lightColor = gubo.directionalLightColor.rgb;
 
 	vec3 V = normalize(gubo.eyePos - fragPos);
 
 	float reflectivity = 1 - roughness;
 	float F0 = pow(reflectivity, 16);
 
-	vec3 DiffSpec = GGXDiffuseSpecular(V, N, L, albedoCol, F0, metallic, roughness);
+	// directional light
+	vec3 L = gubo.directionalLightDirection;
+	vec3 lightColor = gubo.directionalLightColor.rgb;
+	vec3 DiffSpec = GGXDiffuseSpecular(V, N, L, albedoCol, F0, metallic, roughness) * DirectionalLight(L, lightColor);
+	
+	// point light
+	L = normalize(gubo.pointLightPosition - fragPos);
+	lightColor = gubo.pointLightColor.rgb;
+	DiffSpec += GGXDiffuseSpecular(V, N, L, albedoCol, F0, metallic, roughness) * PointLight(gubo.pointLightPosition, lightColor, fragPos, gubo.pointLightDecayFactor, gubo.pointLightTargetDistance);
+	
+	// spot light
+	L = normalize(gubo.spotlightPosition - fragPos);
+	lightColor = gubo.spotlightColor.rgb;
+	DiffSpec += GGXDiffuseSpecular(V, N, L, albedoCol, F0, metallic, roughness) * Spotlight(gubo.spotlightPosition, lightColor, gubo.spotlightDirection, fragPos, gubo.spotlightDecayFactor, gubo.spotlightTargetDistance, gubo.spotlightCosIn, gubo.spotlightCosOut);
+	
 	vec3 Ambient = sh(N) * albedoCol;
 	
 	//For cubemap reflections

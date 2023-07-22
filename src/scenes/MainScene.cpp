@@ -32,14 +32,14 @@ void MainScene::Instantiate() {
 	gubos.pointLightDecayFactor = 2; // Inverse-linear
 	gubos.pointLightTargetDistance = 2;
 	gubos.directionalLightDirection = glm::vec3(-0.825236, 0.462815, -0.323709);
-	gubos.directionalLightColor = glm::vec4(0.404f, 0.789f, 0.976f, 1.0f) * 8.f;
+	gubos.directionalLightColor = glm::vec4(0.404f, 0.789f, 0.976f, 1.0f) * 5.f;
 	gubos.spotlightPosition = glm::vec3(0, 0, 1.2f);
 	gubos.spotlightDirection = glm::vec3(0, 0, -1);
-	gubos.spotlightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	gubos.spotlightColor = glm::vec4(1.0f);
 	gubos.spotlightDecayFactor = 2;  // Inverse-linear
-	gubos.spotlightTargetDistance = 1.5f;
-	gubos.spotlightCosIn = 0.92f;
-	gubos.spotlightCosOut = 0.89f;
+	gubos.spotlightTargetDistance = 50;
+	gubos.spotlightCosIn = 0.95f;
+	gubos.spotlightCosOut = 0.92f;
 	gubos.eyePos = camera->getCameraPosition();
 	// Spawn initial asteroids
 	for (int i = 0; i < initialAsteroids; i++)
@@ -51,9 +51,12 @@ void MainScene::Update() {
 	//Rotate the directional light over time
 	//gubos.directionalLightDirection = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 1, 0)) * glm::vec4(gubos.directionalLightDirection , 1);
 	//Rotate the point light
-	gubos.pointLightPosition = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 0, 1)) * glm::vec4(gubos.pointLightPosition, 1);
+	//gubos.pointLightPosition = glm::rotate(glm::mat4(1), Time::getDeltaT() * 3, glm::vec3(0, 0, 1)) * glm::vec4(gubos.pointLightPosition, 1);
 	//Move the spot light
 	//gubos.spotlightPosition = glm::vec3(9.f * sin(time), 0, -2);
+	glm::vec3 playerUz = -player->transform.uz();
+	gubos.spotlightPosition = player->transform.getPos() + playerUz * 6.5f;
+	gubos.spotlightDirection = playerUz;
 
     float absTime = Time::getAbsoluteTime();
     if (restartFlag) {

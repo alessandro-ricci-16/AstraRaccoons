@@ -50,12 +50,24 @@ void main() {
 	// float metallic = MRAO.r;
 	float ao = pow(MRAO.b, 2);
 	
+	vec3 V = normalize(gubo.eyePos - fragPos);
+	
+	// directional light
 	vec3 L = gubo.directionalLightDirection;
 	vec3 lightColor = gubo.directionalLightColor.rgb;
-
-	vec3 V = normalize(gubo.eyePos - fragPos);
-
-	vec3 DiffSpec = OrenNayarDiffuse(V, N, L, albedoCol, roughness);
+	vec3 DiffSpec = OrenNayarDiffuse(V, N, L, albedoCol, roughness) * DirectionalLight(L, lightColor);
+	
+	// point light
+	L = normalize(gubo.pointLightPosition - fragPos);
+	lightColor = gubo.pointLightColor.rgb;
+	DiffSpec += OrenNayarDiffuse(V, N, L, albedoCol, roughness) * PointLight(gubo.pointLightPosition, lightColor, fragPos, gubo.pointLightDecayFactor, gubo.pointLightTargetDistance);
+	
+	// spot light
+	L = normalize(gubo.spotlightPosition - fragPos);
+	lightColor = gubo.spotlightColor.rgb;
+	DiffSpec += OrenNayarDiffuse(V, N, L, albedoCol, roughness) * Spotlight(gubo.spotlightPosition, lightColor, gubo.spotlightDirection, fragPos, gubo.spotlightDecayFactor, gubo.spotlightTargetDistance, gubo.spotlightCosIn, gubo.spotlightCosOut);
+	
+	
 	vec3 Ambient = sh(N) * albedoCol;
 	
 	outColor = vec4(clamp((DiffSpec + Ambient) * ao, 0.0, 1.0), 1.0f);

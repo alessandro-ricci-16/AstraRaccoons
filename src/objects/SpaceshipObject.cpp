@@ -28,10 +28,13 @@ void SpaceshipObject::Instantiate() {
 							  "textures/sky/top.png",   "textures/sky/bottom.png",
 							  "textures/sky/back.png", "textures/sky/front.png" };
 	model.addCubicTexture(textures);
+
 	float scale = 0.3f;
 	transform.Scale(glm::vec3(scale));
+
 	vel = glm::vec3(0.0f);
 	angVel = glm::vec3(0.0f);
+
 	addCollider(glm::vec3(0, -0.47, -14.26), 2.05f * 0.62f * scale, 0x01, 0x02);
 	addCollider(glm::vec3(0, -0.47, -12.32), 2.05f * 0.62f * scale, 0x01, 0x02);
 	addCollider(glm::vec3(0, -0.47, -10.48), 2.05f * 0.62f * scale, 0x01, 0x02);
@@ -45,21 +48,34 @@ void SpaceshipObject::Instantiate() {
 	addCollider(glm::vec3(0, 0, 5.18), 5.f * 0.62f * scale, 0x01, 0x02);
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = true;
+
+	additionalUniforms.emissionColor = glm::vec4(1.f, 0.723f, 0.022f, 0.f);
 }
 
 void SpaceshipObject::Update() {
 	float delT = Time::getFixedDeltaT(); // always with scale 1
-	disabledKeysTimer -= delT;
 
 	glm::vec3 mov, rot;
 	Inputs::getSixAxis(mov, rot, fire);
+
+	// blocking some movements
+	mov.x = 0;
+	mov.y = 0;
+	mov.z = std::max(mov.z, 0.0f);
+
 	if (disabledKeysTimer > 0) {
+		disabledKeysTimer -= delT;
 		mov = glm::vec3(0);
 		rot = glm::vec3(0);
 		additionalUniforms.flashingColor = baseFlashingColor * sin(disabledKeysTimer * 5);
-	} else {
+	}
+	else {
 		additionalUniforms.flashingColor = glm::vec4(0);
 	}
+
+	emissionMultiplier = std::min(1.0f, mov.z);
+	additionalUniforms.emissionColor.a = DAMP(additionalUniforms.emissionColor.a, emissionMultiplier, delT);
+
 	firingAllowed = firingAllowed || !fire;
 	fire = fire && firingAllowed;
 
@@ -81,7 +97,8 @@ void SpaceshipObject::Update() {
 			timer = 0;
 			reloading = false;
 		}
-	} else if (fire) {
+	}
+	else if (fire) {
 		reloading = true;
 		glm::vec3 finalShotSpeed = glm::vec3(0, 0, -shotSpeed) + vel; // negative z for the same reason mov.z is multiplied by -1
 		Pew* pew = new Pew(transform, shotOffset, finalShotSpeed, shotRange, shotDamage, shotThickness, shotColor);
@@ -95,13 +112,16 @@ void SpaceshipObject::OnCollisionWith(Collider* other) {
 	//Collision is assumed to be only with asteroids
 	if (!hadRecentCollision()) {
 		lives -= 1;
+		// shut down light
+		additionalUniforms.emissionColor.a = 0.0f;
 		if (lives <= 0) {
 			parentScene->requestSceneSwitch(AR_SCENE_GAME_OVER);
 			disabledKeysTimer = 0;
 			firingAllowed = false;
 			vel = glm::vec3(0.0f);
 			angVel = glm::vec3(0.0f);
-		} else {
+		}
+		else {
 			disabledKeysTimer = disabledKeysDefaultTimer;
 		}
 	}

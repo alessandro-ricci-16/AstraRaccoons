@@ -32,6 +32,7 @@ layout(set = 1, binding = 3) uniform samplerCube skybox;
 
 layout(set = 2, binding = 0) uniform SpaceshipUniforms {
 	vec4 flashingColor;
+	vec4 emissionColor;
 } spaceshipUniforms;
 
 const float beta = 0.2f;
@@ -63,7 +64,7 @@ void main() {
 
 	vec4 MRE = texture(metallicRoughnessEmission, fragUV);
 	float roughness = MRE.g;
-	float emission = MRE.b;
+	float emission = MRE.b  * spaceshipUniforms.emissionColor.a;
 	float metallic = MRE.r;
 	
 	vec3 L = gubo.directionalLightDirection;
@@ -72,8 +73,8 @@ void main() {
 	vec3 V = normalize(gubo.eyePos - fragPos);
 
 	vec3 DiffSpec = GGXDiffuseSpecular(V, Norm, L, albedoCol, 0.3f, metallic, roughness) * lightColor;
-	vec3 Ambient = sh(Norm) * albedoCol * (1 - emission);
-	vec3 emissionColor = emission * albedoCol;
+	vec3 Ambient = sh(Norm) * albedoCol;
+	vec3 emissionColor = emission * spaceshipUniforms.emissionColor.rgb;
 	
 	//For cubemap reflections
 	vec3 I = -normalize(gubo.eyePos - fragPos);
@@ -82,5 +83,5 @@ void main() {
 	float F0 = pow(reflectivity, 4);
 	vec3 reflectionColor = texture(skybox, R).xyz * F0;
 	
-	outColor = vec4(clamp(DiffSpec + Ambient + emissionColor + reflectionColor + (spaceshipUniforms.flashingColor.xyz * spaceshipUniforms.flashingColor.w), 0.0, 1.0), 1.0f);
+	outColor = vec4(clamp((DiffSpec + Ambient) * (1 - emission) + emissionColor + reflectionColor + (spaceshipUniforms.flashingColor.xyz * spaceshipUniforms.flashingColor.w), 0.0, 1.0), 1.0f);
 }

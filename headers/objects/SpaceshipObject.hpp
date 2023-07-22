@@ -13,6 +13,7 @@ struct SpaceshipVertex {
 
 struct SpaceshipUniforms {
     alignas(16) glm::vec4 flashingColor;
+    alignas(16) glm::vec4 emissionColor;
 };
 
 class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
@@ -23,10 +24,12 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         glm::vec3 angVel;
         // maxVel = a/d
         // acc = a - d*v
-        const float acc = 15.0f;
+        const float acc = 20.0f;
         const float dec = 1.0f;
         const float angAcc = 250.0f;
         const float angDec = 2.0f;
+
+        float emissionMultiplier = 0.0f;
 
         bool fire = false;
         bool reloading = true;

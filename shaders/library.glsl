@@ -2,7 +2,6 @@
 
 vec3 PointLight(vec3 pointLightPosition, vec3 pointLightColor, vec3 fragPos, float beta, float g) {
     vec3 dir = pointLightPosition - fragPos;
-	vec3 lightDir = normalize(dir);
 	float decay = pow(g / length(dir), beta);
     return pointLightColor * decay;
 }
@@ -11,12 +10,12 @@ vec3 DirectionalLight(vec3 lightDir, vec3 lightColor) {
     return lightColor;
 }
 
-vec3 Spotlight(vec3 lightPos, vec3 lightCol, vec3 lightDir, vec3 fragPos, float decayExp, float baseDist, float cosin, float cosout) {
+vec3 Spotlight(vec3 lightPos, vec3 lightCol, vec3 spotDir, vec3 fragPos, float decayExp, float baseDist, float cosin, float cosout) {
 	vec3 dir = lightPos - fragPos;
 	vec3 lightDirection = normalize(dir);
 	float decay = pow(baseDist / length(dir), decayExp);
 	vec3 lightColor = lightCol;
-	float cosalpha = dot(lightDirection, -normalize(lightDir));
+	float cosalpha = dot(lightDirection, -normalize(spotDir));
 	float coneDimming = clamp((cosalpha - cosout) / (cosin - cosout), 0, 1);
 	lightColor = lightColor * decay * coneDimming;
 
