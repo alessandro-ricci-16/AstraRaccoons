@@ -25,7 +25,8 @@ void GameOverScene::Instantiate() {
     fader->Instantiate();
     addObject(fader);
     // Text
-    TextMaker* txt = new TextMaker("", true, true);
+    const char* text = "GameOver";
+    TextMaker* txt = new TextMaker(text, true, true);
     txt->Instantiate();
     addObject(txt);
 

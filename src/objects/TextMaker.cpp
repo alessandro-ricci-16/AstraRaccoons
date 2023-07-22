@@ -1,5 +1,6 @@
 #define MESHOBJECT_IMPLEMENTATION
 #include <headers/objects/TextMaker.hpp>
+#include <headers/Game.hpp>
 #include "../../headers/engine/scenes/Scene.hpp"
 
 #include <ctime>
@@ -68,12 +69,12 @@ void TextMaker::createTextMesh() {
 	int FontId = 1;
 	for (auto& Txt : demoText) {
 		if (Txt.xCentered && Txt.yCentered) {
-			PtoTsx = 6.0 / 800.0;
-			PtoTsy = 6.0 / 600.0;
+			PtoTsx = 6.0 / width;
+			PtoTsy = 6.0 / height;
 		}
 		else {
-			PtoTsx = 2.0 / 800.0;
-			PtoTsy = 2.0 / 600.0;
+			PtoTsx = 2.0 / width;
+			PtoTsy = 2.0 / height;
 		}
 		for (int i = 0; i < Txt.usedLines; i++) {
 			totLen += strlen(Txt.l[i]);
@@ -93,16 +94,16 @@ void TextMaker::createTextMesh() {
 					yh = -0.95;
 					yl = 0.95;
 				}	
+				df.xoffset = d.xoffset;
 			}
 			if (Txt.xCentered) {
-				xi = 0.0;
-				xf = (float)(tpxf + df.width) * PtoTsx;
+				xi = (float)(tpxi + di.xoffset) * PtoTsx;
+				xf = (float)(tpxf + df.xoffset) * PtoTsx;
 			}
 			else {
 				xi = -0.95;
 				xf = 0.95;
 			}
-			std::cout << xi << " " << xf << "\n";
 			PtoTdx[i] = (xi - xf) / 2;
 			PtoTdy = (yh - yl) / 2;
 			tpxf = 0;
@@ -187,6 +188,7 @@ void TextMaker::createTextMesh() {
 		tpx = 0;
 		tpy = 0;
 		Txt.len = ib - Txt.start;
+		demoText.clear();
 	}
 	/*std::cout << "Text: " << vertices.size()
 		<< ", I: " << indices.size() << "\n";*/

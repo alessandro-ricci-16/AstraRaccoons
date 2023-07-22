@@ -25,8 +25,8 @@ void IntroScene::Instantiate() {
     fader->Instantiate();
     addObject(fader);
     // Text
-    const char *text = "AstraRaccoons\nPolimiEdition";
-    TextMaker* txt = new TextMaker(text, true, false);
+    const char *text = "Astra Raccoons";
+    TextMaker* txt = new TextMaker(text, true, true);
     txt->Instantiate();
     addObject(txt);
 

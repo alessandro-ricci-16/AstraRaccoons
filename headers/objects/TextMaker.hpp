@@ -57,12 +57,18 @@ private:
 	float xf = 1.0;
 	float yh = 0.0;
 	float yl = 0.0;
+	uint32_t width;
+	uint32_t height;
 
 public:
 	TextMaker(const char* text, bool x, bool y);
 	void Instantiate();
 	void Update();
-	void createTextMesh();// std::vector<TextVertex> verts, std::vector<uint32_t> indices);
+	void createTextMesh();
+	void SetDimensions(uint32_t windowWidth, uint32_t windowHeight) {
+		width = windowWidth;
+		height = windowHeight;
+	}
 };
 
 #endif  // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_TEXTMAKER_HPP_

@@ -1,5 +1,6 @@
 #include "../../../headers/engine/base/BaseProject.hpp"
 #include "../../../headers/engine/base/Inputs.hpp"
+#include <headers/objects/TextMaker.hpp>
 
 const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"};
