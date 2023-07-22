@@ -71,7 +71,7 @@ void main() {
 
 	vec3 V = normalize(gubo.eyePos - fragPos);
 
-	vec3 DiffSpec = GGXDiffuseSpecular(V, Norm, L, albedoCol, 0.3f, metallic, roughness);
+	vec3 DiffSpec = GGXDiffuseSpecular(V, Norm, L, albedoCol, 0.3f, metallic, roughness) * lightColor;
 	vec3 Ambient = sh(Norm) * albedoCol * (1 - emission);
 	vec3 emissionColor = emission * albedoCol;
 	

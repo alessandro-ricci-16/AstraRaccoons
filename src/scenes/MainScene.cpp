@@ -31,8 +31,8 @@ void MainScene::Instantiate() {
 	gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	gubos.pointLightDecayFactor = 2; // Inverse-linear
 	gubos.pointLightTargetDistance = 2;
-	gubos.directionalLightDirection = glm::vec3(0, 0, 1);
-	gubos.directionalLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	gubos.directionalLightDirection = glm::vec3(-0.825236, 0.462815, -0.323709);
+	gubos.directionalLightColor = glm::vec4(0.404f, 0.789f, 0.976f, 1.0f) * 1.5f;
 	gubos.spotlightPosition = glm::vec3(0, 0, 1.2f);
 	gubos.spotlightDirection = glm::vec3(0, 0, -1);
 	gubos.spotlightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
