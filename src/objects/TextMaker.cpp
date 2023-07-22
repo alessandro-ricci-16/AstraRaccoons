@@ -69,12 +69,12 @@ void TextMaker::createTextMesh() {
 	int FontId = 1;
 	for (auto& Txt : demoText) {
 		if (Txt.xCentered && Txt.yCentered) {
-			PtoTsx = 6.0 / width;
-			PtoTsy = 6.0 / height;
+			PtoTsx = 6.0 / 800.0;
+			PtoTsy = 6.0 / 600.0;
 		}
 		else {
-			PtoTsx = 2.0 / width;
-			PtoTsy = 2.0 / height;
+			PtoTsx = 2.0 / 800.0;
+			PtoTsy = 2.0 / 600.0;
 		}
 		for (int i = 0; i < Txt.usedLines; i++) {
 			totLen += strlen(Txt.l[i]);
