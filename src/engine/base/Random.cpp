@@ -1,9 +1,14 @@
 #include <headers/engine/base/Random.hpp>
 
+void Random::initialize() {
+	srand(time(NULL));
+}
+
 float Random::randomFloat() {
 	return (float)(rand()) / (float)(RAND_MAX);
 }
 
+// in range [a, b)
 int Random::randomInt(int a, int b) {
 	if (a > b) return randomInt(b, a);
 	if (a == b) return a;

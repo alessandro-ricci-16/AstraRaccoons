@@ -24,6 +24,4 @@ void FaderPlaneObject::Instantiate() {
     acceptsGUBOs = false;
 }
 
-void FaderPlaneObject::Start() {}
-
 void FaderPlaneObject::Update() {}

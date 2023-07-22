@@ -14,7 +14,7 @@ class IntroScene: public Scene {
         void Update();
         void Destroy();
         void Cleanup();
-
+        void WillDisappear();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_SCENES_INTROSCENE_HPP_

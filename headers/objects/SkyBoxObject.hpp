@@ -17,7 +17,6 @@ private:
 public:
 	SkyBoxObject(Camera* c);
 	void Instantiate();
-	void Start();
 	void Update();
 };
 

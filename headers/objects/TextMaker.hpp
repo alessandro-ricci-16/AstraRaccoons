@@ -61,7 +61,6 @@ private:
 public:
 	TextMaker(const char* text, bool x, bool y);
 	void Instantiate();
-	void Start();
 	void Update();
 	void createTextMesh();// std::vector<TextVertex> verts, std::vector<uint32_t> indices);
 };

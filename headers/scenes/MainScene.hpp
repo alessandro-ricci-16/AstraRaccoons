@@ -10,6 +10,7 @@ class MainScene: public Scene {
         float spawnDeltaTime;
         GameObject* player;
         const unsigned int initialAsteroids = 10;
+        bool restartFlag = false;
 
     public:
         MainScene(float* ar) : Scene(ar) {}
@@ -17,6 +18,7 @@ class MainScene: public Scene {
         void Update();
         void Destroy();
         void Cleanup();
+        void WillDisappear();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_SCENES_MAINSCENE_HPP_

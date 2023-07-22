@@ -26,8 +26,5 @@ void SkyBoxObject::Instantiate() {
 	acceptsGUBOs = false;
 }
 
-void SkyBoxObject::Start() {
-}
-
 void SkyBoxObject::Update() {
 }

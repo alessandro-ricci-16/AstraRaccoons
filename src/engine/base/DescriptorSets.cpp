@@ -119,6 +119,7 @@ void DescriptorSet::cleanup() {
 			}
 		}
 	}
+	vkFreeDescriptorSets(BP->device, BP->descriptorPool, static_cast<uint32_t>(BP->swapChainImages.size()), descriptorSets.data());
 }
 
 void DescriptorSet::bind(VkCommandBuffer commandBuffer, Pipeline &P, int setId,

@@ -48,13 +48,15 @@ void main() {
 
 	vec3 V = normalize(gubo.eyePos - fragPos);
 
-	vec3 DiffSpec = GGXDiffuseSpecular(V, Norm, L, albedoCol, 0.3f, metallic, roughness);
+	float reflectivity = 1 - roughness;
+	float F0 = pow(reflectivity, 4);
+
+	vec3 DiffSpec = GGXDiffuseSpecular(V, Norm, L, albedoCol, F0, metallic, roughness);
 	
 	//For cubemap reflections
 	vec3 I = -normalize(gubo.eyePos - fragPos);
     vec3 R = reflect(I, Norm);
-	float reflectivity = 1 - roughness;
-	float F0 = pow(reflectivity, 4);
+
 	vec3 reflectionColor = texture(skybox, R).xyz * F0;
 	
 	outColor = vec4(clamp(DiffSpec + reflectionColor, 0.0, 1.0), 1.0f);

@@ -2,12 +2,14 @@
 #include "../headers/scenes/MainScene.hpp"
 #include <headers/scenes/IntroScene.hpp>
 #include <headers/scenes/TestScene.hpp>
+#include <headers/scenes/GameOverScene.hpp>
 #include "../headers/engine/base/Time.hpp"
+#include "../headers/engine/base/Random.hpp"
 
 Game::Game() {
 	managedScenes = {};
-
 	activeScene = 0;
+	Random::initialize();
 }
 
 // Here you set the main application parameters
@@ -49,8 +51,13 @@ void Game::localInit() {
 	mainScene->proj = this;
 	mainScene->Instantiate();
 
+	GameOverScene* gameOverScene = new GameOverScene(&Ar);
+	gameOverScene->proj = this;
+	gameOverScene->Instantiate();
+
 	managedScenes.push_back(introScene);
 	managedScenes.push_back(mainScene);
+	managedScenes.push_back(gameOverScene);
 	#endif
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes[i]->applyObjectModifications();
@@ -94,6 +101,7 @@ void Game::updateUniformBuffer(uint32_t currentImage) {
 	}
 	//Update the active scene
 	managedScenes.at(activeScene)->UpdateImpl(currentImage);
+	performSceneSwitchIfRequested();
 }
 
 void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
@@ -104,8 +112,6 @@ void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
 		newUniformBlocksCount += managedScenes.at(i)->totalUniformsCount();
 		newTexturesCount += managedScenes.at(i)->totalTextureCount();
 	}
-	newUniformBlocksCount *= swapChainImages.size();
-	newTexturesCount  *= swapChainImages.size();
 	if (commandBufferOnly) {
 		if (uniformBlocksInPool < newUniformBlocksCount || texturesInPool < newTexturesCount) {
 			recreateFullSwapchain = true;
@@ -126,11 +132,23 @@ void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
 	}
 }
 
-void Game::switchToScene(int sceneID) {
+bool Game::requestSwitchToScene(int sceneID) {
 	if (sceneID >= 0 && sceneID < managedScenes.size()) {
-		activeScene = sceneID;
-		recreateVulkanSwapChain();
+		nextSceneToSwitch = sceneID;
+		sceneSwitchRequested = true;
 	} else {
+		sceneSwitchRequested = false;
+		std::cout << "WARNING: Attempting to switch to a non-existing scene. This attempt will be ignored. (requested scene: " << sceneID << ")\n";
+	}
+	return sceneSwitchRequested;
+}
+
+void Game::performSceneSwitchIfRequested() {
+    if (nextSceneToSwitch >= 0 && nextSceneToSwitch < managedScenes.size() && sceneSwitchRequested) {
+		activeScene = nextSceneToSwitch;
+		sceneSwitchRequested = false;
+		recreateVulkanSwapChain(true);
+	} else if (sceneSwitchRequested) {
 		std::cout << "WARNING: Attempting to switch to a non-existing scene. This attempt will be ignored.\n";
 	}
 }

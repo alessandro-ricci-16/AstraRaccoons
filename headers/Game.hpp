@@ -5,13 +5,16 @@
 #include "scenes/MainScene.hpp"
 
 class Game: public BaseProject {
-    protected:
+    private:
         //The window aspect ratio
         float Ar;
         //The list of scenes managed by the game
         std::vector<Scene*> managedScenes;
         //The currently active scene index
-        int activeScene;
+        int activeScene, nextSceneToSwitch;
+        bool sceneSwitchRequested = false;
+
+        void performSceneSwitchIfRequested();
     
     public:
         Game();
@@ -46,7 +49,7 @@ class Game: public BaseProject {
         // Very likely this will be where you will be writing the logic of your application.
         void updateUniformBuffer(uint32_t currentImage);
         void recreateVulkanSwapChain(bool commandBufferOnly = false);
-        void switchToScene(int sceneID);
+        bool requestSwitchToScene(int sceneID);
 };
 
 #endif /* GAME_DEFINED */

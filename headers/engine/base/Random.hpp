@@ -7,6 +7,7 @@ class Random {
 	private:
 		static float randomFloat();
 	public:
+		static void initialize();
 		static int randomInt(int a, int b);
 		static float randomFloat(float a, float b);
 };

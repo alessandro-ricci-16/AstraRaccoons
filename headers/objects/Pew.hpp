@@ -4,6 +4,7 @@
 #include "../engine/base/includes.hpp"
 #include "../engine/objects/Camera.hpp"
 #include "../engine/objects/MeshObject.hpp"
+#include <headers/engine/objects/Collider.hpp>
 
 struct PewVertex {
     glm::vec3 pos;
@@ -25,9 +26,8 @@ class Pew : public MeshObject<PewVertex>, public ICollidable {
         Pew(Transform parent, glm::vec3 offset, glm::vec3 speed, float range, float damage, float thickness, glm::vec3 color);
         float getDamage();
         void Instantiate();
-        void Start();
         void Update();
-        void OnCollisionWith(GameObject* other);
+        void OnCollisionWith(Collider* other);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_PEW_HPP_

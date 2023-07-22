@@ -19,7 +19,6 @@ class MeshObject: public GameObject {
         void compile(BaseProject* proj, GlobalUniforms* guboPtr) override;
 
         virtual void Instantiate() = 0;
-        virtual void Start() = 0;
         virtual void Update() = 0;
         virtual void Destroy();
         virtual void Cleanup();
@@ -92,7 +91,7 @@ void MeshObject<Vert>::Draw(VkCommandBuffer commandBuffer, int currentImage, Gra
 template <class Vert>
 void MeshObject<Vert>::CommitUpdates(int currentImage, glm::mat4 cameraMatrix) {
     //Update model uniforms with the object transform
-    model.uniforms.modelMat = transform.getMatrix();
+    model.uniforms.modelMat = getFullMatrix();
     model.uniforms.nMat = glm::inverse(glm::transpose(model.uniforms.modelMat));
     model.uniforms.cameraMat = cameraMatrix;
     model.uniforms.mvpMat = cameraMatrix * model.uniforms.modelMat;

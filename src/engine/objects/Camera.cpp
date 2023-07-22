@@ -18,6 +18,12 @@ void Camera::setTargetDistance(vec3 targetDistance) {
     camPos = dampedPos;
 }
 
+void Camera::reset() {
+    targetMat = target->getMatrix();
+    dampedPos = glm::vec3(targetMat * glm::vec4(distance, 1));
+    camPos = dampedPos;
+}
+
 glm::mat4 Camera::getCameraMatrix() {
     targetMat = target->getMatrix();
     uy = glm::normalize(glm::vec3(targetMat * glm::vec4(0, 1, 0, 0)));

@@ -5,11 +5,6 @@
 #include "Transform.hpp"
 #include "../base/Time.hpp"
 
-#define LAMBDA 4.f
-#define LERP(start, end, t) start * t + end * (1 - t)
-#define LERPTIME(dt) (float)pow(2.718281828459045f, -LAMBDA * dt)
-#define DAMP(start, end, dt) LERP(start, end, LERPTIME(dt));
-
 class Camera {
     protected:
         Transform* target;
@@ -32,6 +27,7 @@ class Camera {
 
         void setTarget(Transform* targetTransform);
         void setTargetDistance(vec3 targetDistance);
+        void reset();
 
         virtual glm::vec3 getCameraPosition();
         virtual glm::mat4 getCameraMatrix(); //Prj * View

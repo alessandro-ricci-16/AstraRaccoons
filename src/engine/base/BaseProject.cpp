@@ -1100,7 +1100,8 @@ void BaseProject::createDescriptorPool() {
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-    ;
+    poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+
     poolInfo.pPoolSizes = poolSizes.data();
     poolInfo.maxSets =
         static_cast<uint32_t>(setsInPool * swapChainImages.size());
@@ -1170,10 +1171,11 @@ void BaseProject::createCommandBuffers() {
 
 void BaseProject::refillCommandBuffers() {
 	vkDeviceWaitIdle(device);
-	vkFreeCommandBuffers(device, commandPool,
+	if (commandBuffers.size() > 0) {
+        vkFreeCommandBuffers(device, commandPool,
 						 static_cast<uint32_t>(commandBuffers.size()),
 						 commandBuffers.data());
-	std::cout << "Recreated command buffers\n";
+    }
 	createCommandBuffers();
 }
 

@@ -6,12 +6,13 @@
 
 class Collider {
     private:
+        glm::vec3 origin;
         float radius;
         uint8_t collisionLayer, collisionMask;
         GameObject* parent;
 
     public:
-        Collider(GameObject* parent, float radius, uint8_t collisionLayer, uint8_t collisionMask);
+        Collider(GameObject* parent, float radius, uint8_t collisionLayer, uint8_t collisionMask, glm::vec3 origin = glm::vec3(0));
 
         uint8_t getCollisionLayer();
         uint8_t getCollisionMask();
@@ -19,6 +20,12 @@ class Collider {
         float getRadius();
         void setRadius(float radius);
         bool checkCollisionWith(Collider* collider2);
+        void compensateCompenetrations(Collider* collider2);
+};
+
+class ICollidable {
+    public:
+        virtual void OnCollisionWith(Collider* other) = 0;
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_COLLIDER_HPP_
