@@ -36,6 +36,7 @@ struct FontDef {
 
 class TextMaker : public MeshObject<TextVertex> {
 private:
+	std::vector<SingleText*> demoText = {};
 	std::vector<TextVertex> vertices;
 	std::vector<uint32_t> indices;
 	int totLen = 0;
