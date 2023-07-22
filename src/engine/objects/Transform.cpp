@@ -53,6 +53,10 @@ vec3 Transform::getPos() {
 	return vec3(translationMatrix[3]);
 }
 
+vec3 Transform::getScale() {
+	return vec3(scaleMatrix[0][0], scaleMatrix[1][1], scaleMatrix[2][2]);
+}
+
 vec3 Transform::ux() {
 	return vec3(rotationMatrix * vec4(1, 0, 0, 1));
 }

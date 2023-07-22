@@ -15,6 +15,7 @@ public:
     static float getAbsoluteTime();
     static float getDeltaT();
     static float getFixedDeltaT();
+    static float getScale();
     static void pRoFiLinG();
     static void setScale(float scale);
 };

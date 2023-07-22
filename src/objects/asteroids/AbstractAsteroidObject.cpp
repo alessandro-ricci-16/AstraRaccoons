@@ -7,22 +7,22 @@
 #include "../../../headers/engine/base/Random.hpp"
 #include <headers/objects/SpaceshipObject.hpp>
 
-AbstractAsteroidObject::AbstractAsteroidObject(Transform* _playerTransform) {
+AbstractAsteroidObject::AbstractAsteroidObject(GameObject* _player) {
 	transform = Transform::identity();
 	scaleToUpdate = Random::randomFloat(1.25f, 6);
 	minScale = std::min(scaleToUpdate, 1.5f);
-	playerTransform = _playerTransform;
+	player = _player;
 }
 
 void AbstractAsteroidObject::initializeRandom() {
 	//Position the asteroid in a random point around the player at a random distance and with random velocities
 	glm::vec3 randomDirection = glm::normalize(glm::vec3(Random::randomFloat(-1, 1), Random::randomFloat(-1, 1), Random::randomFloat(-1, 1)));
 	float randomDistance = Random::randomFloat(80, 160);
-	float randomVelocity = Random::randomFloat(1.5f, 8);
+	float randomVelocity = Random::randomFloat(3, 12);
 	float randomAngularVelocity = Random::randomFloat(10, 90);
 	glm::vec3 randomRotationAxis = glm::normalize(glm::vec3(Random::randomFloat(-1, 1), Random::randomFloat(-1, 1), Random::randomFloat(-1, 1)));
 
-	glm::vec3 position = playerTransform->getPos() + randomDistance * randomDirection;
+	glm::vec3 position = player->transform.getPos() + randomDistance * randomDirection;
 	glm::vec3 velocity = -randomDirection * randomVelocity;
 
 	transform.TranslateTo(position);
@@ -58,7 +58,7 @@ void AbstractAsteroidObject::Update() {
 	scale = DAMP(scale, scaleToUpdate, delT);
 	transform.ScaleTo(glm::vec3(scale));
 	colliders[0]->setRadius(scale);
-	if (glm::distance(transform.getPos(), playerTransform->getPos()) > 300) {
+	if (glm::distance(transform.getPos(), player->transform.getPos()) > 300) {
 		initializeRandom();
 	}
 }
@@ -105,5 +105,9 @@ void AbstractAsteroidObject::receiveDamage(float damage) {
 	scaleToUpdate = std::cbrtf(std::pow(scaleToUpdate, 3) - 0.238732414637843f * damage);
 	// destroy myself if i'm too small
 	if (scaleToUpdate < minScale)
-		parentScene->removeObject(this);
+		die();
+}
+
+void AbstractAsteroidObject::die() {
+	parentScene->removeObject(this);
 }

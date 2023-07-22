@@ -29,31 +29,69 @@ void SpaceshipObject::Instantiate() {
 							  "textures/sky/back.png", "textures/sky/front.png" };
 	model.addCubicTexture(textures);
 
-	float scale = 0.3f;
-	transform.Scale(glm::vec3(scale));
+	initialScale = 0.3f;
+	transform.ScaleTo(glm::vec3(initialScale));
 
 	vel = glm::vec3(0.0f);
 	angVel = glm::vec3(0.0f);
 
-	addCollider(glm::vec3(0, -0.47, -14.26), 2.05f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(0, -0.47, -12.32), 2.05f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(0, -0.47, -10.48), 2.05f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(0, -0.47, -8.72), 2.05f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(0, -0.47, -6.72), 2.05f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(0, -0.47, -4.82), 2.05f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(0, -0.47, -2.84), 2.05f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(0), 4.06f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(-5.83, 0, 2.03), 5.f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(5.83, 0, 2.03), 5.f * 0.62f * scale, 0x01, 0x02);
-	addCollider(glm::vec3(0, 0, 5.18), 5.f * 0.62f * scale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -14.26), 1.271f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -12.32), 1.271f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -10.48), 1.271f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -8.72), 1.271f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -6.72), 1.271f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -4.82), 1.271f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(0, -0.47, -2.84), 1.271f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(0), 2.5172f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(-5.83, 0, 2.03), 3.1f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(5.83, 0, 2.03), 3.1f * initialScale, 0x01, 0x02);
+	addCollider(glm::vec3(0, 0, 5.18), 3.1f * initialScale, 0x01, 0x02);
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = true;
 
 	additionalUniforms.emissionColor = glm::vec4(1.f, 0.723f, 0.022f, 0.f);
+
+	// initialize all the effect timers to 0
+	effectTimers = std::vector<float>(sizeof(Effect), 0.0f);
 }
 
 void SpaceshipObject::Update() {
 	float delT = Time::getFixedDeltaT(); // always with scale 1
+
+	// effect timers
+	for (int i = 0; i < sizeof(Effect); i++) {
+		if (hasEffect((Effect)i)) { // effect i enabled
+			effectTimers[i] += delT; // increment effect i timer
+			if (effectTimers[i] > effectDuration) {
+				unsetEffect((Effect)i); // unset effect
+				effectTimers[i] = 0; // reset the timer to zero
+			}
+		}
+	}
+
+	// check if has to slow down time
+	float timeScale;
+	if (!hasEffect(EFFECT_TIME)) {
+		timeScale = DAMP(Time::getScale(), 1.0f, delT);
+	}
+	else {
+		timeScale = DAMP(Time::getScale(), effectTimeScale, delT);
+	}
+	Time::setScale(timeScale);
+
+	// check if scaleDown effect
+	float scale = transform.getScale().x, newScale; // should be all equal on x,y,z
+	if (!hasEffect(EFFECT_SIZEDOWN)) {
+		newScale = DAMP(scale, initialScale, delT);
+	}
+	else {
+		newScale = DAMP(scale, initialScale / effectScaleDownFactor, delT);
+	}
+	if (newScale != scale) {
+		transform.ScaleTo(glm::vec3(newScale));
+		scaleColliders(newScale);
+		scale = newScale;
+	}
 
 	glm::vec3 mov, rot;
 	Inputs::getSixAxis(mov, rot, fire);
@@ -101,10 +139,31 @@ void SpaceshipObject::Update() {
 	else if (fire) {
 		reloading = true;
 		glm::vec3 finalShotSpeed = glm::vec3(0, 0, -shotSpeed) + vel; // negative z for the same reason mov.z is multiplied by -1
+		glm::vec3 shotColor = this->shotColor;
+
+		float shotDamage = this->shotDamage;
+		float shotThickness = this->shotThickness * scale; // scale with spaceShip scale
+		glm::vec3 shotOffset = this->shotOffset * scale;
+
+		// check if damage effect
+		if (hasEffect(EFFECT_DAMAGE)) {
+			shotDamage *= effectDamageMultiplier;
+			shotThickness *= effectDamageMultiplier;
+			shotColor = glm::vec3(0.1f, 0.5f, 1);
+		}
+
+
+		if (hasEffect(EFFECT_FIRERATE)) { // shot one more shot
+			shotColor = glm::vec3(0.5f, 0, 0.5f);
+			Pew* pew = new Pew(transform, shotOffset, finalShotSpeed, shotRange, shotDamage, shotThickness, shotColor);
+			pew->Instantiate();
+			parentScene->addObject(pew);
+			shotOffset.x *= -1; // spawn pews in both directions
+		}
 		Pew* pew = new Pew(transform, shotOffset, finalShotSpeed, shotRange, shotDamage, shotThickness, shotColor);
 		pew->Instantiate();
 		parentScene->addObject(pew);
-		shotOffset.x *= -1; // pew left / right
+		this->shotOffset.x *= -1; // pew left / right
 	}
 }
 
@@ -120,6 +179,11 @@ void SpaceshipObject::OnCollisionWith(Collider* other) {
 			firingAllowed = false;
 			vel = glm::vec3(0.0f);
 			angVel = glm::vec3(0.0f);
+			// initialize all the effect timers to 0
+			effectTimers = std::vector<float>(sizeof(Effect), 0.0f);
+			effects = 0;
+			transform.ScaleTo(glm::vec3(initialScale));
+			scaleColliders(initialScale);
 		}
 		else {
 			disabledKeysTimer = disabledKeysDefaultTimer;
@@ -133,4 +197,24 @@ void SpaceshipObject::resetLives() {
 
 bool SpaceshipObject::hadRecentCollision() {
 	return disabledKeysTimer > 0;
+}
+
+bool SpaceshipObject::hasEffect(Effect e) {
+	return effects & (1 << e);
+}
+
+void SpaceshipObject::setEffect(Effect e) {
+	effects |= 1 << e;
+	effectTimers[e] = 0.0f;
+}
+
+void SpaceshipObject::unsetEffect(Effect e) {
+	effects &= ~(1 << e); // unset the effect flag
+}
+
+void SpaceshipObject::scaleColliders(float scale) {
+	static float colliderScales[11] = { 1.271f, 1.271f, 1.271f, 1.271f, 1.271f, 1.271f, 1.271f, 2.5172f, 3.1f, 3.1f, 3.1f };
+	for (int i = 0; i < 11; i++) {
+		colliders[i]->setRadius(colliderScales[i] * scale);
+	}
 }

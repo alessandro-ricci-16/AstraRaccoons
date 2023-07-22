@@ -31,9 +31,6 @@ layout(set = 1, binding = 1) uniform sampler2D albedo;
 layout(set = 1, binding = 2) uniform sampler2D metallicRoughnessAmbientOcclusion;
 layout(set = 1, binding = 3) uniform sampler2D normals;
 
-const float beta = 0.2f;
-const float g = 1.5;
-
 void main() {
 	vec3 Norm = normalize(fragNorm);
 	vec3 Tan = normalize(fragTan.xyz - Norm * dot(fragTan.xyz, Norm));

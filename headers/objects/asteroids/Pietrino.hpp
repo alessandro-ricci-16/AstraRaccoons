@@ -6,7 +6,7 @@
 class Pietrino : public AbstractAsteroidObject {
 
 public:
-    Pietrino(Transform* playerTransform) : AbstractAsteroidObject(playerTransform) {}
+    Pietrino(GameObject* player) : AbstractAsteroidObject(player) {}
 
     void Instantiate() override;
     std::string getModelName();

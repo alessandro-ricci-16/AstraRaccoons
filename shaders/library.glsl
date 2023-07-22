@@ -42,7 +42,7 @@ vec3 PhongSpecular(vec3 V, vec3 N, vec3 L, vec3 Ms, float gamma) {
 	//vec3 L  - light vector (from the light model)
 	//vec3 Ms - specular color of the surface
 	//float gamma - Exponent for power specular term
-	vec3 R = 2 * N * dot(L, N) - L;
+	vec3 R = -reflect(L, N);
 	vec3 phong = Ms * pow(clamp(dot(V, R), 0, 1), gamma);
 	return phong;
 } //Combine with lambert as <lambert> + <blinn>

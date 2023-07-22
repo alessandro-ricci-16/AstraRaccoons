@@ -22,6 +22,10 @@ float Time::getDeltaT() {
     return delT * scale;
 }
 
+float Time::getScale() {
+    return scale;
+}
+
 float Time::getFixedDeltaT() {
     return delT;
 }

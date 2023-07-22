@@ -27,10 +27,15 @@ layout(set = 0, binding = 0) uniform GlobalUniformBufferObject {
     vec3 eyePos;
 } gubo;
 
-layout(set = 1, binding = 1) uniform sampler2D albedo;
-layout(set = 1, binding = 2) uniform sampler2D metallicRoughnessAmbientOcclusion;
-layout(set = 1, binding = 3) uniform sampler2D normals;
-layout(set = 1, binding = 4) uniform samplerCube skybox;
+layout(set = 1, binding = 1) uniform sampler2D normals;
+layout(set = 1, binding = 2) uniform sampler2D noise;
+layout(set = 1, binding = 3) uniform samplerCube skybox;
+
+layout(set = 2, binding = 0) uniform SpecialPietrinoUniforms {
+	vec4 color;
+} specialPietrinoUniforms;
+
+float specGamma = 600;
 
 void main() {
 	vec3 Norm = normalize(fragNorm);
@@ -38,43 +43,40 @@ void main() {
 	vec3 Bitan = cross(Norm, Tan) * fragTan.w;
 	mat3 tbn = mat3(Tan, Bitan, Norm);
 	vec3 nMap = (texture(normals, fragUV).rgb * 2 - 1);
-	nMap.xy *= 1.2;
 	vec3 N = normalize(tbn * nMap);
 	
-	vec3 albedoCol = texture(albedo, fragUV).rgb;
-
-	vec4 MRAO = texture(metallicRoughnessAmbientOcclusion, fragUV);
-	float roughness = MRAO.g;
-	float metallic = MRAO.r;
-	float ao = pow(MRAO.b, 2);
-
+	vec3 albedoCol = mix(texture(noise, fragUV).rgb, specialPietrinoUniforms.color.rgb, 0.75);
+	
 	vec3 V = normalize(gubo.eyePos - fragPos);
-
-	float reflectivity = 1 - roughness;
-	float F0 = pow(reflectivity, 16);
-
+	
 	// directional light
 	vec3 L = gubo.directionalLightDirection;
 	vec3 lightColor = gubo.directionalLightColor.rgb;
-	vec3 DiffSpec = GGXDiffuseSpecular(V, N, L, albedoCol, F0, metallic, roughness) * DirectionalLight(L, lightColor);
+	vec3 diffuse = LambertDiffuse(albedoCol, L, N);
+	vec3 specular = BlinnSpecular(V, N, L, lightColor, specGamma);
+	vec3 DiffSpec = (diffuse + specular) * DirectionalLight(L, lightColor);
 	
 	// point light
 	L = normalize(gubo.pointLightPosition - fragPos);
 	lightColor = gubo.pointLightColor.rgb;
-	DiffSpec += GGXDiffuseSpecular(V, N, L, albedoCol, F0, metallic, roughness) * PointLight(gubo.pointLightPosition, lightColor, fragPos, gubo.pointLightDecayFactor, gubo.pointLightTargetDistance);
+	diffuse = LambertDiffuse(albedoCol, L, N);
+	specular = PhongSpecular(V, N, L, lightColor, specGamma);
+	DiffSpec += (diffuse + specular) * PointLight(gubo.pointLightPosition, lightColor, fragPos, gubo.pointLightDecayFactor, gubo.pointLightTargetDistance);
 	
 	// spot light
 	L = normalize(gubo.spotlightPosition - fragPos);
 	lightColor = gubo.spotlightColor.rgb;
-	DiffSpec += GGXDiffuseSpecular(V, N, L, albedoCol, F0, metallic, roughness) * Spotlight(gubo.spotlightPosition, lightColor, gubo.spotlightDirection, fragPos, gubo.spotlightDecayFactor, gubo.spotlightTargetDistance, gubo.spotlightCosIn, gubo.spotlightCosOut);
+	diffuse = LambertDiffuse(albedoCol, L, N);
+	specular = PhongSpecular(V, N, L, lightColor, specGamma);
+	DiffSpec += (diffuse + specular) * Spotlight(gubo.spotlightPosition, lightColor, gubo.spotlightDirection, fragPos, gubo.spotlightDecayFactor, gubo.spotlightTargetDistance, gubo.spotlightCosIn, gubo.spotlightCosOut);
 	
 	vec3 Ambient = sh(N) * albedoCol;
 	
 	//For cubemap reflections
+	float F0 = pow(0.75, 4);
 	vec3 I = -normalize(gubo.eyePos - fragPos);
     vec3 R = reflect(I, Norm);
-
-	vec3 reflectionColor = texture(skybox, R).xyz * F0 * metallic;
+	vec3 reflectionColor = texture(skybox, R).xyz * F0;
 	
-	outColor = vec4(clamp((DiffSpec + Ambient + reflectionColor) * ao, 0.0, 1.0), 1.0f);
+	outColor = vec4(clamp(DiffSpec + Ambient + reflectionColor, 0.0, 1.0), specialPietrinoUniforms.color.a);
 }

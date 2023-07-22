@@ -5,6 +5,13 @@
 #include <headers/engine/objects/MeshObject.hpp>
 #include <headers/engine/objects/Collider.hpp>
 
+enum Effect {
+    EFFECT_DAMAGE,
+    EFFECT_TIME,
+    EFFECT_FIRERATE,
+    EFFECT_SIZEDOWN
+};
+
 struct SpaceshipVertex {
     glm::vec3 pos;
     glm::vec2 uv;
@@ -18,7 +25,18 @@ struct SpaceshipUniforms {
 
 class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
     private:
+        void scaleColliders(float scale);
         SpaceshipUniforms additionalUniforms;
+
+        // special effects
+        int effects = 0; // mask
+        const float effectDuration = 10.0; // seconds
+        std::vector<float> effectTimers;
+
+        const float effectDamageMultiplier = 2.f;
+        const float effectTimeScale = 0.2f;
+        float initialScale;
+        const float effectScaleDownFactor = 3.0f;
 
         glm::vec3 vel;
         glm::vec3 angVel;
@@ -37,10 +55,10 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         float timer = 0.0f;
 
         const float fireRate = 0.1f;
-        const float shotSpeed = 100.0f;
-        const float shotRange = 100.0f;
+        const float shotSpeed = 150.0f;
+        const float shotRange = 150.0f;
         const float shotDamage = 20.0f;
-        const float shotThickness = 0.2f;
+        const float shotThickness = 0.6f;
 
         int lives = 3;
         const int maxLives = 3;
@@ -51,7 +69,7 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         bool flashingEnabled = false;
 
         const glm::vec3 shotColor = glm::vec3(1, 0, 0);
-        glm::vec3 shotOffset = glm::vec3(1.3f, -0.1f, -0.7f);
+        glm::vec3 shotOffset = glm::vec3(4.4f, -0.3f, -2.25f);
 
     public:
         glm::vec3 getVelocity();
@@ -60,7 +78,9 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         void Instantiate();
         void Update();
         void OnCollisionWith(Collider* other);
-
+        bool hasEffect(Effect e);
+        void setEffect(Effect e);
+        void unsetEffect(Effect e);
         void resetLives();
 };
 

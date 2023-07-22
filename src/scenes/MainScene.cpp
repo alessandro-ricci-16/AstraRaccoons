@@ -18,7 +18,8 @@ void MainScene::Instantiate() {
 	//Set up the camera
 	camera = new Camera(glm::radians(90.0f), 0.1f, 300.0f, aspectRatio);
 	camera->setTarget(&(object->transform));
-	camera->setTargetDistance(vec3(0, 6, 17));
+	camera->setTargetDistance(vec3(0, 1.8f, 5.1f));
+	camera->setTargetYOffset(7.0f);
 	// Load skybox
 	SkyBoxObject* skybox = new SkyBoxObject(camera);
 	skybox->Instantiate();
@@ -31,19 +32,19 @@ void MainScene::Instantiate() {
 	gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	gubos.pointLightDecayFactor = 2; // Inverse-linear
 	gubos.pointLightTargetDistance = 2;
-	gubos.directionalLightDirection = glm::vec3(-0.825236, 0.462815, -0.323709);
-	gubos.directionalLightColor = glm::vec4(0.404f, 0.789f, 0.976f, 1.0f) * 5.f;
+	gubos.directionalLightDirection = glm::vec3(-0.825236f, 0.462815f, -0.323709f);
+	gubos.directionalLightColor = glm::vec4(1.0f);
 	gubos.spotlightPosition = glm::vec3(0, 0, 1.2f);
 	gubos.spotlightDirection = glm::vec3(0, 0, -1);
 	gubos.spotlightColor = glm::vec4(1.0f);
 	gubos.spotlightDecayFactor = 2;  // Inverse-linear
-	gubos.spotlightTargetDistance = 50;
+	gubos.spotlightTargetDistance = 35;
 	gubos.spotlightCosIn = 0.95f;
 	gubos.spotlightCosOut = 0.92f;
 	gubos.eyePos = camera->getCameraPosition();
 	// Spawn initial asteroids
 	for (int i = 0; i < initialAsteroids; i++)
-		AsteroidFactory::spawnRandomAsteroid(this, &(player->transform));
+		AsteroidFactory::spawnRandomAsteroid(this, player);
 }
 
 void MainScene::Update() {
@@ -55,7 +56,7 @@ void MainScene::Update() {
 	//Move the spot light
 	//gubos.spotlightPosition = glm::vec3(9.f * sin(time), 0, -2);
 	glm::vec3 playerUz = -player->transform.uz();
-	gubos.spotlightPosition = player->transform.getPos() + playerUz * 6.5f;
+	gubos.spotlightPosition = player->transform.getPos() + playerUz * 21.65f * player->transform.getScale().z;
 	gubos.spotlightDirection = playerUz;
 
     float absTime = Time::getAbsoluteTime();
@@ -63,13 +64,13 @@ void MainScene::Update() {
         restartFlag = false;
         // Add initial asteroids
         for (int i = 0; i < initialAsteroids; i++) {
-            AsteroidFactory::spawnRandomAsteroid(this, &(player->transform));
+            AsteroidFactory::spawnRandomAsteroid(this, player);
         }
         lastSpawnTime = absTime;
     }
 	//Spawn new asteroids over time
 	if (absTime - lastSpawnTime >= spawnDeltaTime) {
-		AsteroidFactory::spawnRandomAsteroid(this, &(player->transform));
+		AsteroidFactory::spawnRandomAsteroid(this, player);
 		lastSpawnTime = absTime;
 	}
 }
