@@ -29,7 +29,7 @@ void MainScene::Instantiate() {
 	spawnDeltaTime = 2; // seconds
 	// Set up lights
 	gubos.pointLightPosition = glm::vec3(.5f, 0, 1.0f);
-	gubos.pointLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	gubos.pointLightColor = glm::vec4(0);
 	gubos.pointLightDecayFactor = 2; // Inverse-linear
 	gubos.pointLightTargetDistance = 2;
 	gubos.directionalLightDirection = glm::vec3(-0.825236f, 0.462815f, -0.323709f);
