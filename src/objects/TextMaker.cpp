@@ -15,9 +15,32 @@ const std::vector<FontDef> Fonts = { {73,{{0,0,0,0,0,0,21},{116,331,18,61,4,4,21
 {768,35,19,17,-1,-1,17},{790,0,17,16,-3,-1,11},{825,59,15,16,-2,-1,11},{768,103,17,17,-3,-1,12},{808,0,16,16,-2,-1,12},{825,76,15,16,-2,-1,11},{825,93,15,16,-2,-1,10},{789,99,16,17,-2,-1,13},{807,17,16,16,-2,-1,12},{914,34,8,16,-2,-1,5},{873,123,13,17,-3,-1,8},{807,34,16,16,-2,-1,11},{858,106,14,16,-2,-1,9},{789,17,17,16,-2,-1,14},{807,51,16,16,-2,-1,12},{768,53,18,17,-3,-1,13},{825,110,15,16,-2,-1,11},{768,71,18,17,-3,-1,13},{807,68,16,16,-2,-1,12},{825,24,15,17,-2,-1,11},{807,85,16,16,-3,-1,10},{789,117,16,17,-2,-1,12},{789,34,17,16,-3,-1,11},{768,0,21,16,-3,-1,16},{789,51,17,16,-3,-1,11},{789,68,17,16,-3,-1,11},{807,102,16,16,-3,-1,10},{902,129,9,20,-2,-1,5},{888,121,12,16,-4,-1,5},{902,69,10,20,-3,-1,5},{888,66,13,12,-2,-1,8},{842,15,15,5,-3,12,9},
 {902,121,10,7,-3,-1,6},{842,0,15,14,-3,2,9},{842,111,14,17,-2,-1,9},{858,123,14,14,-3,2,8},{842,129,14,17,-3,-1,9},{873,0,14,14,-3,2,9},{888,138,10,16,-3,-1,5},{858,0,14,17,-3,2,9},{888,0,13,16,-2,-1,9},{914,0,8,16,-2,-1,4},{807,134,10,20,-4,-1,4},{888,17,13,16,-2,-1,8},{914,17,8,16,-2,-1,4},{768,89,18,13,-2,2,14},{873,141,13,13,-2,2,9},{873,15,14,14,-3,2,9},{858,18,14,17,-2,2,9},{858,36,14,17,-3,2,9},{902,107,10,13,-2,2,6},{873,30,14,14,-3,2,8},{902,90,10,16,-3,0,5},{888,51,13,14,-2,2,9},{873,45,14,13,-3,2,8},{789,85,17,13,-3,2,12},{873,59,14,13,-3,2,8},{858,54,14,17,-3,2,8},{873,73,14,13,-3,2,8},{888,79,12,20,-4,-1,6},{914,85,8,16,-2,-1,5},{888,100,12,20,-3,-1,6},{825,15,16,8,-3,5,10},{873,112,14,10,-2,4,10}}} };
 
-std::vector<SingleText> demoText = {
-	{1, {"AstraRaccoons", "", "", ""}, 0, 0}
-};
+std::vector<SingleText> demoText = {};
+
+TextMaker::TextMaker(const char* text, bool x, bool y) {
+	int count = 0;
+	std::string tempString[4] = {"", "", "", ""};
+	for (int i = 0; i < strlen(text); i++) {
+		if (text[i] == '\n') {
+			count++;		
+		}
+		else {
+			tempString[count] += text[i];
+		}
+	}
+
+	SingleText newText;
+	newText.usedLines = count + 1;
+	for (int i = 0; i < 4; i++) {
+		newText.l[i] = tempString[i].c_str();
+	}
+	newText.start = 0;
+	newText.len = 0;
+	newText.xCentered = x;
+	newText.yCentered = y;
+
+	demoText.push_back(newText);
+}
 
 void TextMaker::Instantiate() {
 	//Load the model component
@@ -26,6 +49,10 @@ void TextMaker::Instantiate() {
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32_SFLOAT, offsetof(TextVertex, pos), sizeof(glm::vec2), OTHER);
 	vertexDescriptor->addLocation(0, VK_FORMAT_R32G32_SFLOAT, offsetof(TextVertex, texCoord), sizeof(glm::vec2), UV);
 	createTextMesh();	// add vertices and indices
+	/*for (int i = 0; i < vertices.size(); i++) {
+		std::cout << "posx: " << vertices.at(i).pos.x <<
+			", posy: " << vertices.at(i).pos.y << "\n";
+	}*/
 	setModel(vertices, indices, vertexDescriptor);
 	model.setShader("shaders/Text_Vert.spv", "shaders/Text_Frag.spv");
 	model.addTexture("textures/font/Fonts.png");
@@ -40,39 +67,65 @@ void TextMaker::Start() {
 void TextMaker::Update() {
 }
 
-void TextMaker::createTextMesh() {//std::vector<TextVertex> vertices, std::vector<uint32_t> indices) {
-	int totLen = 0;
+void TextMaker::createTextMesh() {
+	int FontId = 1;
 	for (auto& Txt : demoText) {
+		if (Txt.xCentered && Txt.yCentered) {
+			PtoTsx = 6.0 / 800.0;
+			PtoTsy = 6.0 / 600.0;
+		}
+		else {
+			PtoTsx = 2.0 / 800.0;
+			PtoTsy = 2.0 / 600.0;
+		}
 		for (int i = 0; i < Txt.usedLines; i++) {
 			totLen += strlen(Txt.l[i]);
+			ci = ((int)Txt.l[i][0]) - minChar;
+			cf = ((int)Txt.l[i][totLen - 1]) - minChar;
+			di = Fonts[FontId].P[ci];
+			df = Fonts[FontId].P[cf];
+			for (int j = 0; j < strlen(Txt.l[i]); j++) {
+				int c = ((int)Txt.l[i][j]) - minChar;
+				CharData d = Fonts[FontId].P[c];
+				tpxf += d.xadvance;
+				if (Txt.yCentered) {
+					yh = std::min(yh, (float)(tpy + d.yoffset) * PtoTsy);
+					yl = std::max(yl, (float)(tpy + d.yoffset + d.height) * PtoTsy);
+				}
+				else {
+					yh = -0.95;
+					yl = 0.95;
+				}	
+			}
+			if (Txt.xCentered) {
+				xi = 0.0;
+				xf = (float)(tpxf + df.width) * PtoTsx;
+			}
+			else {
+				xi = -0.95;
+				xf = 0.95;
+			}
+			std::cout << xi << " " << xf << "\n";
+			PtoTdx[i] = (xi - xf) / 2;
+			PtoTdy = (yh - yl) / 2;
+			tpxf = 0;
 		}
+		
 	}
-	
-	//std::cout << "Total characters: " << totLen << "\n";
 
 	indices.resize(6 * totLen);
 
-	int FontId = 1;
-
-	float PtoTdx = -0.95;
-	float PtoTdy = -0.95;
-	float PtoTsx = 2.0 / 800.0;
-	float PtoTsy = 2.0 / 600.0;
-
-	int minChar = 32;
-	int maxChar = 127;
 	int texW = 1024;
 	int texH = 512;
 
-	int tpx = 0;
-	int tpy = 0;
-
 	int ib = 0, k = 0;
+	
 	for (auto& Txt : demoText) {
 		Txt.start = ib;
 		for (int i = 0; i < Txt.usedLines; i++) {
 			for (int j = 0; j < strlen(Txt.l[i]); j++) {
 				int c = ((int)Txt.l[i][j]) - minChar;
+				//std::cout << tpx << " " << PtoTdx[i] << "\n";
 				if ((c >= 0) && (c <= maxChar)) {
 					//std::cout << k << " " << j << " " << i << " " << ib << " " << c << "\n";
 					CharData d = Fonts[FontId].P[c];
@@ -80,7 +133,7 @@ void TextMaker::createTextMesh() {//std::vector<TextVertex> vertices, std::vecto
 					TextVertex vertex{};
 
 					vertex.pos = {
-						(float)(tpx + d.xoffset) * PtoTsx + PtoTdx,
+						(float)(tpx + d.xoffset) * PtoTsx + PtoTdx[i],
 						(float)(tpy + d.yoffset) * PtoTsy + PtoTdy
 					};
 					vertex.texCoord = {
@@ -90,8 +143,8 @@ void TextMaker::createTextMesh() {//std::vector<TextVertex> vertices, std::vecto
 					vertices.push_back(vertex);
 
 					vertex.pos = {
-						(float)(tpx + d.xoffset + d.width) * PtoTsx + PtoTdx,
-						(float)(float)(tpy + d.yoffset) * PtoTsy + PtoTdy
+						(float)(tpx + d.xoffset + d.width) * PtoTsx + PtoTdx[i],
+						(float)(float)(tpy + d.yoffset)* PtoTsy + PtoTdy
 					};
 					vertex.texCoord = {
 						(float)(float)(d.x + d.width) / texW,
@@ -100,8 +153,8 @@ void TextMaker::createTextMesh() {//std::vector<TextVertex> vertices, std::vecto
 					vertices.push_back(vertex);
 
 					vertex.pos = {
-						(float)(tpx + d.xoffset) * PtoTsx + PtoTdx,
-						(float)(tpy + d.yoffset + d.height) * PtoTsy + PtoTdy
+						(float)(tpx + d.xoffset) * PtoTsx + PtoTdx[i],
+						(float)(tpy + d.yoffset + d.height)* PtoTsy + PtoTdy
 					};
 					vertex.texCoord = {
 						(float)(d.x) / texW,
@@ -110,8 +163,8 @@ void TextMaker::createTextMesh() {//std::vector<TextVertex> vertices, std::vecto
 					vertices.push_back(vertex);
 
 					vertex.pos = {
-						(float)(tpx + d.xoffset + d.width) * PtoTsx + PtoTdx,
-						(float)(tpy + d.yoffset + d.height) * PtoTsy + PtoTdy
+						(float)(tpx + d.xoffset + d.width) * PtoTsx + PtoTdx[i],
+						(float)(tpy + d.yoffset + d.height)* PtoTsy + PtoTdy
 					};
 					vertex.texCoord = {
 						(float)(d.x + d.width) / texW,
