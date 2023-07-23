@@ -72,7 +72,7 @@ void main() {
 	
 	//For cubemap reflections
 	vec3 I = -normalize(gubo.eyePos - fragPos);
-    vec3 R = reflect(I, Norm);
+    vec3 R = reflect(I, N);
 
 	vec3 reflectionColor = texture(skybox, R).xyz * F0 * metallic;
 	

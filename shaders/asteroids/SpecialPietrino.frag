@@ -75,7 +75,7 @@ void main() {
 	//For cubemap reflections
 	float F0 = pow(0.75, 4);
 	vec3 I = -normalize(gubo.eyePos - fragPos);
-    vec3 R = reflect(I, Norm);
+    vec3 R = reflect(I, N);
 	vec3 reflectionColor = texture(skybox, R).xyz * F0;
 	
 	outColor = vec4(clamp(DiffSpec + Ambient + reflectionColor, 0.0, 1.0), specialPietrinoUniforms.color.a);
