@@ -7,6 +7,7 @@
 class IntroScene: public Scene {
     private:
         Transform* lookAtTarget;
+        Game* game;
 
     public:
         IntroScene(float* ar) : Scene(ar) {}

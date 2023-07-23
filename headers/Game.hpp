@@ -3,6 +3,7 @@
 
 #include "engine/base/BaseProject.hpp"
 #include "scenes/MainScene.hpp"
+#include <headers/objects/TextMaker.hpp>
 
 class Game: public BaseProject {
     private:
@@ -50,6 +51,10 @@ class Game: public BaseProject {
         void updateUniformBuffer(uint32_t currentImage);
         void recreateVulkanSwapChain(bool commandBufferOnly = false);
         bool requestSwitchToScene(int sceneID);
+
+        uint32_t getWidth();
+        uint32_t getHeight();
+        float getAr();
 };
 
 #endif /* GAME_DEFINED */

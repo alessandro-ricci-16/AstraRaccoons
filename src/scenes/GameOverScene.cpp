@@ -27,6 +27,7 @@ void GameOverScene::Instantiate() {
     // Text
     const char* text = "GameOver";
     TextMaker* txt = new TextMaker(text, true, true);
+    txt->SetDimensions(proj->getWidth(), proj->getHeight(), proj->getAr());
     txt->Instantiate();
     addObject(txt);
 

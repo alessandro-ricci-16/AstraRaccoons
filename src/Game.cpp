@@ -152,3 +152,15 @@ void Game::performSceneSwitchIfRequested() {
 		std::cout << "WARNING: Attempting to switch to a non-existing scene. This attempt will be ignored.\n";
 	}
 }
+
+uint32_t Game::getWidth() {
+	return windowWidth;
+}
+
+uint32_t Game::getHeight() {
+	return windowHeight;
+}
+
+float Game::getAr() {
+	return Ar;
+}

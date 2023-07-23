@@ -44,6 +44,7 @@ private:
 	float PtoTdy = 0.0;
 	float PtoTsx = 0.0;
 	float PtoTsy = 0.0;
+	float dim = 0.0;
 	int minChar = 32;
 	int maxChar = 127;
 	int tpx = 0;
@@ -63,12 +64,15 @@ private:
 
 public:
 	TextMaker(const char* text, bool x, bool y);
+
+	bool needResize = false;
 	void Instantiate();
 	void Update();
 	void createTextMesh();
-	void SetDimensions(uint32_t windowWidth, uint32_t windowHeight) {
+	void SetDimensions(uint32_t windowWidth, uint32_t windowHeight, float d) {
 		width = windowWidth;
 		height = windowHeight;
+		dim = d;
 	}
 };
 
