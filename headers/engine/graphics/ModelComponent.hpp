@@ -193,9 +193,7 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
             model.indices = indices;
             model.initMesh(proj, vd);
         }
-
-        pipeline->isTransparent = isTransparent;
-        pipeline->backfaceCullingOn = backfaceCullingOn;
+        
         //Compile the pipeline - this needs to be done even if all assets were compiled, since the pipeline may have been cleaned up
         //Add all necessary sets & descriptor bindings
         if (guboPtr != nullptr) {
@@ -218,6 +216,9 @@ void ModelComponent<Vert>::compile(BaseProject* proj, GlobalUniforms* guboPtr) {
             pipeline->addUniformBindingToLastSet(entry.uniformPtr, entry.size, entry.stage);
         }
     }
+
+    pipeline->isTransparent = isTransparent;
+    pipeline->backfaceCullingOn = backfaceCullingOn;
     
     //Compile the pipeline
     pipeline->compile(proj, vd);
