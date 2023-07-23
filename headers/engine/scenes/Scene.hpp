@@ -24,13 +24,13 @@ class Scene {
         std::set<Collider*> activeColliders; // list of all active colliders in game
         Camera* camera;
         float* aspectRatio;
-        GlobalUniforms gubos;
 
     public:
         std::set<GameObject*> activeObjects;
         Game* proj;
         GraphicsPipeline* activePipeline;
-        
+        GlobalUniforms gubos;
+
         Scene(float* ar);
         virtual ~Scene();
         

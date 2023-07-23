@@ -7,6 +7,7 @@
 #include "../../headers/objects/Pew.hpp"
 #include <headers/Game.hpp>
 #include <headers/scenes/AvailableScenes.hpp>
+#include <headers/objects/asteroids/KillerPietrino.hpp>
 
 glm::vec3 SpaceshipObject::getVelocity() {
 	return vel;
@@ -171,6 +172,9 @@ void SpaceshipObject::OnCollisionWith(Collider* other) {
 	//Collision is assumed to be only with asteroids
 	if (!hadRecentCollision()) {
 		lives -= 1;
+		if (dynamic_cast<KillerPietrino*>(other->getParent()) != nullptr) {
+			lives = -1; //Instant death
+		}
 		// shut down light
 		additionalUniforms.emissionColor.a = 0.0f;
 		if (lives <= 0) {

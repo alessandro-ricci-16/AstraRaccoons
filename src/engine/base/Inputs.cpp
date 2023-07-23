@@ -79,7 +79,8 @@ void Inputs::handleGamePad(int id, glm::vec3& m, glm::vec3& r,
             r.z -=
                 state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] ? 1.0f : 0.0f;
             fire = fire | (bool)state.buttons[GLFW_GAMEPAD_BUTTON_A] |
-                (bool)state.buttons[GLFW_GAMEPAD_BUTTON_B];
+                   (bool)state.buttons[GLFW_GAMEPAD_BUTTON_B] |
+                   fabs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER]) > deadZone;
         }
     }
 }

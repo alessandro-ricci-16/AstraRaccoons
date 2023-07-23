@@ -17,18 +17,19 @@ class AbstractAsteroidObject : public MeshObject<AbstractAsteroidVertex>, public
         glm::vec3 velToUpdate;
         glm::vec3 vel;
         glm::vec3 angVel;
-        float scale, scaleToUpdate;
+        float scale;
         float minScale = 1.25f;
 
-        void receiveDamage(float damage);
+        virtual void receiveDamage(float damage);
         void initializeRandom();        
     protected:
+        float scaleToUpdate;
         GameObject* player;
         virtual void die();
     public:
         AbstractAsteroidObject(GameObject* player);
         virtual void Instantiate();
-        void Update();
+        virtual void Update();
         void OnCollisionWith(Collider* other);
         virtual std::string getModelName() = 0;
 };

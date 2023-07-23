@@ -5,7 +5,10 @@
 #include "../../objects/asteroids/AbstractAsteroidObject.hpp"
 #include "../../engine/base/includes.hpp"
 
-using AsteroidConstructor = std::function<AbstractAsteroidObject* (GameObject*)>;
+struct AsteroidConstructor {
+    std::function<AbstractAsteroidObject*(GameObject*)> constructor;
+    int id;
+};
 
 class AsteroidFactory {
     private:
@@ -27,7 +30,9 @@ class AsteroidFactory {
         template <class Asteroid>
         static void registerAsteroid();
         template <class Asteroid>
-        static void registerSpecialAsteroid();
+        static void registerSpecialAsteroid(bool oneTime = false);
+        template <class Asteroid>
+        static void unregisterSpecialAsteroid(int constructorID);
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_ASTEROIDS_FACTORYOBJECT_HPP_
@@ -38,13 +43,31 @@ class AsteroidFactory {
 // creates a list of normal asteroid constructors
 template <class Asteroid>
 void AsteroidFactory::registerAsteroid() {
-    getConstructors().push_back([](GameObject* g) -> AbstractAsteroidObject* { return new Asteroid(g); });
+    int constructorID = Random::randomInt(0, INT_MAX);
+    getConstructors().push_back({[](GameObject* g) -> AbstractAsteroidObject* { return new Asteroid(g); }, constructorID});
 }
 
 // creates a list of special asteroid constructors
 template <class Asteroid>
-void AsteroidFactory::registerSpecialAsteroid() {
-    getSpecialConstructors().push_back([](GameObject* g) -> AbstractAsteroidObject* { return new Asteroid(g); });
+void AsteroidFactory::registerSpecialAsteroid(bool oneTime) {
+    int constructorID = Random::randomInt(0, INT_MAX);
+    getSpecialConstructors().push_back({[constructorID, oneTime](GameObject* g) -> AbstractAsteroidObject* {
+        if (oneTime) {
+            AsteroidFactory::unregisterSpecialAsteroid<Asteroid>(constructorID);
+        }
+        return new Asteroid(g);
+    }, constructorID});
+}
+
+template <class Asteroid>
+void AsteroidFactory::unregisterSpecialAsteroid(int constructorID) {
+    for (int i = 0; i < getSpecialConstructors().size(); i++) {
+        auto constructor = getSpecialConstructors()[i];
+        if (constructor.id == constructorID) {
+            getSpecialConstructors().erase(getSpecialConstructors().begin() + i);
+            break;
+        }
+    }
 }
 
 #endif

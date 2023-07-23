@@ -16,12 +16,12 @@ void AsteroidFactory::spawnRandomAsteroid(Scene* scene, GameObject* player) {
 	if (!spawnSpecialPietrino && constructors.size() > 0) {
 		// spawn normal asteroid
 		int asteroidChoice = Random::randomInt(0 , constructors.size());
-		asteroid = constructors[asteroidChoice](player);
+		asteroid = constructors[asteroidChoice].constructor(player);
 	}
 	else if (specialConstructors.size() > 0){
 		// spawn special asteroid
 		int asteroidChoice = Random::randomInt(0, specialConstructors.size());
-		asteroid = specialConstructors[asteroidChoice](player);
+		asteroid = specialConstructors[asteroidChoice].constructor(player);
 	}
 	else
 		std::cerr << "No asteroid constructor found\n";
