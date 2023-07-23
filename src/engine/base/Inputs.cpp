@@ -9,13 +9,13 @@ void Inputs::getSixAxis(glm::vec3& mov, glm::vec3& rot, bool& fire) {
     glm::vec3 m, r;
     m = r = glm::vec3(0.0f);
 
-    r.x = -glfwGetKey(window, GLFW_KEY_UP) + glfwGetKey(window, GLFW_KEY_DOWN);
-    r.y = -glfwGetKey(window, GLFW_KEY_LEFT) + glfwGetKey(window, GLFW_KEY_RIGHT);
-    r.z = -glfwGetKey(window, GLFW_KEY_E) + glfwGetKey(window, GLFW_KEY_Q);
+    r.x = -isKeyPressed(GLFW_KEY_UP) + isKeyPressed(GLFW_KEY_DOWN);
+    r.y = -isKeyPressed(GLFW_KEY_LEFT) + isKeyPressed(GLFW_KEY_RIGHT);
+    r.z = -isKeyPressed(GLFW_KEY_E) + isKeyPressed(GLFW_KEY_Q);
 
-    m.x = -glfwGetKey(window, GLFW_KEY_A) + glfwGetKey(window, GLFW_KEY_D);
-    m.y = -glfwGetKey(window, GLFW_KEY_F) + glfwGetKey(window, GLFW_KEY_R);
-    m.z = -glfwGetKey(window, GLFW_KEY_S) + glfwGetKey(window, GLFW_KEY_W);
+    m.x = -isKeyPressed(GLFW_KEY_A) + isKeyPressed(GLFW_KEY_D);
+    m.y = -isKeyPressed(GLFW_KEY_F) + isKeyPressed(GLFW_KEY_R);
+    m.z = -isKeyPressed(GLFW_KEY_S) + isKeyPressed(GLFW_KEY_W);
 
     // Rotate with mouse input
     static double old_xpos = 0, old_ypos = 0;
@@ -27,14 +27,15 @@ void Inputs::getSixAxis(glm::vec3& mov, glm::vec3& rot, bool& fire) {
     old_ypos = ypos;
 
     const float MOUSE_RES = 10.0f;
-    glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-        r.y = -m_dx / MOUSE_RES;
-        r.x = -m_dy / MOUSE_RES;
+
+    // glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
+    if (abs(m_dx) > 0.01f || abs(m_dy) > 0.01f) {
+        r.y = m_dx / MOUSE_RES;
+        r.x = m_dy / MOUSE_RES;
     }
 
-    fire = glfwGetKey(window, GLFW_KEY_SPACE) |
-        glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+    fire = isKeyPressed(GLFW_KEY_SPACE) |
+        glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
     handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
     handleGamePad(GLFW_JOYSTICK_2, m, r, fire);
     handleGamePad(GLFW_JOYSTICK_3, m, r, fire);

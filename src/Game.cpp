@@ -3,6 +3,7 @@
 #include <headers/scenes/IntroScene.hpp>
 #include <headers/scenes/TestScene.hpp>
 #include <headers/scenes/GameOverScene.hpp>
+#include "../headers/engine/base/Inputs.hpp"
 #include "../headers/engine/base/Time.hpp"
 #include "../headers/engine/base/Random.hpp"
 
@@ -10,6 +11,7 @@ Game::Game() {
 	managedScenes = {};
 	activeScene = 0;
 	Random::initialize();
+	fullscreen = false;
 }
 
 // Here you set the main application parameters
@@ -17,6 +19,8 @@ void Game::setWindowParameters() {
 	// window size, titile and initial background
 	windowWidth = 800;
 	windowHeight = 600;
+	oldWindowWidth = windowWidth;
+	oldWindowHeight = windowHeight;
 	windowTitle = "AstroRaccoons";
 	windowResizable = GLFW_TRUE;
 	initialBackgroundColor = { 0.0f, 0.005f, 0.01f, 1.0f };
@@ -27,10 +31,14 @@ void Game::setWindowParameters() {
 	setsInPool = 50;
 
 	Ar = (float)windowWidth / (float)windowHeight;
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void Game::onWindowResize(int w, int h) {
 	if (w & h) {
+		windowWidth = w;
+		windowHeight = h;
 		Ar = (float)w / (float)h;
 	}
 }
@@ -62,7 +70,6 @@ void Game::localInit() {
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes[i]->applyObjectModifications();
 	}
-	
 }
 
 void Game::pipelinesAndDescriptorSetsInit() {
@@ -93,11 +100,17 @@ void Game::populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage
 }
 
 void Game::updateUniformBuffer(uint32_t currentImage) {
+
 	Time::computeDeltaT();
 
 	// Standard procedure to quit when the ESC key is pressed
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+	if (Inputs::isKeyPressed(GLFW_KEY_ESCAPE)) {
 		glfwSetWindowShouldClose(window, GL_TRUE);
+	} else if (Inputs::isKeyPressed(GLFW_KEY_ENTER)) {
+		fullScreenClicked = true;
+	} else if (fullScreenClicked) {
+		fullScreenClicked = false;
+		toggleFullscreen();
 	}
 	//Update the active scene
 	managedScenes.at(activeScene)->UpdateImpl(currentImage);
@@ -151,6 +164,30 @@ void Game::performSceneSwitchIfRequested() {
 	} else if (sceneSwitchRequested) {
 		std::cout << "WARNING: Attempting to switch to a non-existing scene. This attempt will be ignored.\n";
 	}
+}
+
+void Game::toggleFullscreen() {
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	int screenWidth = mode->width;
+	int screenHeight = mode->height;
+
+	if (fullscreen) {
+		std::cout << "Exit fullscreen\n";
+		// Esci dalla modalità fullscreen
+		int xPos = (screenWidth - oldWindowWidth) / 2;
+		int yPos = (screenHeight - oldWindowHeight) / 2;
+		glfwSetWindowMonitor(window, nullptr, xPos, yPos, oldWindowWidth, oldWindowHeight, GLFW_DONT_CARE);
+	}
+	else {
+		std::cout << "Enter fullscreen\n";
+		// Vai in modalità fullscreen
+		oldWindowWidth = getWidth();
+		oldWindowHeight = getHeight();		
+		
+		glfwSetWindowMonitor(window, monitor, 0, 0, screenWidth, screenHeight, mode->refreshRate);
+	}
+	fullscreen = !fullscreen;
 }
 
 uint32_t Game::getWidth() {

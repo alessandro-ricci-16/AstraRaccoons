@@ -14,7 +14,8 @@ class Game: public BaseProject {
         //The currently active scene index
         int activeScene, nextSceneToSwitch;
         bool sceneSwitchRequested = false;
-
+        bool fullscreen, fullScreenClicked = false;
+        void toggleFullscreen();
         void performSceneSwitchIfRequested();
     
     public:

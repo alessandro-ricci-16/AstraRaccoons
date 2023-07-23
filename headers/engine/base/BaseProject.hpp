@@ -31,6 +31,9 @@ class BaseProject {
 
 		uint32_t windowWidth;
 		uint32_t windowHeight;
+		// used to exit fullscreen
+		uint32_t oldWindowWidth;
+		uint32_t oldWindowHeight;
 		bool windowResizable;
 		std::string windowTitle;
 		VkClearColorValue initialBackgroundColor;
