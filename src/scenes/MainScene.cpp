@@ -5,6 +5,7 @@
 #include <headers/objects/TestCubeObject.hpp>
 #include <headers/engine/base/Time.hpp>
 #include <headers/objects/MaterialTestSphere.hpp>
+#include <headers/objects/asteroids/AbstractAsteroidObject.hpp>
 
 #define ASTEROIDFACTORY_IMPLEMETATION
 #include <headers/objects/asteroids/AsteroidFactory.hpp>
@@ -69,7 +70,7 @@ void MainScene::Update() {
         lastSpawnTime = absTime;
     }
 	//Spawn new asteroids over time
-	if (absTime - lastSpawnTime >= spawnDeltaTime) {
+	if (absTime - lastSpawnTime >= spawnDeltaTime && visibleAsteroids < maxVisibleAsteroids) {
 		AsteroidFactory::spawnRandomAsteroid(this, player);
 		lastSpawnTime = absTime;
 	}
@@ -81,6 +82,22 @@ void MainScene::Destroy() {
 
 void MainScene::Cleanup() {
 	//Perform cleanup of local objects not covered under the standard scene lifecycle
+}
+
+void MainScene::addObject(GameObject* object) {
+    Scene::addObject(object);
+
+    if (dynamic_cast<AbstractAsteroidObject*>(object) != nullptr) {
+        visibleAsteroids += 1;
+    }
+}
+
+void MainScene::removeObject(GameObject* object) {
+    Scene::removeObject(object);
+
+    if (dynamic_cast<AbstractAsteroidObject*>(object) != nullptr) {
+        visibleAsteroids -= 1;
+    }
 }
 
 void MainScene::WillDisappear() {

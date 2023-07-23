@@ -9,7 +9,8 @@ class MainScene: public Scene {
         float lastSpawnTime;
         float spawnDeltaTime;
         GameObject* player;
-        const unsigned int initialAsteroids = 10;
+        const unsigned int initialAsteroids = 10, maxVisibleAsteroids = 150;
+        int visibleAsteroids = 0;
         bool restartFlag = false;
 
     public:
@@ -19,6 +20,9 @@ class MainScene: public Scene {
         void Destroy();
         void Cleanup();
         void WillDisappear();
+
+        void addObject(GameObject* object) override;
+        void removeObject(GameObject* object) override;
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_SCENES_MAINSCENE_HPP_
