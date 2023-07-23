@@ -9,6 +9,7 @@
 
 #define ASTEROIDFACTORY_IMPLEMETATION
 #include <headers/objects/asteroids/AsteroidFactory.hpp>
+#include <headers/objects/asteroids/KillerPietrino.hpp>
 
 void MainScene::Instantiate() {
 	//Load & compile a test model
@@ -119,5 +120,9 @@ void MainScene::WillDisappear() {
     spaceship->resetLives();
     restartFlag = true;
     camera->reset();
+    if (gubos.pointLightColor.x != 0.0f) {
+        gubos.pointLightColor = glm::vec4(0);
+        AsteroidFactory::registerSpecialAsteroid<KillerPietrino>(true);
+    }
     //applyObjectModifications();
 }

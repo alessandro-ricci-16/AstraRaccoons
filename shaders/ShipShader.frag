@@ -66,13 +66,19 @@ void main() {
 	float roughness = MRE.g;
 	float emission = MRE.b  * spaceshipUniforms.emissionColor.a;
 	float metallic = MRE.r;
-	
-	vec3 L = gubo.directionalLightDirection;
-	vec3 lightColor = gubo.directionalLightColor.rgb;
 
 	vec3 V = normalize(gubo.eyePos - fragPos);
 
+	// Directional light
+	vec3 L = gubo.directionalLightDirection;
+	vec3 lightColor = gubo.directionalLightColor.rgb;
 	vec3 DiffSpec = GGXDiffuseSpecular(V, Norm, L, albedoCol, 0.3f, metallic, roughness) * lightColor;
+
+	// point light
+	L = normalize(gubo.pointLightPosition - fragPos);
+	lightColor = gubo.pointLightColor.rgb;
+	DiffSpec += GGXDiffuseSpecular(V, Norm, L, albedoCol, 0.3f, metallic, roughness) * PointLight(gubo.pointLightPosition, lightColor, fragPos, gubo.pointLightDecayFactor, gubo.pointLightTargetDistance);
+
 	vec3 Ambient = sh(Norm) * albedoCol;
 	vec3 emissionColor = emission * spaceshipUniforms.emissionColor.rgb;
 	

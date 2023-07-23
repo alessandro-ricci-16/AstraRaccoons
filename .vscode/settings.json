@@ -75,7 +75,8 @@
         "memory_resource": "cpp",
         "__availability": "cpp",
         "filesystem": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "list": "cpp"
     },
     "cmake.configureOnOpen": false
 }
