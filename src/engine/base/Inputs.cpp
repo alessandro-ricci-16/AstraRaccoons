@@ -20,16 +20,15 @@ void Inputs::getSixAxis(glm::vec3& mov, glm::vec3& rot, bool& fire) {
     // Rotate with mouse input
     static double old_xpos = 0, old_ypos = 0;
     double xpos, ypos;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwGetCursorPos(window, &xpos, &ypos);
-    double m_dx = xpos - old_xpos;
-    double m_dy = ypos - old_ypos;
+    double m_dx = glm::clamp(xpos - old_xpos, -MOUSE_RES, MOUSE_RES);
+    double m_dy = glm::clamp(ypos - old_ypos, -MOUSE_RES, MOUSE_RES);
     old_xpos = xpos;
     old_ypos = ypos;
 
-    const float MOUSE_RES = 10.0f;
-
     // glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-    if (abs(m_dx) > 0.01f || abs(m_dy) > 0.01f) {
+    if (fabs(m_dx) > 0.01f || fabs(m_dy) > 0.01f) {
         r.y = m_dx / MOUSE_RES;
         r.x = m_dy / MOUSE_RES;
     }

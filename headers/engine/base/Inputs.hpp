@@ -2,6 +2,8 @@
 #define __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_BASE_INPUTS_HPP_
 #include "includes.hpp"
 
+#define MOUSE_RES 10.0
+
 class Inputs {
 	private:
 		static GLFWwindow* window;

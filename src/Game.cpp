@@ -12,6 +12,7 @@ Game::Game() {
 	activeScene = 0;
 	Random::initialize();
 	fullscreen = false;
+	lastTimeScale = 1.0f;
 }
 
 // Here you set the main application parameters
@@ -31,8 +32,6 @@ void Game::setWindowParameters() {
 	setsInPool = 50;
 
 	Ar = (float)windowWidth / (float)windowHeight;
-
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void Game::onWindowResize(int w, int h) {
@@ -40,6 +39,11 @@ void Game::onWindowResize(int w, int h) {
 		windowWidth = w;
 		windowHeight = h;
 		Ar = (float)w / (float)h;
+		Time::setScale(lastTimeScale);
+	}
+	else {
+		lastTimeScale = Time::getScale();
+		Time::setScale(0.0f);	
 	}
 }
 

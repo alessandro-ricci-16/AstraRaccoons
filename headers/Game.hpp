@@ -15,6 +15,7 @@ class Game: public BaseProject {
         int activeScene, nextSceneToSwitch;
         bool sceneSwitchRequested = false;
         bool fullscreen, fullScreenClicked = false;
+        float lastTimeScale;
         void toggleFullscreen();
         void performSceneSwitchIfRequested();
     
