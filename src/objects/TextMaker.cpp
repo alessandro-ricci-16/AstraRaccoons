@@ -65,7 +65,6 @@ void TextMaker::Update() {
 }
 
 void TextMaker::createTextMesh() {
-	std::cout << width << " " << height << "\n";
 	int FontId = 1;
 	for (auto& Txt : demoText) {
 		for (int i = 0; i < Txt->usedLines; i++) {
