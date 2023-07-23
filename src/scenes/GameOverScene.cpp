@@ -37,8 +37,10 @@ void GameOverScene::Instantiate() {
 void GameOverScene::Update() {
     // Update scene-level objects - NOT GameObjects, they are automatically
     // managed by the scene Rotate the directional light over time
-
-    if (Inputs::isKeyPressed(GLFW_KEY_SPACE)) {
+    bool isSpacePressed = Inputs::isKeyPressed(GLFW_KEY_SPACE);
+    sceneSwitchAllowed = sceneSwitchAllowed || !isSpacePressed;
+    
+    if (sceneSwitchAllowed && isSpacePressed) {
         requestSceneSwitch(AR_SCENE_MAIN);
     }
 }
@@ -55,4 +57,5 @@ void GameOverScene::Cleanup() {
 
 void GameOverScene::WillDisappear() {
     // Cleanup the scene & prepare for a scene reswitch
+    sceneSwitchAllowed = false;
 }

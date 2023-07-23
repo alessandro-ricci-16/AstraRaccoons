@@ -7,6 +7,7 @@
 class GameOverScene: public Scene {
     private:
         Transform* lookAtTarget;
+        bool sceneSwitchAllowed = false;
 
     public:
         GameOverScene(float* ar) : Scene(ar) {}

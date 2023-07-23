@@ -52,14 +52,14 @@ void Scene::applyObjectModifications() {
 		for (GameObject* activeObject: activeObjects) {
 			if (activeObject == objectToRemove) {
 				modifiedActiveObjects = true;
+
 				activeObjects.erase(activeObject);
+				objectToRemove->Cleanup();
+				objectToRemove->Destroy();
+				delete objectToRemove;
 				break;
 			}
 		}
-
-		objectToRemove->Cleanup();
-		objectToRemove->Destroy();
-		delete objectToRemove;
 	}
 	removedObjects.clear();
 	// Check if we need to recreate the swapchain
