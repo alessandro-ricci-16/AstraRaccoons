@@ -17,6 +17,22 @@ void Inputs::getSixAxis(glm::vec3& mov, glm::vec3& rot, bool& fire) {
     m.y = -glfwGetKey(window, GLFW_KEY_F) + glfwGetKey(window, GLFW_KEY_R);
     m.z = -glfwGetKey(window, GLFW_KEY_S) + glfwGetKey(window, GLFW_KEY_W);
 
+    // Rotate with mouse input
+    static double old_xpos = 0, old_ypos = 0;
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+    double m_dx = xpos - old_xpos;
+    double m_dy = ypos - old_ypos;
+    old_xpos = xpos;
+    old_ypos = ypos;
+
+    const float MOUSE_RES = 10.0f;
+    glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+        r.y = -m_dx / MOUSE_RES;
+        r.x = -m_dy / MOUSE_RES;
+    }
+
     fire = glfwGetKey(window, GLFW_KEY_SPACE) |
         glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
     handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
