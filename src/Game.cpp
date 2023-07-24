@@ -187,14 +187,12 @@ void Game::toggleFullscreen() {
 
     if (fullscreen) {
         std::cout << "Exit fullscreen\n";
-        // Esci dalla modalità fullscreen
         int xPos = (screenWidth - oldWindowWidth) / 2;
         int yPos = (screenHeight - oldWindowHeight) / 2;
         glfwSetWindowMonitor(window, nullptr, xPos, yPos, oldWindowWidth, oldWindowHeight, GLFW_DONT_CARE);
     }
     else {
         std::cout << "Enter fullscreen\n";
-        // Vai in modalità fullscreen
         glfwGetWindowSize(window, &oldWindowWidth, &oldWindowHeight);
         glfwSetWindowMonitor(window, monitor, 0, 0, screenWidth, screenHeight, GLFW_DONT_CARE);
     }

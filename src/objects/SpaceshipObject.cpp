@@ -236,7 +236,6 @@ void SpaceshipObject::die() {
 	//Reset the spaceship
 	transform.TranslateTo(glm::vec3(0));
 	transform.RotateTo(glm::vec3(0));
-	lives = maxLives;
 }
 
 void SpaceshipObject::unsetEffect(Effect e) {
@@ -250,6 +249,9 @@ void SpaceshipObject::scaleColliders(float scale) {
 	}
 }
 
+void SpaceshipObject::resetLives() {
+	lives = maxLives;
+}
 
 int SpaceshipObject::getLives() {
 	return lives;

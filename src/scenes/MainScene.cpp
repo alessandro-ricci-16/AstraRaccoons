@@ -68,11 +68,12 @@ void MainScene::Update() {
 	glm::vec3 playerUz = -player->transform.uz();
 	gubos.spotlightPosition = player->transform.getPos() + playerUz * 21.65f * player->transform.getScale().z;
 	gubos.spotlightDirection = playerUz;
-    float absTime = Time::getAbsoluteTime();
-    if (restartFlag) {
-        restartFlag = false;
-        lastSpawnTime = absTime;
-    }
+	float absTime = Time::getAbsoluteTime();
+	if (restartFlag) {
+		restartFlag = false;
+		lastSpawnTime = absTime;
+		((SpaceshipObject*)player)->resetLives();
+	}
 	//Spawn new asteroids over time
 	if (absTime - lastSpawnTime >= spawnDeltaTime && visibleAsteroids < maxVisibleAsteroids) {
 		AsteroidFactory::spawnRandomAsteroid(this, player);
@@ -101,19 +102,19 @@ void MainScene::Cleanup() {
 }
 
 void MainScene::addObject(GameObject* object) {
-    Scene::addObject(object);
+	Scene::addObject(object);
 
-    if (dynamic_cast<AbstractAsteroidObject*>(object) != nullptr) {
-        visibleAsteroids += 1;
-    }
+	if (dynamic_cast<AbstractAsteroidObject*>(object) != nullptr) {
+		visibleAsteroids += 1;
+	}
 }
 
 void MainScene::removeObject(GameObject* object) {
-    Scene::removeObject(object);
+	Scene::removeObject(object);
 
-    if (dynamic_cast<AbstractAsteroidObject*>(object) != nullptr) {
-        visibleAsteroids -= 1;
-    }
+	if (dynamic_cast<AbstractAsteroidObject*>(object) != nullptr) {
+		visibleAsteroids -= 1;
+	}
 }
 
 void MainScene::WillAppear() {
@@ -126,24 +127,25 @@ void MainScene::WillAppear() {
 }
 
 void MainScene::WillDisappear() {
-    //Cleanup the scene & prepare for a scene reswitch
-    //Clear all but the first 2 objects (spaceship & skybox)
-    SpaceshipObject* spaceship;
-    for (ActiveObjectElement* activeObject: activeObjects) {
-        SpaceshipObject* sp = dynamic_cast<SpaceshipObject*>(activeObject->object);
-        SkyBoxObject* sk = dynamic_cast<SkyBoxObject*>(activeObject->object);
-        if (sp == nullptr && sk == nullptr) {
-            removeObject(activeObject->object);
-        } else if (sp != nullptr) {
-            spaceship = sp;
-        }
-    }
-    restartFlag = true;
-    camera->reset();
-    if (gubos.pointLightColor.x != 0.0f) {
-        gubos.pointLightColor = glm::vec4(0);
-        AsteroidFactory::registerSpecialAsteroid<KillerPietrino>(true);
-    }
+	//Cleanup the scene & prepare for a scene reswitch
+	//Clear all but the first 2 objects (spaceship & skybox)
+	SpaceshipObject* spaceship;
+	for (ActiveObjectElement* activeObject : activeObjects) {
+		SpaceshipObject* sp = dynamic_cast<SpaceshipObject*>(activeObject->object);
+		SkyBoxObject* sk = dynamic_cast<SkyBoxObject*>(activeObject->object);
+		if (sp == nullptr && sk == nullptr) {
+			removeObject(activeObject->object);
+		}
+		else if (sp != nullptr) {
+			spaceship = sp;
+		}
+	}
+	restartFlag = true;
+	camera->reset();
+	if (gubos.pointLightColor.x != 0.0f) {
+		gubos.pointLightColor = glm::vec4(0);
+		AsteroidFactory::registerSpecialAsteroid<KillerPietrino>(true);
+	}
 	setText();
 	txt = new TextMaker(text.c_str(), false, false);
 	txt->SetDimensions(proj->getWidth(), proj->getHeight());

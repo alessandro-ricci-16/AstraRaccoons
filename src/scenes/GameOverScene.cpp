@@ -77,5 +77,5 @@ void GameOverScene::WillDisappear() {
 }
 
 void GameOverScene::setText() {
-    text = "GameOver\nTotal Score: " + std::to_string(score);
+    text = "Game Over\nTotal Score: " + std::to_string(score);
 }
