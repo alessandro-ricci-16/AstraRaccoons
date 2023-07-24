@@ -1131,7 +1131,7 @@ void BaseProject::createCommandBuffers() {
         throw std::runtime_error("failed to allocate command buffers!");
     }
 
-	for (size_t i = 0; i < commandBuffers.size(); i++) {
+	for (int i = 0; i < commandBuffers.size(); i++) {
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = 0;                   // Optional

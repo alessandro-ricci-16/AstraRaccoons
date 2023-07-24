@@ -1,7 +1,7 @@
 #include <headers/engine/base/Random.hpp>
 
 void Random::initialize() {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 }
 
 float Random::randomFloat() {

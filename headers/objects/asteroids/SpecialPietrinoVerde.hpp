@@ -15,7 +15,7 @@ class SpecialPietrinoVerde : public AbstractAsteroidObject {
         SpecialPietrinoVerde(GameObject* player) : AbstractAsteroidObject(player) {}
 
         void Instantiate() override;
-        std::string getModelName();
+        std::string getModelName() override;
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_ASTEROIDS_SPECIALPIETRINOVERDEOBJECT_HPP_

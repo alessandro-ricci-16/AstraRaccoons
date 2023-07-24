@@ -15,11 +15,11 @@ class MainScene: public Scene {
 
     public:
         MainScene(float* ar) : Scene(ar) {}
-        void Instantiate();
-        void Update();
-        void Destroy();
-        void Cleanup();
-        void WillDisappear();
+        void Instantiate() override;
+        void Update() override;
+        void Destroy() override;
+        void Cleanup() override;
+        void WillDisappear() override;
 
         void addObject(GameObject* object) override;
         void removeObject(GameObject* object) override;

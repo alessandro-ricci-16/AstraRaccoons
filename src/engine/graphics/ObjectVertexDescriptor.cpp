@@ -7,13 +7,13 @@ ObjectVertexDescriptor::ObjectVertexDescriptor() {
 }
 
 void ObjectVertexDescriptor::addBinding(uint32_t size, bool changesPerVertex) {
-    uint32_t bindingIndex = bindings.size();
+    uint32_t bindingIndex = (uint32_t)bindings.size();
     VertexBindingDescriptorElement binding = { bindingIndex, size, changesPerVertex ? VK_VERTEX_INPUT_RATE_VERTEX : VK_VERTEX_INPUT_RATE_INSTANCE };
     bindings.push_back(binding);
 }
 
 void ObjectVertexDescriptor::addLocation(uint32_t bindingNumber, VkFormat format, uint32_t offset, uint32_t size, VertexDescriptorElementUsage usage) {
-    uint32_t locationIndex = locations.size();
+    uint32_t locationIndex = (uint32_t)locations.size();
     VertexDescriptorElement location = { bindingNumber, locationIndex, format, offset, size, usage };
     locations.push_back(location);
 }

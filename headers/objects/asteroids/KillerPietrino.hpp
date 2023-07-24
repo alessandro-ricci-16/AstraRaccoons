@@ -17,7 +17,7 @@ class KillerPietrino : public AbstractAsteroidObject {
 
         void Instantiate() override;
         void Update() override;
-        std::string getModelName();
+        std::string getModelName() override;
 };
 
 #endif  // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_ASTEROIDS_KILLERPIETRINOOBJECT_HPP_
