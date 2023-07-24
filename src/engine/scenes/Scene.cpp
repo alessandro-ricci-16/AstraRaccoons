@@ -24,6 +24,22 @@ void Scene::removeObject(GameObject* object) {
 }
 
 void Scene::applyObjectModifications() {
+	//First off, remove from addedObjects ALL objects that are in removedObjects: objects created during this frame should not be added/removed, but just deleted!
+	std::vector<GameObject*> ignoredObjects = {};
+	for (GameObject* objectToRemove: removedObjects) {
+		// remove from active objects
+		for (GameObject* addedObject: addedObjects) {
+			if (addedObject == objectToRemove) {
+				addedObjects.erase(addedObject);
+				ignoredObjects.push_back(objectToRemove);
+				delete objectToRemove;
+				break;
+			}
+		}
+	}
+	for (int i = 0; i < ignoredObjects.size(); i++) {
+		removedObjects.erase(ignoredObjects[i]);
+	}
 	// adding new objects
 	for (GameObject* objectToAdd: addedObjects) {
 		objectToAdd->parentScene = this;
