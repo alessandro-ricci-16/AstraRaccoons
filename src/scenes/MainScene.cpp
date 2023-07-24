@@ -114,10 +114,6 @@ void MainScene::WillDisappear() {
             spaceship = sp;
         }
     }
-    //Reset the spaceship
-    spaceship->transform.TranslateTo(glm::vec3(0));
-    spaceship->transform.RotateTo(glm::vec3(0));
-    spaceship->resetLives();
     restartFlag = true;
     camera->reset();
     if (gubos.pointLightColor.x != 0.0f) {

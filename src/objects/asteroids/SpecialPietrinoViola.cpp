@@ -14,7 +14,7 @@ void SpecialPietrinoViola::Instantiate() {
 
 	model.addUniformData(&additionalUniforms, sizeof(SpecialPietrinoViolaUniforms), VK_SHADER_STAGE_FRAGMENT_BIT);
 	// special pietrino color
-	additionalUniforms.color = glm::vec4(0.4f, 0, 0.4f, 0.95f);
+	additionalUniforms.color = glm::vec4(0.3f, 0, 0.3f, 0.95f);
 
 	model.setShader("shaders/asteroids/BaseAsteroid_Vert.spv", "shaders/asteroids/SpecialPietrino_Frag.spv");
 	model.addTexture("textures/asteroids/hoshi/CrystalNormalMapStar.png");

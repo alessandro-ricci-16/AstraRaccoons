@@ -27,6 +27,7 @@ struct SpaceshipUniforms {
 
 class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
     private:
+        void die();
         void scaleColliders(float scale);
         void updateEffectTimers(float deltaT);
         SpaceshipUniforms additionalUniforms;
@@ -69,10 +70,13 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         int lives = 3;
         const int maxLives = 3;
 
+        bool flashingEffect = false;
         float disabledKeysTimer = 0.0f;
-        const float disabledKeysDefaultTimer = 2.2f;
-        const glm::vec4 baseFlashingColor = glm::vec4(0.878f, 0.224f, 0.024f, 0.35f);
-        bool flashingEnabled = false;
+        const float disabledKeysDefaultTimer = 2.5f;
+        const glm::vec4 damageFlashingColor = glm::vec4(0.878f, 0.224f, 0.024f, 0.35f);
+        float hpFlashingTimer = 0.0f;
+        float hpFlashingDefaultTimer = 2.5f;
+        const glm::vec4 hpUpFlashingColor = glm::vec4(0.2f, 1.0f, 0.0f, 0.35f);
 
         const glm::vec3 shotColor = glm::vec3(1, 0, 0);
         glm::vec3 shotOffset = glm::vec3(4.4f, -0.3f, -2.25f);
@@ -86,8 +90,8 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         void OnCollisionWith(Collider* other);
         bool hasEffect(Effect e);
         void setEffect(Effect e);
+        void setLives(int delta);
         void unsetEffect(Effect e);
-        void resetLives();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_SPACESHIP_HPP_

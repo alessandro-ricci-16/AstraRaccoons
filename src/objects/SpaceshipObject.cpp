@@ -102,12 +102,19 @@ void SpaceshipObject::Update() {
 	mov.x = 0;
 	mov.y = 0;
 	mov.z = std::max(mov.z, 0.0f);
-
-	if (disabledKeysTimer > 0) {
-		disabledKeysTimer -= delT;
-		mov = glm::vec3(0);
-		rot = glm::vec3(0);
-		additionalUniforms.flashingColor = baseFlashingColor * sin(disabledKeysTimer * 5);
+	if (disabledKeysTimer > 0 || hpFlashingTimer > 0) {
+		if (hpFlashingTimer > 0) {
+			hpFlashingTimer -= delT;
+			// hp up flashing effect
+			additionalUniforms.flashingColor = hpUpFlashingColor * sin(hpFlashingTimer * 5);
+		}
+		if (disabledKeysTimer > 0) {
+			disabledKeysTimer -= delT;
+			mov = glm::vec3(0);
+			rot = glm::vec3(0);
+			// damage received flashing effect
+			additionalUniforms.flashingColor = damageFlashingColor * sin(disabledKeysTimer * 5);
+		}
 	}
 	else {
 		additionalUniforms.flashingColor = glm::vec4(0);
@@ -171,32 +178,13 @@ void SpaceshipObject::Update() {
 void SpaceshipObject::OnCollisionWith(Collider* other) {
 	//Collision is assumed to be only with asteroids
 	if (!hadRecentCollision()) {
-		lives -= 1;
 		if (dynamic_cast<KillerPietrino*>(other->getParent()) != nullptr) {
-			lives = -1; //Instant death
-		}
-		// shut down light
-		additionalUniforms.emissionColor.a = 0.0f;
-		if (lives <= 0) {
-			parentScene->requestSceneSwitch(AR_SCENE_GAME_OVER);
-			disabledKeysTimer = 0;
-			firingAllowed = false;
-			vel = glm::vec3(0.0f);
-			angVel = glm::vec3(0.0f);
-			// initialize all the effect timers to 0
-			effectTimers = std::vector<float>(sizeof(Effect), 0.0f);
-			effects = 0;
-			transform.ScaleTo(glm::vec3(initialScale));
-			scaleColliders(initialScale);
+			die(); //Instant death
 		}
 		else {
-			disabledKeysTimer = disabledKeysDefaultTimer;
+			setLives(-1);
 		}
 	}
-}
-
-void SpaceshipObject::resetLives() {
-	lives = maxLives;
 }
 
 bool SpaceshipObject::hadRecentCollision() {
@@ -210,6 +198,41 @@ bool SpaceshipObject::hasEffect(Effect e) {
 void SpaceshipObject::setEffect(Effect e) {
 	effects |= 1 << e;
 	effectTimers[e] = 0.0f;
+}
+
+void SpaceshipObject::setLives(int delta) {
+	if (delta == 0) return;
+	lives += delta;
+	if (delta > 0) {
+		// gained some hp, flashing effect
+		hpFlashingTimer = hpFlashingDefaultTimer;
+	}
+	else if (lives <= 0) {
+		die();
+	}
+	else {
+		// damage received, block inputs for a while
+		disabledKeysTimer = disabledKeysDefaultTimer;
+		// shut down light
+		additionalUniforms.emissionColor.a = 0.0f;
+	}
+}
+
+void SpaceshipObject::die() {
+	parentScene->requestSceneSwitch(AR_SCENE_GAME_OVER);
+	disabledKeysTimer = 0;
+	firingAllowed = false;
+	vel = glm::vec3(0.0f);
+	angVel = glm::vec3(0.0f);
+	// initialize all the effect timers to 0
+	effectTimers = std::vector<float>(sizeof(Effect), 0.0f);
+	effects = 0;
+	transform.ScaleTo(glm::vec3(initialScale));
+	scaleColliders(initialScale);
+	//Reset the spaceship
+	transform.TranslateTo(glm::vec3(0));
+	transform.RotateTo(glm::vec3(0));
+	lives = maxLives;
 }
 
 void SpaceshipObject::unsetEffect(Effect e) {

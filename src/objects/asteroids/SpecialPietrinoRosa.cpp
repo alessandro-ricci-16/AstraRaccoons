@@ -1,24 +1,24 @@
 #define MESHOBJECT_IMPLEMENTATION
 
 #include "../../../headers/engine/scenes/Scene.hpp"
-#include "../../../headers/objects/asteroids/SpecialPietrinoBlu.hpp"
+#include "../../../headers/objects/asteroids/SpecialPietrinoRosa.hpp"
 #include "../../../headers/objects/SpaceshipObject.hpp"
 
 // register to asteroid factory
 #define ASTEROIDFACTORY_IMPLEMENTATION
 #include "../../../headers/objects/asteroids/AsteroidFactory.hpp"
-static const bool SpecialPietrinoBluRegistered = (AsteroidFactory::registerSpecialAsteroid<SpecialPietrinoBlu>(), true);
+static const bool SpecialPietrinoRosaRegistered = (AsteroidFactory::registerSpecialAsteroid<SpecialPietrinoRosa>(), true);
 
-void SpecialPietrinoBlu::Instantiate() {
+void SpecialPietrinoRosa::Instantiate() {
 	AbstractAsteroidObject::Instantiate();
 
-	model.addUniformData(&additionalUniforms, sizeof(SpecialPietrinoBluUniforms), VK_SHADER_STAGE_FRAGMENT_BIT);
+	model.addUniformData(&additionalUniforms, sizeof(SpecialPietrinoRosaUniforms), VK_SHADER_STAGE_FRAGMENT_BIT);
 	// special pietrino color
-	additionalUniforms.color = glm::vec4(0.1f, 0.3f, 0.8f, 0.95f);
+	additionalUniforms.color = glm::vec4(1.0f, 0.0f, 0.75f, 0.95f);
 
 	model.setShader("shaders/asteroids/BaseAsteroid_Vert.spv", "shaders/asteroids/SpecialPietrino_Frag.spv");
-	model.addTexture("textures/asteroids/hoshi/CrystalNormalMapStar.png");
-	model.addTexture("textures/asteroids/hoshi/NoiseStar.png");
+	model.addTexture("textures/asteroids/kokoro/CrystalNormalMapHeart.png");
+	model.addTexture("textures/asteroids/kokoro/NoiseHeart.png");
 	const std::vector<std::string> textures = { "textures/sky/right.png", "textures/sky/left.png",
 						  "textures/sky/top.png",   "textures/sky/bottom.png",
 						  "textures/sky/back.png", "textures/sky/front.png" };
@@ -27,11 +27,11 @@ void SpecialPietrinoBlu::Instantiate() {
 	model.isTransparent = true;
 }
 
-std::string SpecialPietrinoBlu::getModelName() {
-	return "models/Hoshi.gltf";
+std::string SpecialPietrinoRosa::getModelName() {
+	return "models/Kokoro.gltf";
 }
 
-void SpecialPietrinoBlu::die() {
-	((SpaceshipObject*)player)->setEffect(EFFECT_DAMAGE);
+void SpecialPietrinoRosa::die() {
+	((SpaceshipObject*)player)->setLives(1); // adds one hp
 	AbstractAsteroidObject::die();
 }
