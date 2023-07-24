@@ -9,7 +9,9 @@ enum Effect {
     EFFECT_DAMAGE,
     EFFECT_TIME,
     EFFECT_FIRERATE,
-    EFFECT_SIZEDOWN
+    EFFECT_SIZEDOWN,
+    EFFECT_SPEEDUP,
+    TotEffects
 };
 
 struct SpaceshipVertex {
@@ -26,6 +28,7 @@ struct SpaceshipUniforms {
 class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
     private:
         void scaleColliders(float scale);
+        void updateEffectTimers(float deltaT);
         SpaceshipUniforms additionalUniforms;
 
         // special effects
@@ -37,6 +40,9 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         const float effectTimeScale = 0.2f;
         float initialScale;
         const float effectScaleDownFactor = 3.0f;
+        const float effectSpeedUpFactor = 3.0f;
+        const glm::vec3 normalEmissionColor = glm::vec3(1.f, 0.723f, 0.022f);
+        const glm::vec3 speedUpEmissionColor = glm::vec3(1.f, 0.05f, 0.05f);
 
         glm::vec3 vel;
         glm::vec3 angVel;

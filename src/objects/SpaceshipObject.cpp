@@ -50,7 +50,7 @@ void SpaceshipObject::Instantiate() {
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = true;
 
-	additionalUniforms.emissionColor = glm::vec4(1.f, 0.723f, 0.022f, 0.f);
+	additionalUniforms.emissionColor = glm::vec4(normalEmissionColor, 0.f);
 
 	// initialize all the effect timers to 0
 	effectTimers = std::vector<float>(sizeof(Effect), 0.0f);
@@ -58,17 +58,7 @@ void SpaceshipObject::Instantiate() {
 
 void SpaceshipObject::Update() {
 	float delT = Time::getFixedDeltaT(); // always with scale 1
-
-	// effect timers
-	for (int i = 0; i < sizeof(Effect); i++) {
-		if (hasEffect((Effect)i)) { // effect i enabled
-			effectTimers[i] += delT; // increment effect i timer
-			if (effectTimers[i] > effectDuration) {
-				unsetEffect((Effect)i); // unset effect
-				effectTimers[i] = 0; // reset the timer to zero
-			}
-		}
-	}
+	updateEffectTimers(delT);
 
 	// check if has to slow down time
 	float timeScale;
@@ -76,6 +66,7 @@ void SpaceshipObject::Update() {
 		timeScale = DAMP(Time::getScale(), 1.0f, delT);
 	}
 	else {
+		// slow down time
 		timeScale = DAMP(Time::getScale(), effectTimeScale, delT);
 	}
 	Time::setScale(timeScale);
@@ -92,6 +83,16 @@ void SpaceshipObject::Update() {
 		transform.ScaleTo(glm::vec3(newScale));
 		scaleColliders(newScale);
 		scale = newScale;
+	}
+
+	float acc = this->acc;
+	glm::vec3 emissionColor = normalEmissionColor;
+
+	// check if speedup effect
+	if (hasEffect(EFFECT_SPEEDUP)) {
+		// increases the local one
+		acc *= effectSpeedUpFactor;
+		emissionColor = speedUpEmissionColor;
 	}
 
 	glm::vec3 mov, rot;
@@ -113,7 +114,7 @@ void SpaceshipObject::Update() {
 	}
 
 	emissionMultiplier = std::min(1.0f, mov.z);
-	additionalUniforms.emissionColor.a = DAMP(additionalUniforms.emissionColor.a, emissionMultiplier, delT);
+	additionalUniforms.emissionColor = DAMP(additionalUniforms.emissionColor, glm::vec4(emissionColor, emissionMultiplier), delT);
 
 	firingAllowed = firingAllowed || !fire;
 	fire = fire && firingAllowed;
@@ -152,7 +153,6 @@ void SpaceshipObject::Update() {
 			shotThickness *= effectDamageMultiplier;
 			shotColor = glm::vec3(0.1f, 0.5f, 1);
 		}
-
 
 		if (hasEffect(EFFECT_FIRERATE)) { // shot one more shot
 			shotColor = glm::vec3(0.5f, 0, 0.5f);
@@ -220,5 +220,18 @@ void SpaceshipObject::scaleColliders(float scale) {
 	static float colliderScales[11] = { 1.271f, 1.271f, 1.271f, 1.271f, 1.271f, 1.271f, 1.271f, 2.5172f, 3.1f, 3.1f, 3.1f };
 	for (int i = 0; i < 11; i++) {
 		colliders[i]->setRadius(colliderScales[i] * scale);
+	}
+}
+
+void SpaceshipObject::updateEffectTimers(float delT) {
+	// effect timers
+	for (int i = 0; i < TotEffects; i++) {
+		if (hasEffect((Effect)i)) { // effect i enabled
+			effectTimers[i] += delT; // increment effect i timer
+			if (effectTimers[i] > effectDuration) {
+				unsetEffect((Effect)i); // unset effect
+				effectTimers[i] = 0; // reset the timer to zero
+			}
+		}
 	}
 }
