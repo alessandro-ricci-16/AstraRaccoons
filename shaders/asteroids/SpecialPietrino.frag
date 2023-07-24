@@ -53,7 +53,7 @@ void main() {
 	vec3 L = gubo.directionalLightDirection;
 	vec3 lightColor = gubo.directionalLightColor.rgb;
 	vec3 diffuse = LambertDiffuse(albedoCol, L, N);
-	vec3 specular = BlinnSpecular(V, N, L, lightColor, specGamma);
+	vec3 specular = PhongSpecular(V, N, L, lightColor, specGamma);
 	vec3 DiffSpec = (diffuse + specular) * DirectionalLight(L, lightColor);
 	
 	// point light
