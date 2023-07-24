@@ -17,8 +17,8 @@ void SpecialPietrinoViola::Instantiate() {
 	additionalUniforms.color = glm::vec4(0.4f, 0, 0.4f, 0.95f);
 
 	model.setShader("shaders/asteroids/BaseAsteroid_Vert.spv", "shaders/asteroids/SpecialPietrino_Frag.spv");
-	model.addTexture("textures/asteroids/crystal/CrystalNormalMap.png");
-	model.addTexture("textures/asteroids/crystal/Noise.png");
+	model.addTexture("textures/asteroids/hoshi/CrystalNormalMapStar.png");
+	model.addTexture("textures/asteroids/hoshi/NoiseStar.png");
 	const std::vector<std::string> textures = { "textures/sky/right.png", "textures/sky/left.png",
 						  "textures/sky/top.png",   "textures/sky/bottom.png",
 						  "textures/sky/back.png", "textures/sky/front.png" };
@@ -28,7 +28,7 @@ void SpecialPietrinoViola::Instantiate() {
 }
 
 std::string SpecialPietrinoViola::getModelName() {
-	return "models/Crystal.gltf";
+	return "models/Hoshi.gltf";
 }
 
 void SpecialPietrinoViola::die() {

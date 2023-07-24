@@ -28,7 +28,6 @@ layout(set = 0, binding = 0) uniform GlobalUniformBufferObject {
 } gubo;
 
 layout(set = 1, binding = 1) uniform sampler2D emission;
-layout(set = 1, binding = 2) uniform sampler2D normals;
 
 layout(set = 2, binding = 0) uniform KillerPietrinoUniforms {
     float time;
@@ -38,16 +37,10 @@ void main() {
     vec2 scaledUVs = (fragUV) + vec2(killerPietrinoUniforms.time * 0.5, 0);
 
 	vec3 Norm = normalize(fragNorm);
-	vec3 Tan = normalize(fragTan.xyz - Norm * dot(fragTan.xyz, Norm));
-	vec3 Bitan = cross(Norm, Tan) * fragTan.w;
-	mat3 tbn = mat3(Tan, Bitan, Norm);
-	vec3 nMap = (texture(normals, scaledUVs).rgb * 2 - 1);
-	nMap.xy *= 1.2;
-	vec3 N = normalize(tbn * nMap);
 	
 	vec3 emissionCol = texture(emission, scaledUVs).rgb * 1.8;
 
-	vec3 Ambient = sh(N) * emissionCol;
+	vec3 Ambient = sh(Norm) * emissionCol;
 	
 	outColor = vec4(clamp((emissionCol + Ambient), 0.0, 1.0), 1.0f);
 }

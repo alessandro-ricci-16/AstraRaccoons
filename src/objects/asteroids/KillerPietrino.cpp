@@ -23,7 +23,6 @@ void KillerPietrino::Instantiate() {
     model.setShader("shaders/asteroids/BaseAsteroid_Vert.spv",
                     "shaders/asteroids/KillerPietrino_Frag.spv");
     model.addTexture("textures/asteroids/killer/Emission.jpg");
-    model.addTexture("textures/asteroids/killer/NormalMap.jpg");
 
     scaleToUpdate = 20.f;
 }
