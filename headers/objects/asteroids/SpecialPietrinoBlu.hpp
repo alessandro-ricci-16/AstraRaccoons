@@ -11,6 +11,7 @@ class SpecialPietrinoBlu : public AbstractAsteroidObject {
     private:
         SpecialPietrinoBluUniforms additionalUniforms;
         void die() override;
+        void addScore(int points) override;
     public:
         SpecialPietrinoBlu(GameObject* player) : AbstractAsteroidObject(player) {}
 

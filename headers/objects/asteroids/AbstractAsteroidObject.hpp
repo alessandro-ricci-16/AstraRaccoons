@@ -26,6 +26,7 @@ class AbstractAsteroidObject : public MeshObject<AbstractAsteroidVertex>, public
         float scaleToUpdate;
         GameObject* player;
         virtual void die();
+        virtual void addScore(int points);
     public:
         AbstractAsteroidObject(GameObject* player);
         virtual void Instantiate();

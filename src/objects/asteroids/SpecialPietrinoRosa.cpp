@@ -35,3 +35,7 @@ void SpecialPietrinoRosa::die() {
 	((SpaceshipObject*)player)->setLives(1); // adds one hp
 	AbstractAsteroidObject::die();
 }
+
+void SpecialPietrinoRosa::addScore(int points) {
+	// it's special, you won't get points from it :(
+}

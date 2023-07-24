@@ -35,3 +35,7 @@ void SpecialPietrinoVerde::die() {
 	((SpaceshipObject*)player)->setEffect(EFFECT_TIME);
 	AbstractAsteroidObject::die();
 }
+
+void SpecialPietrinoVerde::addScore(int points) {
+	// it's special, you won't get points from it :(
+}

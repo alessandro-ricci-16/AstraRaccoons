@@ -1,7 +1,7 @@
 #define MESHOBJECT_IMPLEMENTATION
 
 #include "../../../headers/engine/base/Time.hpp"
-#include "../../../headers/engine/scenes/Scene.hpp"
+#include "../../../headers/scenes/MainScene.hpp"
 #include "../../../headers/objects/asteroids/AbstractAsteroidObject.hpp"
 #include "../../../headers/objects/Pew.hpp"
 #include "../../../headers/engine/base/Random.hpp"
@@ -103,11 +103,19 @@ void AbstractAsteroidObject::OnCollisionWith(Collider* other) {
 void AbstractAsteroidObject::receiveDamage(float damage) {
 	// new scale^3 = scale^3 - (3/4pi)*damage, scales volume linearly wrt to damage
 	scaleToUpdate = std::cbrtf(std::pow(scaleToUpdate, 3) - 0.238732414637843f * damage);
+	// add points
+	addScore(damage / 4);
 	// destroy myself if i'm too small
 	if (scaleToUpdate < minScale)
 		die();
 }
 
 void AbstractAsteroidObject::die() {
+	// add points
+	addScore(50);
 	parentScene->removeObject(this);
+}
+
+void AbstractAsteroidObject::addScore(int points) {
+	((MainScene*)parentScene)->addScore(points);
 }

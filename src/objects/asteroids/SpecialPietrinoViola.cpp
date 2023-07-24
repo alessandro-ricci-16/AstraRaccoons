@@ -35,3 +35,7 @@ void SpecialPietrinoViola::die() {
 	((SpaceshipObject*)player)->setEffect(EFFECT_FIRERATE);
 	AbstractAsteroidObject::die();
 }
+
+void SpecialPietrinoViola::addScore(int points) {
+	// it's special, you won't get points from it :(
+}

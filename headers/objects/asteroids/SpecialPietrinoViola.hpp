@@ -11,9 +11,9 @@ class SpecialPietrinoViola : public AbstractAsteroidObject {
     private:
         SpecialPietrinoViolaUniforms additionalUniforms;
         void die() override;
+        void addScore(int points) override;
     public:
         SpecialPietrinoViola(GameObject* player) : AbstractAsteroidObject(player) {}
-
         void Instantiate() override;
         std::string getModelName();
 };

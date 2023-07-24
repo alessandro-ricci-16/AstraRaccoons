@@ -31,7 +31,7 @@ void KillerPietrino::Update() {
 	AbstractAsteroidObject::Update();
 	additionalUniforms.time += Time::getDeltaT();
 
-	//Update GUBOs for the point light
+	// Update GUBOs for the point light
 	parentScene->gubos.pointLightColor = glm::vec4(1.f, 0.44f, 0.22f, 1.f) * 8.f;
 	parentScene->gubos.pointLightDecayFactor = 1.5f;
 	parentScene->gubos.pointLightTargetDistance = 40.f;
@@ -41,9 +41,13 @@ void KillerPietrino::Update() {
 std::string KillerPietrino::getModelName() { return "models/Sphere.gltf"; }
 
 void KillerPietrino::receiveDamage(float damage) {
-	//No damage here!
+	// No damage here!
 }
 
 void KillerPietrino::die() {
-	//Do not despawn
+	// Do not despawn
+}
+
+void KillerPietrino::addScore(int points) {
+	// it's special, you won't get points from it :(
 }

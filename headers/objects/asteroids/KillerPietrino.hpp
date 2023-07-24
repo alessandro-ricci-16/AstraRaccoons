@@ -12,6 +12,7 @@ class KillerPietrino : public AbstractAsteroidObject {
         KillerPietrinoUniforms additionalUniforms;
         void die() override;
         void receiveDamage(float damage) override;
+        void addScore(int points) override;
     public:
         KillerPietrino(GameObject* player) : AbstractAsteroidObject(player) {}
 
