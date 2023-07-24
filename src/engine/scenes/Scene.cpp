@@ -16,7 +16,9 @@ void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
 }
 
 void Scene::addObject(GameObject* object) {
-	addedObjects.insert(object);
+	ActiveObjectElement* element = new ActiveObjectElement{object, newZIndex};
+	newZIndex += 1;
+	addedObjects.insert(element);
 }
 
 void Scene::removeObject(GameObject* object) {
@@ -28,10 +30,11 @@ void Scene::applyObjectModifications() {
 	std::vector<GameObject*> ignoredObjects = {};
 	for (GameObject* objectToRemove : removedObjects) {
 		// remove from active objects
-		for (GameObject* addedObject : addedObjects) {
-			if (addedObject == objectToRemove) {
+		for (ActiveObjectElement* addedObject : addedObjects) {
+			if (addedObject->object == objectToRemove) {
 				addedObjects.erase(addedObject);
 				ignoredObjects.push_back(objectToRemove);
+				delete addedObject;
 				delete objectToRemove;
 				break;
 			}
@@ -41,14 +44,12 @@ void Scene::applyObjectModifications() {
 		removedObjects.erase(ignoredObjects[i]);
 	}
 	// adding new objects
-	for (GameObject* objectToAdd: addedObjects) {
-		objectToAdd->parentScene = this;
-		ActiveObjectElement* element = new ActiveObjectElement{objectToAdd, newZIndex};
-		newZIndex += 1;
-		activeObjects.insert(element);
+	for (ActiveObjectElement* objectToAdd: addedObjects) {
+		objectToAdd->object->parentScene = this;
+		activeObjects.insert(objectToAdd);
 		modifiedActiveObjects = true;
-		for (int i = 0; i < objectToAdd->colliders.size(); i++) {
-			activeColliders.insert(objectToAdd->colliders[i]);
+		for (int i = 0; i < objectToAdd->object->colliders.size(); i++) {
+			activeColliders.insert(objectToAdd->object->colliders[i]);
 		}
 	}
 	addedObjects.clear();

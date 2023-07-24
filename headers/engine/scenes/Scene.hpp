@@ -26,8 +26,8 @@ class Scene {
                 return lhs->zIndex < rhs->zIndex;
             }
         };
-        
-        std::set<GameObject*> addedObjects;
+
+        std::set<ActiveObjectElement*> addedObjects;
         std::set<GameObject*> removedObjects;
         bool modifiedActiveObjects;
         bool isUpdatingScene;
