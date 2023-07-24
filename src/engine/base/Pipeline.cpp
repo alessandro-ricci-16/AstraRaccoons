@@ -156,7 +156,7 @@ void Pipeline::create() {
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType =
 		VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = DSL.size();
+	pipelineLayoutInfo.setLayoutCount = (uint32_t)DSL.size();
 	pipelineLayoutInfo.pSetLayouts = DSL.data();
 	pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
 	pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional

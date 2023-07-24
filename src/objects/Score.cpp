@@ -1,5 +1,7 @@
 #include "../../headers/objects/Score.hpp"
 
+int Score::score = 0;
+
 void Score::addScore(int points) {
     score += points;
 }

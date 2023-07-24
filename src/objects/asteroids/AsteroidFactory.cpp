@@ -4,7 +4,7 @@
 #include "../../../headers/objects/asteroids/Pietro.hpp"
 
 //std::vector<AsteroidConstructor> AsteroidFactory::constructors;
-float AsteroidFactory::specialPietrinoProbability = 1.0f; // probability to spawn a special pietrino in (0, 1)
+float AsteroidFactory::specialPietrinoProbability = 0.1f; // probability to spawn a special pietrino in (0, 1)
 
 void AsteroidFactory::spawnRandomAsteroid(Scene* scene, GameObject* player) {
 	// list of constructors
@@ -15,12 +15,12 @@ void AsteroidFactory::spawnRandomAsteroid(Scene* scene, GameObject* player) {
 
 	if (!spawnSpecialPietrino && constructors.size() > 0) {
 		// spawn normal asteroid
-		int asteroidChoice = Random::randomInt(0 , constructors.size());
+		int asteroidChoice = Random::randomInt(0, (int)constructors.size());
 		asteroid = constructors[asteroidChoice].constructor(player);
 	}
 	else if (specialConstructors.size() > 0){
 		// spawn special asteroid
-		int asteroidChoice = Random::randomInt(0, specialConstructors.size());
+		int asteroidChoice = Random::randomInt(0, (int)specialConstructors.size());
 		asteroid = specialConstructors[asteroidChoice].constructor(player);
 	}
 	else

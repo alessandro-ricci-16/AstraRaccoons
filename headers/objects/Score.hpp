@@ -5,11 +5,11 @@
 
 class Score {
 private:
-    int score = 0;
+    static int score;
 public:
-    void addScore(int points);
-    int getScore();
-    void resetScore();
+    static void addScore(int points);
+    static int getScore();
+    static void resetScore();
 };
 
 #endif //__DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_SCORE_HPP_

@@ -12,7 +12,6 @@
 #include <headers/objects/asteroids/KillerPietrino.hpp>
 
 void MainScene::Instantiate() {
-	score = new Score();
 	//Load & compile a test model
 	SpaceshipObject* object = new SpaceshipObject();
 	object->Instantiate();
@@ -122,11 +121,6 @@ void MainScene::WillDisappear() {
         AsteroidFactory::registerSpecialAsteroid<KillerPietrino>(true);
     }
 
-	score->resetScore();
+	Score::resetScore();
     //applyObjectModifications();
-}
-
-void MainScene::addScore(int points) {
-	if (score != nullptr)
-		score->addScore(points);
 }

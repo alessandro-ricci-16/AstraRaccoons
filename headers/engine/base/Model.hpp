@@ -59,10 +59,6 @@ void Model<Vert>::loadModelOBJ(std::string file) {
 	}
 
 	std::cout << "Building\n";
-	//	std::cout << "Position " << VD->Position.hasIt << "," <<
-	//VD->Position.offset << "\n"; 	std::cout << "UV " << VD->UV.hasIt << ","
-	//<< VD->UV.offset << "\n"; 	std::cout << "Normal " << VD->Normal.hasIt
-	//<< "," << VD->Normal.offset << "\n";
 	for (const auto& shape : shapes) {
 		for (const auto& index : shape.mesh.indices) {
 			Vert vertex{};
@@ -103,7 +99,7 @@ void Model<Vert>::loadModelOBJ(std::string file) {
 			}
 
 			vertices.push_back(vertex);
-			indices.push_back(vertices.size() - 1);
+			indices.push_back((unsigned int)vertices.size() - 1);
 		}
 	}
 	std::cout << "[OBJ] Vertices: " << vertices.size() << "\n";
@@ -146,8 +142,6 @@ void Model<Vert>::loadModelGLTF(std::string file, bool encoded) {
 		// }
 
 		decomp = calloc(size, 1);
-		int n = sinflate(decomp, (int)size, &decrypted[16],
-			decrypted.size() - 16);
 
 		if (!loader.LoadASCIIFromString(
 			&model, &warn, &err, reinterpret_cast<const char*>(decomp),
@@ -195,7 +189,7 @@ void Model<Vert>::loadModelGLTF(std::string file, bool encoded) {
 						.data[posAccessor.byteOffset +
 						posView.byteOffset]));
 				meshHasPos = true;
-				cntPos = posAccessor.count;
+				cntPos = (int)posAccessor.count;
 				if (cntPos > cntTot) cntTot = cntPos;
 			}
 			else {
@@ -216,7 +210,7 @@ void Model<Vert>::loadModelGLTF(std::string file, bool encoded) {
 						.data[normAccessor.byteOffset +
 						normView.byteOffset]));
 				meshHasNorm = true;
-				cntNorm = normAccessor.count;
+				cntNorm = (int)normAccessor.count;
 				if (cntNorm > cntTot) cntTot = cntNorm;
 			}
 			else {
@@ -237,7 +231,7 @@ void Model<Vert>::loadModelGLTF(std::string file, bool encoded) {
 						.data[tanAccessor.byteOffset +
 						tanView.byteOffset]));
 				meshHasTan = true;
-				cntTan = tanAccessor.count;
+				cntTan = (int)tanAccessor.count;
 				if (cntTan > cntTot) cntTot = cntTan;
 			}
 			else {
@@ -257,7 +251,7 @@ void Model<Vert>::loadModelGLTF(std::string file, bool encoded) {
 					model.buffers[uvView.buffer]
 					.data[uvAccessor.byteOffset + uvView.byteOffset]));
 				meshHasUV = true;
-				cntUV = uvAccessor.count;
+				cntUV = (int)uvAccessor.count;
 				if (cntUV > cntTot) cntTot = cntUV;
 			}
 			else {
@@ -435,7 +429,7 @@ void Model<Vert>::bind(VkCommandBuffer commandBuffer) {
 //Loading textures here because STBI :(
 
 void Texture::createTextureImage(const char* const files[], VkFormat Fmt) {
-	int texWidth, texHeight, texChannels;
+	int texWidth = 0, texHeight = 0, texChannels = 0;
 	int curWidth = -1, curHeight = -1, curChannels = -1;
 	stbi_uc* pixels[maxImgs];
 

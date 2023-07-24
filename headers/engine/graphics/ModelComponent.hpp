@@ -82,7 +82,7 @@ ModelComponent<Vert>::ModelComponent(std::string name, ObjectVertexDescriptor* v
     textures = {};
     // Generate the ID from the hash of the model name (used to recycle models)
     std::hash<std::string> hasher;
-    id = hasher(name);
+    id = (uint32_t)hasher(name);
     this->vertexDescriptor = vertexDescriptor;
     isCompiled = false;
     isProcedural = false;
@@ -102,7 +102,6 @@ ModelComponent<Vert>::ModelComponent(std::vector<Vert> verts, std::vector<uint32
     textureNames = {};
     textures = {};
     // Generate the ID from the hash of the model name (used to recycle models)
-    std::hash<std::string> hasher;
     id = (uint32_t)Random::randomInt(0, UINT32_MAX);
     this->vertexDescriptor = vertexDescriptor;
     isCompiled = false;
@@ -128,12 +127,12 @@ void ModelComponent<Vert>::addUniformData(void* uniformPtr, int size, VkShaderSt
 
 template <class Vert>
 int ModelComponent<Vert>::textureCount() {
-    return textureNames.size();
+    return (int)textureNames.size();
 }
 
 template <class Vert>
 int ModelComponent<Vert>::uniformCount() {
-    return 1 + additionalUniforms.size();
+    return 1 + (int)additionalUniforms.size();
 }
 
 template <class Vert>

@@ -18,10 +18,10 @@ class MeshObject: public GameObject {
         void setModel(std::vector<Vert> vertices, std::vector<uint32_t> indices, ObjectVertexDescriptor* vertexDescriptor);
         void compile(BaseProject* proj, GlobalUniforms* guboPtr) override;
 
-        virtual void Instantiate() = 0;
-        virtual void Update() = 0;
-        virtual void Destroy();
-        virtual void Cleanup();
+        virtual void Instantiate() override = 0;
+        virtual void Update() override = 0;
+        virtual void Destroy() override;
+        virtual void Cleanup() override;
         void CommitUpdates(int currentimage, glm::mat4 cameraMatrix) override;
 
         int textureCount() override;

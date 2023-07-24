@@ -12,7 +12,7 @@ DSet::DSet() {
 
 void DSet::addTextureBinding(Texture* tex, VkShaderStageFlags shaderStage) {
 	//Add bindings for both the DSL and DS
-	uint32_t bindingIndex = bindings.size();
+	uint32_t bindingIndex = (uint32_t)bindings.size();
 
 	bindings.push_back({ bindingIndex, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, shaderStage });
 	setElements.push_back({ nullptr, { (int)bindingIndex, TEXTURE, 0, tex } });
@@ -20,7 +20,7 @@ void DSet::addTextureBinding(Texture* tex, VkShaderStageFlags shaderStage) {
 
 void DSet::addUniformBinding(void* uniform, int uniformSize, VkShaderStageFlags shaderStage) {
 	//Add bindings for both the DSL and DS
-	uint32_t bindingIndex = bindings.size();
+	uint32_t bindingIndex = (uint32_t)bindings.size();
 
 	bindings.push_back({ bindingIndex, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, shaderStage });
 	setElements.push_back({ uniform, { (int)bindingIndex, UNIFORM, uniformSize, nullptr } });
@@ -92,7 +92,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vertexShader, std::string fragmen
 	std::copy(fragmentShader.rbegin(), fragmentShader.rend(), std::back_inserter(fragName));
 	std::string concatNames = vertName.append(fragName);
 	std::hash<std::string> hasher;
-	id = hasher(concatNames);
+	id = (uint32_t)hasher(concatNames);
 	isInitialized = false;
 	isDestroyed = true;
 }

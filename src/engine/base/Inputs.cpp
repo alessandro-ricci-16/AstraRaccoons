@@ -33,8 +33,7 @@ void Inputs::getSixAxis(glm::vec3& mov, glm::vec3& rot, bool& fire) {
         r.x = m_dy / MOUSE_RES;
     }
 
-    fire = isKeyPressed(GLFW_KEY_SPACE) |
-        glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+    fire = isKeyPressed(GLFW_KEY_SPACE) || glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
     handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
     handleGamePad(GLFW_JOYSTICK_2, m, r, fire);
     handleGamePad(GLFW_JOYSTICK_3, m, r, fire);

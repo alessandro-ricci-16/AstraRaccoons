@@ -109,7 +109,7 @@ void Scene::UpdateImpl(int currentimage) {
 
 void Scene::CheckCollisions() {
 	std::vector<Collider*> activeCollidersList(activeColliders.begin(), activeColliders.end());
-	int nColliders = activeCollidersList.size();
+	int nColliders = (int)activeCollidersList.size();
 	if (nColliders < 2) return;
 
 	for (int i = 0; i < nColliders; i++) {

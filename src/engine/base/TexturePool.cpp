@@ -4,7 +4,7 @@ std::unordered_map<uint32_t, TexturePool::TextureEntry*> TexturePool::pool = {};
 
 uint32_t TexturePool::getHash(std::string str) {
     std::hash<std::string> hasher;
-    return hasher(str);
+    return (uint32_t)hasher(str);
 }
 
 uint32_t TexturePool::getHash(std::vector<std::string> strs) {
@@ -28,7 +28,7 @@ void TexturePool::addTextureIfNotPresent(std::vector<std::string> files, Texture
 
 void TexturePool::addTextureIfNotPresent(uint32_t hash, Texture* tex) {
     try {
-        TextureEntry* mapTex = pool.at(hash);
+        pool.at(hash);
     } catch (const std::out_of_range& e) {
         pool[hash] = new TextureEntry{ tex, 1 };
     }

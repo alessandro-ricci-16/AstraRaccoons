@@ -7,7 +7,6 @@
 
 class MainScene: public Scene {
     private:
-        Score* score = nullptr;
         float lastSpawnTime;
         float spawnDeltaTime;
         GameObject* player = nullptr;
@@ -17,12 +16,12 @@ class MainScene: public Scene {
 
     public:
         MainScene(float* ar) : Scene(ar) {}
-        void addScore(int points);
-        void Instantiate();
-        void Update();
-        void Destroy();
-        void Cleanup();
-        void WillDisappear();
+
+        void Instantiate() override;
+        void Update() override;
+        void Destroy() override;
+        void Cleanup() override;
+        void WillDisappear() override;
 
         void addObject(GameObject* object) override;
         void removeObject(GameObject* object) override;
