@@ -11,40 +11,39 @@
 #include "../../../headers/objects/asteroids/AsteroidFactory.hpp"
 
 static const bool KillerPietrinoRegistered =
-    (AsteroidFactory::registerSpecialAsteroid<KillerPietrino>(true), true);
+(AsteroidFactory::registerSpecialAsteroid<KillerPietrino>(true), true);
 
 void KillerPietrino::Instantiate() {
-    AbstractAsteroidObject::Instantiate();
+	AbstractAsteroidObject::Instantiate();
 
-    model.addUniformData(&additionalUniforms, sizeof(KillerPietrinoUniforms), VK_SHADER_STAGE_FRAGMENT_BIT);
-    // special pietrino color
-    additionalUniforms.time = Time::getAbsoluteTime();
+	model.addUniformData(&additionalUniforms, sizeof(KillerPietrinoUniforms), VK_SHADER_STAGE_FRAGMENT_BIT);
+	// special pietrino color
+	additionalUniforms.time = 0.0f;
 
-    model.setShader("shaders/asteroids/BaseAsteroid_Vert.spv",
-                    "shaders/asteroids/KillerPietrino_Frag.spv");
-    model.addTexture("textures/asteroids/killer/Emission.jpg");
+	model.setShader("shaders/asteroids/BaseAsteroid_Vert.spv",
+		"shaders/asteroids/KillerPietrino_Frag.spv");
+	model.addTexture("textures/asteroids/killer/Emission.jpg");
 
-    scaleToUpdate = 20.f;
+	scaleToUpdate = 20.f;
 }
 
 void KillerPietrino::Update() {
-    AbstractAsteroidObject::Update();
+	AbstractAsteroidObject::Update();
+	additionalUniforms.time += Time::getDeltaT();
 
-    additionalUniforms.time = Time::getAbsoluteTime();
-
-    //Update GUBOs for the point light
+	//Update GUBOs for the point light
 	parentScene->gubos.pointLightColor = glm::vec4(1.f, 0.44f, 0.22f, 1.f) * 8.f;
 	parentScene->gubos.pointLightDecayFactor = 1.5f;
 	parentScene->gubos.pointLightTargetDistance = 40.f;
-    parentScene->gubos.pointLightPosition = transform.getPos();
+	parentScene->gubos.pointLightPosition = transform.getPos();
 }
 
 std::string KillerPietrino::getModelName() { return "models/Sphere.gltf"; }
 
 void KillerPietrino::receiveDamage(float damage) {
-    //No damage here!
+	//No damage here!
 }
 
 void KillerPietrino::die() {
-    //Do not despawn
+	//Do not despawn
 }

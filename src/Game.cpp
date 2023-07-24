@@ -192,7 +192,7 @@ void Game::toggleFullscreen() {
 		oldWindowWidth = getWidth();
 		oldWindowHeight = getHeight();
 
-		glfwSetWindowMonitor(window, monitor, 0, 0, screenWidth, screenHeight, mode->refreshRate);
+		glfwSetWindowMonitor(window, monitor, 0, 0, screenWidth, screenHeight, GLFW_DONT_CARE);
 	}
 	fullscreen = !fullscreen;
 }
