@@ -39,6 +39,11 @@ void Game::onWindowResize(int w, int h) {
 		windowHeight = h;
 		Ar = (float)w / (float)h;
 		Time::setPause(false);
+		std::cout << "Window resize\n";
+		for (Scene* scene : managedScenes) {
+			scene->windowResize();
+		}
+		std::cout << "Window resized\n";
 	}
 	else { // window minimized
 		Time::setPause(true);
@@ -203,8 +208,4 @@ uint32_t Game::getWidth() {
 
 uint32_t Game::getHeight() {
 	return windowHeight;
-}
-
-float Game::getAr() {
-	return Ar;
 }

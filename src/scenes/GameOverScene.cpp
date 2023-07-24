@@ -25,9 +25,9 @@ void GameOverScene::Instantiate() {
     fader->Instantiate();
     addObject(fader);
     // Text
-    const char* text = "GameOver";
-    TextMaker* txt = new TextMaker(text, true, true);
-    txt->SetDimensions(proj->getWidth(), proj->getHeight(), proj->getAr());
+    setText();
+    txt = new TextMaker(text->c_str(), true, true);
+    txt->SetDimensions(proj->getWidth(), proj->getHeight());
     txt->Instantiate();
     addObject(txt);
 
@@ -58,4 +58,8 @@ void GameOverScene::Cleanup() {
 void GameOverScene::WillDisappear() {
     // Cleanup the scene & prepare for a scene reswitch
     sceneSwitchAllowed = false;
+}
+
+void GameOverScene::setText() {
+    text = new std::string("GameOver\nTotal Score: " + std::to_string(Score::getScore()));
 }

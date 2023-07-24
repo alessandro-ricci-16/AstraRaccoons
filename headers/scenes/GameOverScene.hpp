@@ -8,6 +8,7 @@ class GameOverScene: public Scene {
     private:
         Transform* lookAtTarget;
         bool sceneSwitchAllowed = false;
+        std::string* text;
 
     public:
         GameOverScene(float* ar) : Scene(ar) {}
@@ -16,6 +17,7 @@ class GameOverScene: public Scene {
         void Destroy();
         void Cleanup();
         void WillDisappear();
+        void setText();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_SCENES_GAMEOVERSCENE_HPP_

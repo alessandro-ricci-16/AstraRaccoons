@@ -92,6 +92,8 @@ class SpaceshipObject : public MeshObject<SpaceshipVertex>, public ICollidable {
         void setEffect(Effect e);
         void setLives(int delta);
         void unsetEffect(Effect e);
+        void resetLives();
+        int getLives();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_SPACESHIP_HPP_

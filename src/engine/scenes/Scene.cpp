@@ -26,9 +26,9 @@ void Scene::removeObject(GameObject* object) {
 void Scene::applyObjectModifications() {
 	//First off, remove from addedObjects ALL objects that are in removedObjects: objects created during this frame should not be added/removed, but just deleted!
 	std::vector<GameObject*> ignoredObjects = {};
-	for (GameObject* objectToRemove: removedObjects) {
+	for (GameObject* objectToRemove : removedObjects) {
 		// remove from active objects
-		for (GameObject* addedObject: addedObjects) {
+		for (GameObject* addedObject : addedObjects) {
 			if (addedObject == objectToRemove) {
 				addedObjects.erase(addedObject);
 				ignoredObjects.push_back(objectToRemove);
@@ -177,4 +177,15 @@ void Scene::DestroyImpl() {
 
 Scene::~Scene() {
 	//Everything deallocated on Destroy
+}
+
+void Scene::windowResize() {
+	text = txt->getText();
+	x = txt->getXCen();
+	y = txt->getYCen();
+	removeObject(txt);
+	txt = new TextMaker(text.c_str(), x, y);
+	txt->SetDimensions(proj->getWidth(), proj->getHeight());
+	txt->Instantiate();
+	addObject(txt);
 }

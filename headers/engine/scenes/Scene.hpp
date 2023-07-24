@@ -7,6 +7,7 @@
 #include "../graphics/GraphicsPipeline.hpp"
 #include "../objects/Camera.hpp"
 #include "../graphics/Uniforms.hpp"
+#include <headers/objects/TextMaker.hpp>
 
 inline auto key_selector = [](auto pair){return pair.first;};
 
@@ -19,11 +20,14 @@ class Scene {
         bool modifiedActiveObjects;
         bool isUpdatingScene;
         bool sceneSwitchRequested = false;
+        std::string text;
+        bool x, y;
 
     protected:
         std::set<Collider*> activeColliders; // list of all active colliders in game
         Camera* camera;
         float* aspectRatio;
+        TextMaker* txt;
 
     public:
         std::set<GameObject*> activeObjects;
@@ -58,6 +62,7 @@ class Scene {
         virtual void removeObject(GameObject* object);
         void applyObjectModifications();
         void requestSceneSwitch(int newScene);
+        virtual void windowResize();
 
     private:
         void CheckCollisions();

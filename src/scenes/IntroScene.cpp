@@ -3,7 +3,6 @@
 #include <headers/scenes/IntroScene.hpp>
 #include <headers/engine/objects/OrbitingCamera.hpp>
 #include <headers/objects/FaderPlaneObject.hpp>
-#include <headers/objects/TextMaker.hpp>
 #include <headers/engine/base/Inputs.hpp>
 #include <headers/Game.hpp>
 #include <headers/scenes/AvailableScenes.hpp>
@@ -25,9 +24,9 @@ void IntroScene::Instantiate() {
     fader->Instantiate();
     addObject(fader);
     // Text
-    const char *text = "Astra Raccoons\nPress Space to play";
-    TextMaker* txt = new TextMaker(text, true, true);
-    txt->SetDimensions(proj->getWidth(), proj->getHeight(), proj->getAr());
+    text = "Astra Raccoons\nPress Space to play";
+    txt = new TextMaker(text, true, true);
+    txt->SetDimensions(proj->getWidth(), proj->getHeight());
     txt->Instantiate();
     addObject(txt);
 

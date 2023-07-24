@@ -246,6 +246,11 @@ void SpaceshipObject::scaleColliders(float scale) {
 	}
 }
 
+
+int SpaceshipObject::getLives() {
+	return lives;
+}
+
 void SpaceshipObject::updateEffectTimers(float delT) {
 	// effect timers
 	for (int i = 0; i < TotEffects; i++) {

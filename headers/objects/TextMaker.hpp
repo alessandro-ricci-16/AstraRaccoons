@@ -36,6 +36,7 @@ struct FontDef {
 
 class TextMaker : public MeshObject<TextVertex> {
 private:
+	ObjectVertexDescriptor* vertexDescriptor;
 	std::vector<SingleText*> demoText = {};
 	std::vector<TextVertex> vertices;
 	std::vector<uint32_t> indices;
@@ -44,7 +45,6 @@ private:
 	float PtoTdy = 0.0;
 	float PtoTsx = 0.0;
 	float PtoTsy = 0.0;
-	float dim = 0.0;
 	int minChar = 32;
 	int maxChar = 127;
 	int tpx = 0;
@@ -60,20 +60,20 @@ private:
 	float yh = 0.0;
 	float yl = 0.0;
 	uint32_t width;
-	uint32_t height;
+	uint32_t height; 
+	std::string text;
+	bool x, y = false;
 
 public:
-	TextMaker(const char* text, bool x, bool y);
-
-	bool needResize = false;
+	TextMaker(const char* newText, bool x_, bool y_);
+	
 	void Instantiate();
 	void Update();
 	void createTextMesh();
-	void SetDimensions(uint32_t windowWidth, uint32_t windowHeight, float d) {
-		width = windowWidth;
-		height = windowHeight;
-		dim = d;
-	}
+	void SetDimensions(uint32_t windowWidth, uint32_t windowHeight);
+	std::string getText();
+	bool getXCen();
+	bool getYCen();
 };
 
 #endif  // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_OBJECTS_TEXTMAKER_HPP_

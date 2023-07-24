@@ -55,7 +55,6 @@ class Game: public BaseProject {
 
         uint32_t getWidth();
         uint32_t getHeight();
-        float getAr();
 };
 
 #endif /* GAME_DEFINED */

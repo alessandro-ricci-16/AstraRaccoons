@@ -3,11 +3,13 @@
 
 #include <headers/engine/base/includes.hpp>
 #include <headers/engine/scenes/Scene.hpp>
+#include <headers/objects/TextMaker.hpp>
 
 class IntroScene: public Scene {
     private:
         Transform* lookAtTarget;
         Game* game;
+        const char* text;
 
     public:
         IntroScene(float* ar) : Scene(ar) {}
