@@ -201,8 +201,12 @@ void SpaceshipObject::setEffect(Effect e) {
 }
 
 void SpaceshipObject::setLives(int delta) {
-	if (delta == 0) return;
-	lives += delta;
+	if (lives + delta > maxLives) // clamps to maxLives
+		delta = maxLives - lives;
+
+	if (delta == 0) return; // do nothing
+
+	lives += delta;	
 	if (delta > 0) {
 		// gained some hp, flashing effect
 		hpFlashingTimer = hpFlashingDefaultTimer;
