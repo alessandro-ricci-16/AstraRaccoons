@@ -13,13 +13,27 @@ inline auto key_selector = [](auto pair){return pair.first;};
 
 class Game;
 
+struct ActiveObjectElement {
+    GameObject* object;
+    uint64_t zIndex;
+};
+
 class Scene {
     private:
-        std::set<GameObject*> addedObjects;
+        struct ActiveObjectsCompare {
+            bool operator()(const ActiveObjectElement* lhs,
+                            const ActiveObjectElement* rhs) const {
+                return lhs->zIndex < rhs->zIndex;
+            }
+        };
+
+        std::set<ActiveObjectElement*> addedObjects;
         std::set<GameObject*> removedObjects;
         bool modifiedActiveObjects;
         bool isUpdatingScene;
         bool sceneSwitchRequested = false;
+
+        uint64_t newZIndex = 0;
 
     protected:
         std::set<Collider*> activeColliders; // list of all active colliders in game
@@ -32,7 +46,7 @@ class Scene {
         int lives;
 
     public:
-        std::set<GameObject*> activeObjects;
+        std::set<ActiveObjectElement*, ActiveObjectsCompare> activeObjects;
         Game* proj;
         GraphicsPipeline* activePipeline;
         GlobalUniforms gubos;

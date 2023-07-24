@@ -179,27 +179,25 @@ void Game::performSceneSwitchIfRequested() {
 }
 
 void Game::toggleFullscreen() {
-	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	int screenWidth = mode->width;
-	int screenHeight = mode->height;
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    int screenWidth = mode->width;
+    int screenHeight = mode->height;
 
-	if (fullscreen) {
-		std::cout << "Exit fullscreen\n";
-		// Esci dalla modalit� fullscreen
-		int xPos = (screenWidth - oldWindowWidth) / 2;
-		int yPos = (screenHeight - oldWindowHeight) / 2;
-		glfwSetWindowMonitor(window, nullptr, xPos, yPos, oldWindowWidth, oldWindowHeight, GLFW_DONT_CARE);
-	}
-	else {
-		std::cout << "Enter fullscreen\n";
-		// Vai in modalit� fullscreen
-		oldWindowWidth = getWidth();
-		oldWindowHeight = getHeight();
-
-		glfwSetWindowMonitor(window, monitor, 0, 0, screenWidth, screenHeight, GLFW_DONT_CARE);
-	}
-	fullscreen = !fullscreen;
+    if (fullscreen) {
+        std::cout << "Exit fullscreen\n";
+        // Esci dalla modalità fullscreen
+        int xPos = (screenWidth - oldWindowWidth) / 2;
+        int yPos = (screenHeight - oldWindowHeight) / 2;
+        glfwSetWindowMonitor(window, nullptr, xPos, yPos, oldWindowWidth, oldWindowHeight, GLFW_DONT_CARE);
+    }
+    else {
+        std::cout << "Enter fullscreen\n";
+        // Vai in modalità fullscreen
+        glfwGetWindowSize(window, &oldWindowWidth, &oldWindowHeight);
+        glfwSetWindowMonitor(window, monitor, 0, 0, screenWidth, screenHeight, GLFW_DONT_CARE);
+    }
+    fullscreen = !fullscreen;
 }
 
 uint32_t Game::getWidth() {

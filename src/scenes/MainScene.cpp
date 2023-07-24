@@ -124,11 +124,11 @@ void MainScene::WillDisappear() {
     //Cleanup the scene & prepare for a scene reswitch
     //Clear all but the first 2 objects (spaceship & skybox)
     SpaceshipObject* spaceship;
-    for (GameObject* activeObject: activeObjects) {
-        SpaceshipObject* sp = dynamic_cast<SpaceshipObject*>(activeObject);
-        SkyBoxObject* sk = dynamic_cast<SkyBoxObject*>(activeObject);
+    for (ActiveObjectElement* activeObject: activeObjects) {
+        SpaceshipObject* sp = dynamic_cast<SpaceshipObject*>(activeObject->object);
+        SkyBoxObject* sk = dynamic_cast<SkyBoxObject*>(activeObject->object);
         if (sp == nullptr && sk == nullptr) {
-            removeObject(activeObject);
+            removeObject(activeObject->object);
         } else if (sp != nullptr) {
             spaceship = sp;
         }

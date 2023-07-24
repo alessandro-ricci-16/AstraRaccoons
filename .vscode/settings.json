@@ -76,7 +76,10 @@
         "__availability": "cpp",
         "filesystem": "cpp",
         "functional": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "any": "cpp",
+        "span": "cpp",
+        "ranges": "cpp"
     },
     "cmake.configureOnOpen": false
 }
