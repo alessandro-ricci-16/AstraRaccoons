@@ -10,8 +10,8 @@ Scene::Scene(float* ar) {
 void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
 	//For each object in the scene, bind its pipeline and draw (WITHOUT rebinding the pipeline if it uses the same one)
 	this->activePipeline = nullptr;
-	for (GameObject* object: activeObjects) {
-		object->Draw(commandBuffer, currentImage, this->activePipeline);
+	for (ActiveObjectElement* element: activeObjects) {
+		element->object->Draw(commandBuffer, currentImage, this->activePipeline);
 	}
 }
 
@@ -43,7 +43,9 @@ void Scene::applyObjectModifications() {
 	// adding new objects
 	for (GameObject* objectToAdd: addedObjects) {
 		objectToAdd->parentScene = this;
-		activeObjects.insert(objectToAdd);
+		ActiveObjectElement* element = new ActiveObjectElement{objectToAdd, newZIndex};
+		newZIndex += 1;
+		activeObjects.insert(element);
 		modifiedActiveObjects = true;
 		for (int i = 0; i < objectToAdd->colliders.size(); i++) {
 			activeColliders.insert(objectToAdd->colliders[i]);
@@ -65,14 +67,15 @@ void Scene::applyObjectModifications() {
 			}
 		}
 		// remove from active objects
-		for (GameObject* activeObject: activeObjects) {
-			if (activeObject == objectToRemove) {
+		for (ActiveObjectElement* activeObject: activeObjects) {
+			if (activeObject->object == objectToRemove) {
 				modifiedActiveObjects = true;
 
 				activeObjects.erase(activeObject);
 				objectToRemove->Cleanup();
 				objectToRemove->Destroy();
 				delete objectToRemove;
+				delete activeObject;
 				break;
 			}
 		}
@@ -86,16 +89,16 @@ void Scene::applyObjectModifications() {
 
 int Scene::totalTextureCount() {
 	int texCount = 0;
-	for (GameObject* activeObject: activeObjects) {
-		texCount += activeObject->textureCount();
+	for (ActiveObjectElement* activeObject: activeObjects) {
+		texCount += activeObject->object->textureCount();
 	}
 	return texCount;
 }
 
 int Scene::totalUniformsCount() {
 	int uniformsCount = 0;
-	for (GameObject* activeObject: activeObjects) {
-		uniformsCount += activeObject->uniformsCount();
+	for (ActiveObjectElement* activeObject: activeObjects) {
+		uniformsCount += activeObject->object->uniformsCount();
 	}
 	return uniformsCount;
 }
@@ -103,14 +106,14 @@ int Scene::totalUniformsCount() {
 void Scene::UpdateImpl(int currentimage) {
 	isUpdatingScene = true;
 	Update();
-	for (GameObject* activeObject: activeObjects) {
-		activeObject->UpdateImpl();
+	for (ActiveObjectElement* activeObject: activeObjects) {
+		activeObject->object->UpdateImpl();
 	}
 	isUpdatingScene = false;
 	glm::mat4 cameraMatrix = camera->getCameraMatrix();
 	gubos.eyePos = camera->getCameraPosition();
-	for (GameObject* activeObject: activeObjects) {
-		activeObject->CommitUpdates(currentimage, cameraMatrix);
+	for (ActiveObjectElement* activeObject: activeObjects) {
+		activeObject->object->CommitUpdates(currentimage, cameraMatrix);
 	}
 	//Now check for collisions
 	CheckCollisions();
@@ -149,8 +152,8 @@ void Scene::CheckCollisions() {
 }
 
 void Scene::CompileObjects(bool addedOnly) {
-	for (GameObject* activeObject: activeObjects) {
-		activeObject->compile(proj, &gubos);
+	for (ActiveObjectElement* activeObject: activeObjects) {
+		activeObject->object->compile(proj, &gubos);
 	}
 	modifiedActiveObjects = false;
 }
@@ -160,15 +163,16 @@ void Scene::requestSceneSwitch(int newScene) {
 }
 
 void Scene::CleanupImpl() {
-	for (GameObject* activeObject: activeObjects) {
-		activeObject->Cleanup();
+	for (ActiveObjectElement* activeObject: activeObjects) {
+		activeObject->object->Cleanup();
 	}
 	Cleanup();
 }
 
 void Scene::DestroyImpl() {
-	for (GameObject* activeObject: activeObjects) {
-		activeObject->Destroy();
+	for (ActiveObjectElement* activeObject: activeObjects) {
+		activeObject->object->Destroy();
+		delete activeObject->object;
 		delete activeObject;
 	}
 	Destroy();
