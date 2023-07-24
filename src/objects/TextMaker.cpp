@@ -67,7 +67,7 @@ void TextMaker::Update() {
 }
 
 void TextMaker::createTextMesh() {
-	int FontId = 1;
+	int FontId = 0;
 	for (auto& Txt : demoText) {
 		for (int i = 0; i < Txt->usedLines; i++) {
 			if (Txt->xCentered && Txt->yCentered && i == 0) {
