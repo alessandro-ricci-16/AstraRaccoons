@@ -71,6 +71,10 @@ void GameObject::UpdateImpl() {
     }
 }
 
+bool GameObject::getDisplaysAlwaysOnTop() {
+    return shouldDisplayAlwaysOnTop;
+}
+
 GameObject::~GameObject() {
     for (int i = 0; i < children.size(); i++) {
         delete children.at(i);

@@ -12,7 +12,7 @@ class GameObject {
     protected:
         GameObject* parentObject = nullptr;
         std::vector<GameObject*> children;
-        bool acceptsGUBOs;
+        bool acceptsGUBOs, shouldDisplayAlwaysOnTop = false;
 
     public:
         Transform transform;
@@ -39,6 +39,7 @@ class GameObject {
         virtual void Draw(VkCommandBuffer commandBuffer, int currentImage, GraphicsPipeline* activePipeline);
 
         mat4 getFullMatrix();
+        bool getDisplaysAlwaysOnTop();
 };
 
 #endif
