@@ -7,8 +7,11 @@
 
 class MainScene: public Scene {
     private:
-        float lastSpawnTime;
+        float spawnTimer;
         float spawnDeltaTime;
+        const float initialSpawnDeltaTime = 3.0f;
+        const float loweringPerAsteroid = 0.1f;
+        const float minSpawnRate = 0.1f;
         GameObject* player = nullptr;
         const unsigned int initialAsteroids = 10, maxVisibleAsteroids = 150;
         int visibleAsteroids = 0;
