@@ -71,10 +71,6 @@ void MainScene::Update() {
     float absTime = Time::getAbsoluteTime();
     if (restartFlag) {
         restartFlag = false;
-        // Add initial asteroids
-        for (int i = 0; i < initialAsteroids; i++) {
-            AsteroidFactory::spawnRandomAsteroid(this, player);
-        }
         lastSpawnTime = absTime;
     }
 	//Spawn new asteroids over time
@@ -120,6 +116,15 @@ void MainScene::removeObject(GameObject* object) {
     }
 }
 
+void MainScene::WillAppear() {
+	if (restartFlag) {
+		// Add initial asteroids
+		for (int i = 0; i < initialAsteroids; i++) {
+			AsteroidFactory::spawnRandomAsteroid(this, player);
+		}
+	}
+}
+
 void MainScene::WillDisappear() {
     //Cleanup the scene & prepare for a scene reswitch
     //Clear all but the first 2 objects (spaceship & skybox)
@@ -144,7 +149,6 @@ void MainScene::WillDisappear() {
 	txt->SetDimensions(proj->getWidth(), proj->getHeight());
 	txt->Instantiate();
 	addObject(txt);
-	//applyObjectModifications();
 }
 
 void MainScene::setText() {

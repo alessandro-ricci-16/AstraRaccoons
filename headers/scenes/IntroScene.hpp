@@ -17,6 +17,7 @@ class IntroScene: public Scene {
         void Update();
         void Destroy();
         void Cleanup();
+        void WillAppear();
         void WillDisappear();
 };
 

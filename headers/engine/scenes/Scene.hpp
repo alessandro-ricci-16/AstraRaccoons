@@ -64,9 +64,12 @@ class Scene {
         virtual void Destroy() = 0;
         //Called when the scene is about to disappear due to scene switch
         virtual void WillDisappear() = 0;
+        // Called when the scene is about to appear due to scene switch
+        virtual void WillAppear() = 0;
 
         void UpdateImpl(int currentImage);
         void DestroyImpl();
+        void WillAppearImpl();
         void CleanupImpl();
         void CompileObjects(bool addedOnly);
 

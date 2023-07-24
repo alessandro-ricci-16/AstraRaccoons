@@ -66,6 +66,10 @@ void GameOverScene::Cleanup() {
     // lifecycle
 }
 
+void GameOverScene::WillAppear() {
+    
+}
+
 void GameOverScene::WillDisappear() {
     // Cleanup the scene & prepare for a scene reswitch
     sceneSwitchAllowed = false;

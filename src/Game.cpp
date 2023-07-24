@@ -171,6 +171,7 @@ void Game::performSceneSwitchIfRequested() {
 	if (nextSceneToSwitch >= 0 && nextSceneToSwitch < managedScenes.size() && sceneSwitchRequested) {
 		activeScene = nextSceneToSwitch;
 		sceneSwitchRequested = false;
+		managedScenes[activeScene]->WillAppearImpl();
 		recreateVulkanSwapChain(true);
 	}
 	else if (sceneSwitchRequested) {

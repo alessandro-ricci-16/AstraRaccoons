@@ -52,4 +52,6 @@ void IntroScene::Cleanup() {
     // lifecycle
 }
 
+void IntroScene::WillAppear() {}
+
 void IntroScene::WillDisappear() {}

@@ -16,6 +16,7 @@ class TestScene: public Scene {
         void Destroy();
         void Cleanup();
         void WillDisappear();
+        void WillAppear();
 };
 
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_SCENES_TESTSCENE_HPP_

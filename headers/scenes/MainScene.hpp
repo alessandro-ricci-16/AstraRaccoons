@@ -21,6 +21,7 @@ class MainScene: public Scene {
         void Update() override;
         void Destroy() override;
         void Cleanup() override;
+        void WillAppear() override;
         void WillDisappear() override;
         void setText();
 

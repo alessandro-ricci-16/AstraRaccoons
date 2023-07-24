@@ -181,6 +181,11 @@ void Scene::DestroyImpl() {
 	activeObjects.clear();
 }
 
+void Scene::WillAppearImpl() {
+	WillAppear();
+	applyObjectModifications();
+}
+
 Scene::~Scene() {
 	//Everything deallocated on Destroy
 }

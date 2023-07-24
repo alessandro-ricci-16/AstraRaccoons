@@ -51,4 +51,6 @@ void TestScene::Cleanup() {
     // lifecycle
 }
 
+void TestScene::WillAppear() {}
+
 void TestScene::WillDisappear() {}
