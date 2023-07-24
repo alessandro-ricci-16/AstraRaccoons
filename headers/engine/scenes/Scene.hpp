@@ -20,14 +20,16 @@ class Scene {
         bool modifiedActiveObjects;
         bool isUpdatingScene;
         bool sceneSwitchRequested = false;
-        std::string text;
-        bool x, y;
 
     protected:
         std::set<Collider*> activeColliders; // list of all active colliders in game
         Camera* camera;
         float* aspectRatio;
         TextMaker* txt;
+        std::string text;
+        int score;
+        bool x, y;
+        int lives;
 
     public:
         std::set<GameObject*> activeObjects;

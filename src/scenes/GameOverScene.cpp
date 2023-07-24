@@ -26,7 +26,7 @@ void GameOverScene::Instantiate() {
     addObject(fader);
     // Text
     setText();
-    txt = new TextMaker(text->c_str(), true, true);
+    txt = new TextMaker(text.c_str(), true, true);
     txt->SetDimensions(proj->getWidth(), proj->getHeight());
     txt->Instantiate();
     addObject(txt);
@@ -43,6 +43,17 @@ void GameOverScene::Update() {
     if (sceneSwitchAllowed && isSpacePressed) {
         requestSceneSwitch(AR_SCENE_MAIN);
     }
+    if (Score::getScore() != score) {
+        score = Score::getScore();
+        x = txt->getXCen();
+        y = txt->getYCen();
+        removeObject(txt);
+        setText();
+        txt = new TextMaker(text.c_str(), x, y);
+        txt->SetDimensions(proj->getWidth(), proj->getHeight());
+        txt->Instantiate();
+        addObject(txt);
+    }
 }
 
 void GameOverScene::Destroy() {
@@ -58,8 +69,9 @@ void GameOverScene::Cleanup() {
 void GameOverScene::WillDisappear() {
     // Cleanup the scene & prepare for a scene reswitch
     sceneSwitchAllowed = false;
+    Score::resetScore();
 }
 
 void GameOverScene::setText() {
-    text = new std::string("GameOver\nTotal Score: " + std::to_string(Score::getScore()));
+    text = "GameOver\nTotal Score: " + std::to_string(score);
 }

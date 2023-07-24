@@ -67,20 +67,20 @@ void TextMaker::Update() {
 }
 
 void TextMaker::createTextMesh() {
-	int FontId = 1;
+	int FontId = 0;
 	for (auto& Txt : demoText) {
 		for (int i = 0; i < Txt->usedLines; i++) {
 			if (Txt->xCentered && Txt->yCentered && i == 0) {
-				PtoTsx = 6.0 / width;
-				PtoTsy = 6.0 / height;
-			}
-			else if (Txt->xCentered && Txt->yCentered && i != 0) {
-				PtoTsx = 4.0 / width;
-				PtoTsy = 4.0 / height;
-			}
-			else {
 				PtoTsx = 2.0 / width;
 				PtoTsy = 2.0 / height;
+			}
+			else if (Txt->xCentered && Txt->yCentered && i != 0) {
+				PtoTsx = 1.3 / width;
+				PtoTsy = 1.3 / height;
+			}
+			else {
+				PtoTsx = 0.7 / width;
+				PtoTsy = 0.7 / height;
 			}
 			totLen += strlen(Txt->l[i]);
 			ci = ((int)Txt->l[i][0]) - minChar;
@@ -127,16 +127,16 @@ void TextMaker::createTextMesh() {
 		Txt->start = ib;
 		for (int i = 0; i < Txt->usedLines; i++) {
 			if (Txt->xCentered && Txt->yCentered && i == 0) {
-				PtoTsx = 6.0 / width;
-				PtoTsy = 6.0 / height;
-			}
-			else if (Txt->xCentered && Txt->yCentered && i != 0) {
-				PtoTsx = 4.0 / width;
-				PtoTsy = 4.0 / height;
-			}
-			else {
 				PtoTsx = 2.0 / width;
 				PtoTsy = 2.0 / height;
+			}
+			else if (Txt->xCentered && Txt->yCentered && i != 0) {
+				PtoTsx = 1.3 / width;
+				PtoTsy = 1.3 / height;
+			}
+			else {
+				PtoTsx = 0.7 / width;
+				PtoTsy = 0.7 / height;
 			}
 			for (int j = 0; j < strlen(Txt->l[i]); j++) {
 				int c = ((int)Txt->l[i][j]) - minChar;

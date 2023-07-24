@@ -14,7 +14,6 @@ class MainScene: public Scene {
         const unsigned int initialAsteroids = 10, maxVisibleAsteroids = 150;
         int visibleAsteroids = 0;
         bool restartFlag = false;
-        const char* text;
 
     public:
         MainScene(float* ar) : Scene(ar) {}
@@ -23,7 +22,7 @@ class MainScene: public Scene {
         void Destroy() override;
         void Cleanup() override;
         void WillDisappear() override;
-        void setText(SpaceshipObject* obj);
+        void setText();
 
         void addObject(GameObject* object) override;
         void removeObject(GameObject* object) override;

@@ -18,14 +18,15 @@ void MainScene::Instantiate() {
 	object->Instantiate();
 	addObject(object);
 	player = object;
+	lives = object->getLives();
 	//Set up the camera
 	camera = new Camera(glm::radians(90.0f), 0.1f, 300.0f, aspectRatio);
 	camera->setTarget(&(object->transform));
 	camera->setTargetDistance(vec3(0, 1.8f, 5.1f));
 	camera->setTargetYOffset(7.0f);
 	// Text
-	setText(object);
-	txt = new TextMaker(text, false, false);
+	setText();
+	txt = new TextMaker(text.c_str(), false, false);
 	txt->SetDimensions(proj->getWidth(), proj->getHeight());
 	txt->Instantiate();
 	addObject(txt);
@@ -67,7 +68,6 @@ void MainScene::Update() {
 	glm::vec3 playerUz = -player->transform.uz();
 	gubos.spotlightPosition = player->transform.getPos() + playerUz * 21.65f * player->transform.getScale().z;
 	gubos.spotlightDirection = playerUz;
-
     float absTime = Time::getAbsoluteTime();
     if (restartFlag) {
         restartFlag = false;
@@ -81,6 +81,18 @@ void MainScene::Update() {
 	if (absTime - lastSpawnTime >= spawnDeltaTime && visibleAsteroids < maxVisibleAsteroids) {
 		AsteroidFactory::spawnRandomAsteroid(this, player);
 		lastSpawnTime = absTime;
+	}
+	if (Score::getScore() != score || ((SpaceshipObject*)player)->getLives() != lives) {
+		score = Score::getScore();
+		lives = ((SpaceshipObject*)player)->getLives();
+		x = txt->getXCen();
+		y = txt->getYCen();
+		removeObject(txt);
+		setText();
+		txt = new TextMaker(text.c_str(), x, y);
+		txt->SetDimensions(proj->getWidth(), proj->getHeight());
+		txt->Instantiate();
+		addObject(txt);
 	}
 }
 
@@ -127,20 +139,18 @@ void MainScene::WillDisappear() {
         gubos.pointLightColor = glm::vec4(0);
         AsteroidFactory::registerSpecialAsteroid<KillerPietrino>(true);
     }
-	setText(spaceship);
-	txt = new TextMaker(text, false, false);
+	setText();
+	txt = new TextMaker(text.c_str(), false, false);
 	txt->SetDimensions(proj->getWidth(), proj->getHeight());
 	txt->Instantiate();
 	addObject(txt);
-	Score::resetScore();
 	//applyObjectModifications();
 }
 
-void MainScene::setText(SpaceshipObject* obj) {
-	std::string text1 = "Score: " + std::to_string(Score::getScore());
-	std::string text2 = "\nLives: " + std::to_string(obj->getLives());
+void MainScene::setText() {
+	std::string text1 = "Score: " + std::to_string(score);
+	std::string text2 = "\nLives: " + std::to_string(lives);
 	std::string tempString = text1 + text2;
 	std::string* str = new std::string(tempString.c_str());
-	text = str->c_str();
 	text = str->c_str();
 }

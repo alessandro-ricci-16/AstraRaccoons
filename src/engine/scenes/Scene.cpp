@@ -5,6 +5,7 @@ Scene::Scene(float* ar) {
 	aspectRatio = ar;
 	modifiedActiveObjects = false;
 	isUpdatingScene = false;
+	score = Score::getScore();
 }
 
 void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
