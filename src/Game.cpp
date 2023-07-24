@@ -12,7 +12,6 @@ Game::Game() {
 	activeScene = 0;
 	Random::initialize();
 	fullscreen = false;
-	lastTimeScale = 1.0f;
 }
 
 // Here you set the main application parameters
@@ -39,22 +38,21 @@ void Game::onWindowResize(int w, int h) {
 		windowWidth = w;
 		windowHeight = h;
 		Ar = (float)w / (float)h;
-		Time::setScale(lastTimeScale);
+		Time::setPause(false);
 	}
-	else {
-		lastTimeScale = Time::getScale();
-		Time::setScale(0.0f);	
+	else { // window minimized
+		Time::setPause(true);
 	}
 }
 
 void Game::localInit() {
-	#ifdef DEBUG_LIGHTS
+#ifdef DEBUG_LIGHTS
 	TestScene* testScene = new TestScene(&Ar);
 	testScene->proj = this;
 	testScene->Instantiate();
 
 	managedScenes.push_back(testScene);
-	#else
+#else
 	IntroScene* introScene = new IntroScene(&Ar);
 	introScene->proj = this;
 	introScene->Instantiate();
@@ -70,7 +68,7 @@ void Game::localInit() {
 	managedScenes.push_back(introScene);
 	managedScenes.push_back(mainScene);
 	managedScenes.push_back(gameOverScene);
-	#endif
+#endif
 	for (int i = 0; i < managedScenes.size(); i++) {
 		managedScenes[i]->applyObjectModifications();
 	}
@@ -104,21 +102,23 @@ void Game::populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage
 }
 
 void Game::updateUniformBuffer(uint32_t currentImage) {
-
-	Time::computeDeltaT();
-
-	// Standard procedure to quit when the ESC key is pressed
-	if (Inputs::isKeyPressed(GLFW_KEY_ESCAPE)) {
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	} else if (Inputs::isKeyPressed(GLFW_KEY_ENTER)) {
-		fullScreenClicked = true;
-	} else if (fullScreenClicked) {
-		fullScreenClicked = false;
-		toggleFullscreen();
+	Time::computeDeltaT(); // update delta time also if game paused to avoid having huge delT when resuming
+	if (!Time::isPaused()) { // only if game is not paused
+		// Standard procedure to quit when the ESC key is pressed
+		if (Inputs::isKeyPressed(GLFW_KEY_ESCAPE)) {
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		} // check if toogle to fullscreen on key released
+		else if (Inputs::isKeyPressed(GLFW_KEY_ENTER)) {
+			fullScreenClicked = true;
+		}
+		else if (fullScreenClicked) {
+			fullScreenClicked = false;
+			toggleFullscreen();
+		}
+		//Update the active scene
+		managedScenes.at(activeScene)->UpdateImpl(currentImage);
+		performSceneSwitchIfRequested();
 	}
-	//Update the active scene
-	managedScenes.at(activeScene)->UpdateImpl(currentImage);
-	performSceneSwitchIfRequested();
 }
 
 void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
@@ -132,7 +132,8 @@ void Game::recreateVulkanSwapChain(bool commandBufferOnly) {
 	if (commandBufferOnly) {
 		if (uniformBlocksInPool < newUniformBlocksCount || texturesInPool < newTexturesCount) {
 			recreateFullSwapchain = true;
-		} else {
+		}
+		else {
 			for (int i = 0; i < managedScenes.size(); i++) {
 				managedScenes.at(i)->proj = this;
 				managedScenes.at(i)->CompileObjects(true);
@@ -153,7 +154,8 @@ bool Game::requestSwitchToScene(int sceneID) {
 	if (sceneID >= 0 && sceneID < managedScenes.size()) {
 		nextSceneToSwitch = sceneID;
 		sceneSwitchRequested = true;
-	} else {
+	}
+	else {
 		sceneSwitchRequested = false;
 		std::cout << "WARNING: Attempting to switch to a non-existing scene. This attempt will be ignored. (requested scene: " << sceneID << ")\n";
 	}
@@ -161,11 +163,12 @@ bool Game::requestSwitchToScene(int sceneID) {
 }
 
 void Game::performSceneSwitchIfRequested() {
-    if (nextSceneToSwitch >= 0 && nextSceneToSwitch < managedScenes.size() && sceneSwitchRequested) {
+	if (nextSceneToSwitch >= 0 && nextSceneToSwitch < managedScenes.size() && sceneSwitchRequested) {
 		activeScene = nextSceneToSwitch;
 		sceneSwitchRequested = false;
 		recreateVulkanSwapChain(true);
-	} else if (sceneSwitchRequested) {
+	}
+	else if (sceneSwitchRequested) {
 		std::cout << "WARNING: Attempting to switch to a non-existing scene. This attempt will be ignored.\n";
 	}
 }
@@ -187,8 +190,8 @@ void Game::toggleFullscreen() {
 		std::cout << "Enter fullscreen\n";
 		// Vai in modalità fullscreen
 		oldWindowWidth = getWidth();
-		oldWindowHeight = getHeight();		
-		
+		oldWindowHeight = getHeight();
+
 		glfwSetWindowMonitor(window, monitor, 0, 0, screenWidth, screenHeight, mode->refreshRate);
 	}
 	fullscreen = !fullscreen;
