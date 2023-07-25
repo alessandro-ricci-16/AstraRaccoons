@@ -8,10 +8,13 @@ void Pipeline::init(BaseProject *bp, VertexDescriptor *vd,
 	
 	auto vertShaderCode = readFile(VertShader);
 	auto fragShaderCode = readFile(FragShader);
-	std::cout << "Vertex shader <" << VertShader << "> len: " << 
-				vertShaderCode.size() << "\n";
-	std::cout << "Fragment shader <" << FragShader << "> len: " <<
-				fragShaderCode.size() << "\n";
+
+	#ifdef DEBUG
+		std::cout << "Vertex shader <" << VertShader << "> len: " <<
+			vertShaderCode.size() << "\n";
+		std::cout << "Fragment shader <" << FragShader << "> len: " <<
+			fragShaderCode.size() << "\n";
+	#endif // DEBUG
 	
 	vertShaderModule =
 			createShaderModule(vertShaderCode);

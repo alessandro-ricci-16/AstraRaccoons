@@ -21,7 +21,7 @@ void Game::setWindowParameters() {
 	windowHeight = 600;
 	oldWindowWidth = windowWidth;
 	oldWindowHeight = windowHeight;
-	windowTitle = "AstroRaccoons";
+	windowTitle = "AstraRaccoons";
 	windowResizable = GLFW_TRUE;
 	initialBackgroundColor = { 0.0f, 0.005f, 0.01f, 1.0f };
 
@@ -39,12 +39,10 @@ void Game::onWindowResize(int w, int h) {
 		windowHeight = h;
 		Ar = (float)w / (float)h;
 		Time::setPause(false);
-		std::cout << "Window resize\n";
 		for (Scene* scene : managedScenes) {
 			scene->windowResize();
 		}
-		std::cout << "Window resized\n";
-	}
+		std::cout << "Window resized\n";	}
 	else { // window minimized
 		Time::setPause(true);
 	}

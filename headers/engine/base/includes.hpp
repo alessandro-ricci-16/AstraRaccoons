@@ -39,4 +39,6 @@
 #define LERPTIME(dt) (float)pow(2.718281828459045f, -LAMBDA * dt)
 #define DAMP(start, end, dt) LERP(start, end, LERPTIME(dt));
 
+// #define DEBUG
+
 #endif // __DESKTOP_POLIMI_PROJECTS_CG_ASTRARACCOONS_HEADERS_BASE_INCLUDES_HPP_

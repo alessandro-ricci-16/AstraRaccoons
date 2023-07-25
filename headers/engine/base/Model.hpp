@@ -52,13 +52,20 @@ void Model<Vert>::loadModelOBJ(std::string file) {
 	std::vector<tinyobj::material_t> materials;
 	std::string warn, err;
 
-	std::cout << "Loading : " << file << "[OBJ]\n";
+	#ifdef DEBUG
+		std::cout << "Loading : " << file << "[OBJ]\n";
+	#endif // DEBUG
+
 	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err,
 		file.c_str())) {
 		throw std::runtime_error(warn + err);
 	}
 
-	std::cout << "Building\n";
+	#ifdef DEBUG
+		std::cout << "Building\n";
+	#endif // DEBUG
+
+
 	for (const auto& shape : shapes) {
 		for (const auto& index : shape.mesh.indices) {
 			Vert vertex{};
@@ -102,8 +109,11 @@ void Model<Vert>::loadModelOBJ(std::string file) {
 			indices.push_back((unsigned int)vertices.size() - 1);
 		}
 	}
-	std::cout << "[OBJ] Vertices: " << vertices.size() << "\n";
-	std::cout << "Indices: " << indices.size() << "\n";
+
+	#ifdef DEBUG
+		std::cout << "[OBJ] Vertices: " << vertices.size() << "\n";
+		std::cout << "Indices: " << indices.size() << "\n";
+	#endif // DEBUG
 }
 
 template <class Vert>
@@ -112,8 +122,10 @@ void Model<Vert>::loadModelGLTF(std::string file, bool encoded) {
 	tinygltf::TinyGLTF loader;
 	std::string warn, err;
 
-	std::cout << "Loading : " << file << (encoded ? "[MGCG]" : "[GLTF]")
-		<< "\n";
+	#ifdef DEBUG
+		std::cout << "Loading : " << file << (encoded ? "[MGCG]" : "[GLTF]") << "\n";
+	#endif // DEBUG
+
 	if (encoded) {
 		auto modelString = readFile(file);
 
@@ -156,7 +168,11 @@ void Model<Vert>::loadModelGLTF(std::string file, bool encoded) {
 	}
 
 	for (const auto& mesh : model.meshes) {
-		std::cout << "Primitives: " << mesh.primitives.size() << "\n";
+
+		#ifdef DEBUG
+			std::cout << "Primitives: " << mesh.primitives.size() << "\n";
+		#endif // DEBUG
+
 		for (const auto& primitive : mesh.primitives) {
 			if (primitive.indices < 0) {
 				continue;
@@ -338,10 +354,11 @@ void Model<Vert>::loadModelGLTF(std::string file, bool encoded) {
 			}
 		}
 	}
-
-	std::cout << (encoded ? "[MGCG]" : "[GLTF]")
-		<< " Vertices: " << vertices.size()
-		<< "\nIndices: " << indices.size() << "\n";
+	#ifdef DEBUG
+		std::cout << (encoded ? "[MGCG]" : "[GLTF]")
+			<< " Vertices: " << vertices.size()
+			<< "\nIndices: " << indices.size() << "\n";
+	#endif // DEBUG
 }
 
 template <class Vert>
@@ -378,8 +395,10 @@ template <class Vert>
 void Model<Vert>::initMesh(BaseProject* bp, VertexDescriptor* vd) {
 	BP = bp;
 	VD = vd;
-	std::cout << "[Manual] Vertices: " << vertices.size()
-		<< "\nIndices: " << indices.size() << "\n";
+	#ifdef DEBUG
+		std::cout << "[Manual] Vertices: " << vertices.size()
+			<< "\nIndices: " << indices.size() << "\n";
+	#endif // DEBUG
 	createVertexBuffer();
 	createIndexBuffer();
 }
@@ -440,8 +459,11 @@ void Texture::createTextureImage(const char* const files[], VkFormat Fmt) {
 			std::cout << "Not found: " << files[i] << "\n";
 			throw std::runtime_error("failed to load texture image!");
 		}
-		std::cout << "[" << i << "]" << files[i] << " -> size: " << texWidth
-			<< "x" << texHeight << ", ch: " << texChannels << "\n";
+
+		#ifdef DEBUG
+			std::cout << "[" << i << "]" << files[i] << " -> size: " << texWidth
+				<< "x" << texHeight << ", ch: " << texChannels << "\n";
+		#endif // DEBUG
 
 		if (i == 0) {
 			curWidth = texWidth;
