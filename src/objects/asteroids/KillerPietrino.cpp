@@ -16,11 +16,11 @@ static const bool KillerPietrinoRegistered =
 void KillerPietrino::Instantiate() {
 	AbstractAsteroidObject::Instantiate();
 
-	model.addUniformData(&additionalUniforms, sizeof(KillerPietrinoUniforms), VK_SHADER_STAGE_FRAGMENT_BIT);
+	model.addUniformData(&additionalUniforms, sizeof(KillerPietrinoUniforms), VK_SHADER_STAGE_ALL_GRAPHICS);
 	// special pietrino color
 	additionalUniforms.time = 0.0f;
 
-	model.setShader("shaders/asteroids/BaseAsteroid_Vert.spv",
+	model.setShader("shaders/asteroids/KillerPietrino_Vert.spv",
 		"shaders/asteroids/KillerPietrino_Frag.spv");
 	model.addTexture("textures/asteroids/killer/Emission.jpg");
 

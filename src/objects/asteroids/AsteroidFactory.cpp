@@ -4,7 +4,7 @@
 #include "../../../headers/objects/asteroids/Pietro.hpp"
 
 //std::vector<AsteroidConstructor> AsteroidFactory::constructors;
-float AsteroidFactory::specialPietrinoProbability = 0.1f; // probability to spawn a special pietrino in (0, 1)
+float AsteroidFactory::specialPietrinoProbability = 0.2f; // probability to spawn a special pietrino in (0, 1)
 
 void AsteroidFactory::spawnRandomAsteroid(Scene* scene, GameObject* player) {
 	// list of constructors

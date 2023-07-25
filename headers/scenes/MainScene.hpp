@@ -11,7 +11,7 @@ class MainScene: public Scene {
         float lastSpawnTime;
         float spawnDeltaTime;
         GameObject* player = nullptr;
-        const unsigned int initialAsteroids = 10, maxVisibleAsteroids = 150;
+        const unsigned int initialAsteroids = 10, maxVisibleAsteroids = 60;
         int visibleAsteroids = 0;
         bool restartFlag = false;
 
