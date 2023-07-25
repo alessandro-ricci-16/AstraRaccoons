@@ -45,6 +45,7 @@ TextMaker::TextMaker(const char* oldText, bool x_, bool y_) {
 	y = y_;
 
 	demoText.push_back(newText);
+	shouldDisplayAlwaysOnTop = true;
 }
 
 void TextMaker::Instantiate() {
@@ -60,6 +61,7 @@ void TextMaker::Instantiate() {
 	model.isTransparent = true;
 	acceptsGUBOs = false;
 	model.backfaceCullingOn = false;
+	shouldDisplayAlwaysOnTop = true;
 }
 
 void TextMaker::Update() {

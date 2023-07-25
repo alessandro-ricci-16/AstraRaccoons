@@ -11,9 +11,19 @@ Scene::Scene(float* ar) {
 void Scene::Draw(VkCommandBuffer commandBuffer, int currentImage) {
 	//For each object in the scene, bind its pipeline and draw (WITHOUT rebinding the pipeline if it uses the same one)
 	this->activePipeline = nullptr;
+	std::vector<ActiveObjectElement*> objectsAlwaysOnTop = {};
 	for (ActiveObjectElement* element: activeObjects) {
-		element->object->Draw(commandBuffer, currentImage, this->activePipeline);
+		if (!element->object->getDisplaysAlwaysOnTop()) {
+			element->object->Draw(commandBuffer, currentImage, this->activePipeline);
+		} else {
+			objectsAlwaysOnTop.push_back(element);
+		}
 	}
+
+	for (int i = 0; i < objectsAlwaysOnTop.size(); i++) {
+		objectsAlwaysOnTop[i]->object->Draw(commandBuffer, currentImage, this->activePipeline);
+	}
+	
 }
 
 void Scene::addObject(GameObject* object) {
