@@ -51,6 +51,7 @@ void Pew::Instantiate() {
 	model.backfaceCullingOn = true;
 	// add collider
 	addCollider(glm::vec3(0), thickness, 0x4, 0x2); // Layer = 0b00000100 Mask = 0b00000010, i.e. collides only with asteroids having layer 0x2
+	colliders[0]->compensateCompenetration = false; // to avoid moving asteroids when hit
 	// Enable GUBOs -- REQUIRED if the shader uses them!
 	acceptsGUBOs = false;
 }

@@ -49,7 +49,7 @@ bool Collider::checkCollisionWith(Collider* collider2) {
 void Collider::compensateCompenetrations(Collider* collider2) {
 	// Check masks
 	bool maskCheck = (collisionMask & collider2->collisionLayer) != 0;
-	if (!maskCheck) return;
+	if (!maskCheck || !compensateCompenetration || !collider2->compensateCompenetration) return;
 	// Get the origin of this collider
 	Transform parentTransform = getParent()->transform;
 	Transform otherTransform = collider2->getParent()->transform;

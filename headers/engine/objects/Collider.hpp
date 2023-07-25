@@ -13,7 +13,7 @@ class Collider {
 
     public:
         Collider(GameObject* parent, float radius, uint8_t collisionLayer, uint8_t collisionMask, glm::vec3 origin = glm::vec3(0));
-
+        bool compensateCompenetration = true;
         uint8_t getCollisionLayer();
         uint8_t getCollisionMask();
         GameObject* getParent();
