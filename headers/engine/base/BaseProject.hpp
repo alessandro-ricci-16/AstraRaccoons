@@ -144,6 +144,7 @@ class BaseProject {
 		void cleanupSwapChain();
 		void cleanup();
 		void RebuildPipeline();
+		void setWindowIcon(GLFWwindow* window, const char* iconPath);
 	
 	// Public part of the base class
 	public:

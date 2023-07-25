@@ -1,6 +1,7 @@
 #include "../../../headers/engine/base/BaseProject.hpp"
 #include "../../../headers/engine/base/Inputs.hpp"
 #include <headers/objects/TextMaker.hpp>
+#include <headers/engine/helpers/stb_image.h>
 
 const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"};
@@ -25,6 +26,9 @@ void BaseProject::initWindow() {
 
     window = glfwCreateWindow(windowWidth, windowHeight, windowTitle.c_str(),
                               nullptr, nullptr);
+
+    setWindowIcon(window, "textures/icon.png");
+
     Inputs::setWindow(window);
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
@@ -1399,4 +1403,23 @@ void BaseProject::printMat4(const char* Name, glm::mat4 v) {
     for (int i = 0; i < 16; i++) {
         std::cout << v[i / 4][i % 4] << ((i < 15) ? ", " : ");\n");
     }
+}
+
+void BaseProject::setWindowIcon(GLFWwindow* window, const char* iconPath) {
+    int width, height, channels;
+    unsigned char* pixels = stbi_load(iconPath, &width, &height, &channels, STBI_rgb_alpha);
+    if (!pixels) {
+        // Error handling for failed image loading
+        return;
+    }
+    GLFWimage icon;
+    icon.width = width;
+    icon.height = height;
+    icon.pixels = pixels;
+
+    // Set the window icon
+    glfwSetWindowIcon(window, 1, &icon);
+
+    // Free the image data after setting the icon
+    stbi_image_free(pixels);
 }
