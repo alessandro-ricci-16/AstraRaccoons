@@ -17,22 +17,22 @@ held at Politecnico di Milano (2022/2023). <br />
 ## Project info
 The project consists of a 3D version of the game *Asteroids* done in C++ with Vulkan.
 
-## [Compile](https://media.licdn.com/dms/image/C4E03AQFkRf6_tRxaIg/profile-displayphoto-shrink_800_800/0/1517599267364?e=1713398400&v=beta&t=dL4Ahw6dhMU5JU5sY-gVuBVWVUrgJQGw932EW2Y6D2w)
+## Compile
 
 Windows User:
 
-1. create a bat file containing the following code:
+1. create a bat file containing the following [code](https://media.licdn.com/dms/image/C4E03AQFkRf6_tRxaIg/profile-displayphoto-shrink_800_800/0/1517599267364?e=1713398400&v=beta&t=dL4Ahw6dhMU5JU5sY-gVuBVWVUrgJQGw932EW2Y6D2w):
 
    ```
-    @echo off
+    	@echo off
 	chcp 65001
 	setlocal enabledelayedexpansion
 	
-	set "ProjDir=C:\Users\alexe\source\repos\alessandro-ricci-16\AstraRaccoons\AstraRaccoons"
-	set "VulkDir=C:\VulkanSDK"
-	set "VulkVers=1.3.246.0"
+	set "ProjDir=<Project_Dir>"
+	set "VulkDir=<Vulkan_Dir>"
+	set "VulkVers=<Vulkan_Version>"
 	set "GlslcDir=!VulkDir!\!VulkVers!\Bin\glslc.exe"
-	set "Mingw64=C:\Program Files\msys64\mingw64"
+	set "Mingw64=<Mingw64_Dir>"
 	
 	set "compileOnlyShaders=false"
 	IF "%1"=="-s" (
@@ -79,19 +79,25 @@ Windows User:
 
 ### Commands
 
-|   Commands    |   Actions    |
-|:-------------:|:------------:|
-|       W       |  Accelerate  |
-|       Q       |   Roll Left  |
-|       E       |  Roll Right  |
-|    Up Arrow   |   Pitch Up   |
-|   Down Arrow  |  Pitch Down  |
-|   Left Arrow  |   Yaw Left   |
-|  Right Arrow  |   Yaw Right  |
-|   Space Bar   |    Shoot     |
+|     Commands     |   Actions   |
+|:----------------:|:-----------:|
+|         W        |  Accelerate |
+|         Q        |   Roll Left |
+|         E        |  Roll Right |
+|   Up/Down Arrow  |    Pitch    |
+| Left/Right Arrow |     Yaw     |
+|     Space Bar    |    Shoot    |
 
+### Recommendations
 
+It is required to have installed [Mingw64](https://www.mingw-w64.org/downloads/) and [Vulkan](https://vulkan.lunarg.com/) to compile and run the project.
 
+### External Assets
+
+[Skybox](https://gamebanana.com/mods/285684)
+[Skybox License](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+[Spaceship](https://sketchfab.com/3d-models/low-poly-spaceship-de307645e6c84b3a8046bd6fcbb7e744) - In the project with different colors.
+[Spaceship License](https://creativecommons.org/licenses/by-nd/4.0/)
 
 
 
