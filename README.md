@@ -94,10 +94,10 @@ It is required to have installed [Mingw64](https://www.mingw-w64.org/downloads/)
 
 ### External Assets
 
-[Skybox](https://gamebanana.com/mods/285684)
-[Skybox License](https://creativecommons.org/licenses/by-nc-nd/4.0/)
-[Spaceship](https://sketchfab.com/3d-models/low-poly-spaceship-de307645e6c84b3a8046bd6fcbb7e744) - In the project with different colors.
-[Spaceship License](https://creativecommons.org/licenses/by-nd/4.0/)
+[Skybox](https://gamebanana.com/mods/285684)  
+[Skybox License](https://creativecommons.org/licenses/by-nc-nd/4.0/)  
+[Spaceship](https://sketchfab.com/3d-models/low-poly-spaceship-de307645e6c84b3a8046bd6fcbb7e744) - In the project with different colors.  
+[Spaceship License](https://creativecommons.org/licenses/by-nd/4.0/)  
 
 
 
